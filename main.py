@@ -11,7 +11,7 @@ MAIN_VIDEO = "GA_Beauty_Startler_Holl_V.mp4"
 
 def main():
     parser = argparse.ArgumentParser(description='Let\'s get spooky with some halloween good times.')
-    parser.add_argument('--run', choices=['chromecast', 'ring', 'both'], default='all', 
+    parser.add_argument('--run', choices=['chromecast', 'ring', 'both'], default='both', 
                         help='pick if you want to run the chromecast portion or ring. Useful for testing.')
     parser.add_argument('--server-url', help='the server url where the videos are being served')
     parser.add_argument('--ring-config', help='the path to the config where that username and password is')
