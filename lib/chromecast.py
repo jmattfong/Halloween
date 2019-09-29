@@ -4,14 +4,38 @@ import sys
 import json
 import time
 import pychromecast
+import random
 
 DEVICE_NAME='Basement TV'
 
+VIDEOS=[
+'GA_Beauty_Roamer1_Win_V.mp4',
+'GA_Beauty_Roamer2_Win_V.mp4',
+'GA_Beauty_Roamer3_Win_V.mp4',
+'GA_Beauty_Roamer4_Win_V.mp4',
+'GA_Beauty_Startler_Win_V.mp4',
+'GA_Buffer_Black_V.mp4',
+'GA_Girl_Roamer1_Win_V.mp4',
+'GA_Girl_Roamer2_Win_V.mp4',
+'GA_Girl_Roamer3_Win_V.mp4',
+'GA_Girl_Roamer4_Win_V.mp4',
+'GA_Girl_Startler_Win_V.mp4',
+'GA_HeadOfHouse_Roamer1_Win_V.mp4',
+'GA_HeadOfHouse_Roamer2_Win_V.mp4',
+'GA_HeadOfHouse_Roamer3_Win_V.mp4',
+'GA_HeadOfHouse_Roamer4_Win_V.mp4',
+'GA_HeadOfHouse_Startler_Win_V.mp4',
+'GA_Wraith_Roamer1_Win_V.mp4',
+'GA_Wraith_Roamer2_Win_V.mp4',
+'GA_Wraith_Roamer3_Win_V.mp4',
+'GA_Wraith_Roamer4_Win_V.mp4',
+'GA_Wraith_Startler_Win_V.mp4'
+]
+
 def main():
     server = sys.argv[1]
-    videoFile = sys.argv[2]
     cast = chromecastConnect()
-    playVideo(cast, server, videoFile)
+    playRandomVideo(cast, server)
 
 def chromecastConnect(deviceName=DEVICE_NAME) :
     chromecasts = pychromecast.get_chromecasts()
@@ -26,6 +50,10 @@ def chromecastConnect(deviceName=DEVICE_NAME) :
     print()
 
     return cast
+
+def playRandomVideo(cast, server):
+    video = random.choice(VIDEOS)
+    playVideo(cast, server, video)
 
 def playVideo(cast, server, videoFile):
     videoUrl = (server + '/' + videoFile)
