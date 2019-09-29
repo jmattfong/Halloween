@@ -15,7 +15,6 @@ VIDEOS=[
 'GA_Beauty_Roamer3_Win_V.mp4',
 'GA_Beauty_Roamer4_Win_V.mp4',
 'GA_Beauty_Startler_Win_V.mp4',
-'GA_Buffer_Black_V.mp4',
 'GA_Girl_Roamer1_Win_V.mp4',
 'GA_Girl_Roamer2_Win_V.mp4',
 'GA_Girl_Roamer3_Win_V.mp4',
@@ -40,10 +39,10 @@ class ChromecastPlayer(object):
             raise "no server url passed in"
 
         self.server = server
-        self.cast = self.chromecastConnect(deviceName)
+        self.cast = ChromecastPlayer.chromecastConnect(deviceName)
         super().__init__()
 
-    def chromecastConnect(self, deviceName=DEVICE_NAME) :
+    def chromecastConnect(deviceName=DEVICE_NAME) :
         chromecasts = pychromecast.get_chromecasts()
         #print(chromecasts)
         cast = next(cc for cc in chromecasts if cc.device.friendly_name == deviceName)

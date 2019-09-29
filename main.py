@@ -7,12 +7,15 @@ import argparse
 from lib.chromecast import ChromecastPlayer
 from lib.ring import RingEnhancedSpookinator
 
+BLACK_VIDEO='GA_Buffer_Black_V.mp4'
+
 def main():
     parser = argparse.ArgumentParser(description='Let\'s get spooky with some halloween good times.')
     parser.add_argument('--run', choices=['chromecast', 'ring', 'both'], default='both', 
                         help='pick if you want to run the chromecast portion or ring. Useful for testing.')
     parser.add_argument('--server-url', help='the server url where the videos are being served')
-    parser.add_argument('--ring-config', help='the path to the config where that username and password is')
+    parser.add_argument('--ring-config', help='the path to the config where that username and password is',
+        default='/var/secret/ring-cred.json')
 
     args = parser.parse_args()
 
@@ -22,6 +25,7 @@ def main():
     if args.run == 'chromecast' or args.run == 'both':
         chromeCaster = ChromecastPlayer(args.server_url)
         callback = chromeCaster.playRandomVideo
+        chromeCaster.playVideo(BLACK_VIDEO)
 
     if args.run == 'ring' or args.run == 'both':
        ring = RingEnhancedSpookinator(args.ring_config) 
