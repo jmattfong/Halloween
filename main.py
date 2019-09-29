@@ -4,10 +4,8 @@ import sys
 import json
 import time
 import argparse
-import lib.chromecast as cc
+from lib.chromecast import ChromecastPlayer
 from lib.ring import RingEnhancedSpookinator
-
-MAIN_VIDEO = "GA_Beauty_Startler_Holl_V.mp4"
 
 def main():
     parser = argparse.ArgumentParser(description='Let\'s get spooky with some halloween good times.')
@@ -22,15 +20,12 @@ def main():
     callback = printAlert
 
     if args.run == 'chromecast' or args.run == 'both':
-        server(args.server_url)
+        chromeCaster = ChromecastPlayer(args.server_url)
+        callback = chromeCaster.playRandomVideo
 
     if args.run == 'ring' or args.run == 'both':
        ring = RingEnhancedSpookinator(args.ring_config) 
        ring.pollForActivity(callback)
-
-def server(videoServer) :
-    cast = cc.chromecastConnect()
-    cc.playVideo(cast, videoServer, MAIN_VIDEO)
 
 def printAlert():
     print('Alert detected!')

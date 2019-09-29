@@ -5,6 +5,7 @@ import json
 import time
 import pychromecast
 import random
+import pprint
 
 DEVICE_NAME='Basement TV'
 
@@ -32,20 +33,19 @@ VIDEOS=[
 'GA_Wraith_Startler_Win_V.mp4'
 ]
 
-def main():
-    server = sys.argv[1]
-    player = ChromecastPlayer(server)
-    player.playRandomVideo()
-
 class ChromecastPlayer(object):
 
     def __init__(self, server, deviceName=DEVICE_NAME):
+        if not server:
+            raise "no server url passed in"
+
         self.server = server
         self.cast = self.chromecastConnect(deviceName)
         super().__init__()
 
     def chromecastConnect(self, deviceName=DEVICE_NAME) :
         chromecasts = pychromecast.get_chromecasts()
+        #print(chromecasts)
         cast = next(cc for cc in chromecasts if cc.device.friendly_name == deviceName)
 
         # Start worker thread and wait for cast device to be ready
@@ -74,6 +74,3 @@ class ChromecastPlayer(object):
 
         print("Chromecast media status :  " + str(mc.status))
         print()
-
-if __name__== "__main__" :
-    main()
