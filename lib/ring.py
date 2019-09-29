@@ -4,7 +4,7 @@ from ring_doorbell import Ring
 import time
 
 def login(username, password) :
-    ring = Ring('jmattfong@gmail.com', 'Ajmmwf<3!Ring')
+    ring = Ring(username, password)
     print('Connected: ' + str(ring.is_connected))
     return ring
 
