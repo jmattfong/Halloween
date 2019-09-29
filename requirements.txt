@@ -1,0 +1,2 @@
+ring_doorbell==0.2.3
+pychromecast==4.0.1
