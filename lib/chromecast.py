@@ -13,10 +13,6 @@ def main():
     cast = chromecastConnect()
     playVideo(cast, server, videoFile)
 
-def testChromecast() :
-    cast = chromecastConnect()
-    playVideo(cast, videoFile)
-
 def chromecastConnect(deviceName=DEVICE_NAME) :
     chromecasts = pychromecast.get_chromecasts()
     cast = next(cc for cc in chromecasts if cc.device.friendly_name == deviceName)
