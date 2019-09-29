@@ -34,39 +34,46 @@ VIDEOS=[
 
 def main():
     server = sys.argv[1]
-    cast = chromecastConnect()
-    playRandomVideo(cast, server)
+    player = ChromecastPlayer(server)
+    player.playRandomVideo()
 
-def chromecastConnect(deviceName=DEVICE_NAME) :
-    chromecasts = pychromecast.get_chromecasts()
-    cast = next(cc for cc in chromecasts if cc.device.friendly_name == deviceName)
+class ChromecastPlayer(object):
 
-    # Start worker thread and wait for cast device to be ready
-    cast.wait()
+    def __init__(self, server, deviceName=DEVICE_NAME):
+        self.server = server
+        self.cast = self.chromecastConnect(deviceName)
+        super().__init__()
 
-    print("Connected to chromecast: " + str(cast.device))
-    print()
-    print("Chromecast Status: " + str(cast.status))
-    print()
+    def chromecastConnect(self, deviceName=DEVICE_NAME) :
+        chromecasts = pychromecast.get_chromecasts()
+        cast = next(cc for cc in chromecasts if cc.device.friendly_name == deviceName)
 
-    return cast
+        # Start worker thread and wait for cast device to be ready
+        cast.wait()
 
-def playRandomVideo(cast, server):
-    video = random.choice(VIDEOS)
-    playVideo(cast, server, video)
+        print("Connected to chromecast: " + str(cast.device))
+        print()
+        print("Chromecast Status: " + str(cast.status))
+        print()
 
-def playVideo(cast, server, videoFile):
-    videoUrl = (server + '/' + videoFile)
-    print("Playing video " + str(videoUrl))
-    print()
+        return cast
 
-    mc = cast.media_controller
-    mc.play_media(videoUrl, content_type='video/mp4')
-    mc.block_until_active()
-    mc.play()
+    def playRandomVideo(self):
+        video = random.choice(VIDEOS)
+        self.playVideo(video)
 
-    print("Chromecast media status :  " + str(mc.status))
-    print()
+    def playVideo(self, videoFile):
+        videoUrl = (self.server + '/' + videoFile)
+        print("Playing video " + str(videoUrl))
+        print()
+
+        mc = self.cast.media_controller
+        mc.play_media(videoUrl, content_type='video/mp4')
+        mc.block_until_active()
+        mc.play()
+
+        print("Chromecast media status :  " + str(mc.status))
+        print()
 
 if __name__== "__main__" :
     main()
