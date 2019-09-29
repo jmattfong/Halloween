@@ -44,14 +44,14 @@ class ChromecastPlayer(object):
             raise "no server url passed in"
 
         self.server = server
-        self.cast = ChromecastPlayer.chromecastConnect(deviceName)
+        self.cast = self.chromecastConnect(deviceName)
         self.mc = self.cast.media_controller
         self.last_played = ''
         self.next_video = None
 
         super().__init__()
 
-    def chromecastConnect(deviceName) :
+    def chromecastConnect(self, deviceName) :
         chromecasts = pychromecast.get_chromecasts()
         #print(chromecasts)
         cast = next(cc for cc in chromecasts if cc.device.friendly_name == deviceName)
