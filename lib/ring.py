@@ -2,6 +2,7 @@ import sys
 import json
 from ring_doorbell import Ring
 import time
+from pprint import pprint
 
 def login(username, password) :
     ring = Ring(username, password)
@@ -11,25 +12,20 @@ def login(username, password) :
 def getFrontDoorbell(ring) :
     return ring.doorbells[0]
 
-def getLatestEvent(doorbell) :
-    doorbell.update()
-    return doorbell.history(limit=1)[0]
-
 def waitForNextEvent(doorbell, callback) :
     waitTimeSeconds = 2
 
-    firstEvent = getLatestEvent(doorbell)
-    latestEvent = firstEvent
+    result = doorbell.check_alerts()
+    callback(result)
 
-    while (latestEvent['id'] == firstEvent['id']) :
-        latestEvent = getLatestEvent(doorbell)
-        if (latestEvent['id'] == firstEvent['id']) :
-            print('No recent events found. Waiting %d seconds' % waitTimeSeconds)
-            time.sleep(waitTimeSeconds)
-        else :
-            print('New event! %s' % str(latestEvent))
+    if doorbell.alert != None:
+        # pprint(vars(doorbell))
+        print('there was an alert!')
+        print('it expires @ ' + str(doorbell.alert_expires_at))
+    else:
+        print('no alert found')
 
-    callback(latestEvent['kind'])
+    time.sleep(waitTimeSeconds)
 
 def printResult(result) :
     print(str(result))
