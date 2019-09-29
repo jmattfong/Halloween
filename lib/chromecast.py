@@ -8,7 +8,12 @@ import pychromecast
 DEVICE_NAME='Basement TV'
 
 def main():
-    videoFile = sys.argv[1]
+    server = sys.argv[1]
+    videoFile = sys.argv[2]
+    cast = chromecastConnect()
+    playVideo(cast, server, videoFile)
+
+def testChromecast() :
     cast = chromecastConnect()
     playVideo(cast, videoFile)
 
@@ -26,12 +31,13 @@ def chromecastConnect(deviceName=DEVICE_NAME) :
 
     return cast
 
-def playVideo(cast, videoFile):
-    print("Playing video " + str(videoFile))
+def playVideo(cast, server, videoFile):
+    videoUrl = (server + '/' + videoFile)
+    print("Playing video " + str(videoUrl))
     print()
 
     mc = cast.media_controller
-    mc.play_media(videoFile, content_type='video/mp4')
+    mc.play_media(videoUrl, content_type='video/mp4')
     mc.block_until_active()
     mc.play()
 
