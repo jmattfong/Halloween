@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import sys
 import json
 from ring_doorbell import Ring
@@ -36,12 +34,9 @@ def waitForNextEvent(doorbell, callback) :
 def printResult(result) :
     print(str(result))
 
-
-
-def main():
-    passwordFile = sys.argv[1]
+def doRing(configPath):
     creds = {}
-    with open(passwordFile, 'r') as file:
+    with open(configPath, 'r') as file:
         creds = json.loads(' '.join(file.readlines()))
 
     ring = login(creds['username'], creds['password'])
@@ -61,5 +56,3 @@ def main():
         waitForNextEvent(doorbell, printResult)
         print('Keep waiting')
 
-if __name__== "__main__" :
-    main()
