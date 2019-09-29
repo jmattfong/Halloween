@@ -5,7 +5,7 @@ import json
 import time
 import argparse
 import lib.chromecast as cc
-from lib.ring import doRing
+from lib.ring import RingEnhancedSpookinator
 
 MAIN_VIDEO = "GA_Beauty_Startler_Holl_V.mp4"
 
@@ -19,19 +19,23 @@ def main():
 
     args = parser.parse_args()
 
-    videoServer = args.videoServer
+    # default to using the printAlert method when we are not combining this with actually showing a chromecast video
+    callback = printAlert
+
+    if args.run == 'server' or args.run == 'both':
+        videoServer = args.videoServer
+        server(videoServer)
 
     if args.run == 'ring' or args.run == 'both':
-        if args.ringConfigPath == '':
-            raise 'no config path passed'
-        doRing(args.ringConfigPath)
-
-    if args.run == 'server':
-        server(videoServer)
+       ring = RingEnhancedSpookinator(args.ringConfigPath) 
+       ring.pollForActivity(callback)
 
 def server(videoServer) :
     cast = cc.chromecastConnect()
     cc.playVideo(cast, videoServer, MAIN_VIDEO)
+
+def printAlert():
+    print('Alert detected!')
 
 if __name__== "__main__" :
     main()

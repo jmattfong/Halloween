@@ -4,51 +4,34 @@ from ring_doorbell import Ring
 import time
 from pprint import pprint
 
-def login(username, password) :
-    ring = Ring(username, password)
-    print('Connected: ' + str(ring.is_connected))
-    return ring
+class RingEnhancedSpookinator(object):
 
-def getFrontDoorbell(ring) :
-    return ring.doorbells[0]
+    def __init__(self, configPath):
+        self.ring = self._setup(configPath)
+        print('Ring setup. Connection status: ' + str(self.getStatus()))
+        self.doorbell = self.ring.doorbells[0]
+        print('Selected doorbell: ' + str(self.doorbell.name))
+        super().__init__()
 
-def waitForNextEvent(doorbell, callback) :
-    waitTimeSeconds = 2
+    def _setup(self, configPath):
+        if not configPath:
+            raise 'no ring config path passed'
 
-    result = doorbell.check_alerts()
-    callback(result)
+        with open(configPath, 'r') as file:
+            creds = json.loads(' '.join(file.readlines()))
+        return Ring(creds['username'], creds['password'])
 
-    if doorbell.alert != None:
-        # pprint(vars(doorbell))
-        print('there was an alert!')
-        print('it expires @ ' + str(doorbell.alert_expires_at))
-    else:
-        print('no alert found')
+    def getStatus(self):
+        return self.ring.is_connected
 
-    time.sleep(waitTimeSeconds)
+    def pollForActivity(self, callback):
+        waitTimeSeconds = 2
 
-def printResult(result) :
-    print(str(result))
+        while True:
+            result = self.doorbell.check_alerts()
 
-def doRing(configPath):
-    creds = {}
-    with open(configPath, 'r') as file:
-        creds = json.loads(' '.join(file.readlines()))
+            if result == True:
+                print('alert detected! Calling callback')
+                callback()
 
-    ring = login(creds['username'], creds['password'])
-    doorbell = getFrontDoorbell(ring)
-    lastEvent = getLatestEvent(doorbell)
-    print(str(lastEvent))
-    print('--' * 50)
-    print('Last Event:')
-    print('--' * 50)
-    print('ID:       %s' % lastEvent['id'])
-    print('Kind:     %s' % lastEvent['kind'])
-    print('Answered: %s' % lastEvent['answered'])
-    print('When:     %s' % lastEvent['created_at'])
-    print('--' * 50)
-
-    while(True) :
-        waitForNextEvent(doorbell, printResult)
-        print('Keep waiting')
-
+            time.sleep(waitTimeSeconds)
