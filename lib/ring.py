@@ -3,6 +3,7 @@ import json
 from ring_doorbell import Ring
 import time
 from pprint import pprint
+from datetime import datetime, timedelta
 
 class RingEnhancedSpookinator(object):
 
@@ -10,6 +11,7 @@ class RingEnhancedSpookinator(object):
         self.ring = self._setup(configPath)
         print('Ring setup. Connection status: ' + str(self.getStatus()))
         self.doorbell = self.ring.doorbells[0]
+        self.last_alert = None
         print('Selected doorbell: ' + str(self.doorbell.name))
         super().__init__()
 
@@ -30,8 +32,13 @@ class RingEnhancedSpookinator(object):
         while True:
             result = self.doorbell.check_alerts()
 
-            if result == True:
+            now = datetime.now()
+
+            # check to see if the alert occurred, and if it has been greater than 30 seconds since the last
+            # alert (dedupe that shit)
+            if result == True and self.last_alert != None and ((now - self.last_alert) > timedelta(seconds=30)):
                 print('alert detected! Calling callback')
                 callback()
+                self.last_alert = now
 
             time.sleep(waitTimeSeconds)
