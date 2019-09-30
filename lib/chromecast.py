@@ -6,6 +6,7 @@ import time
 import pychromecast
 import random
 import pprint
+from threading import BoundedSemaphore
 
 DEVICE_NAME='Basement TV'
 
@@ -43,11 +44,10 @@ class ChromecastPlayer(object):
         if not server:
             raise "no server url passed in"
 
+        self.play_lock = BoundedSemaphore(1)
         self.server = server
         self.cast = self.chromecastConnect(deviceName)
         self.mc = self.cast.media_controller
-        self.last_played = ''
-        self.next_video = None
 
         super().__init__()
 
@@ -66,32 +66,34 @@ class ChromecastPlayer(object):
         return cast
 
     def play_loop(self) :
-        while(True) :
-            sleep_time = BLANK_TIME
-            if self.next_video is None :
+        while(True):
+            self.play_lock.acquire()
+
+            # if the media player is playing, then do nothing!
+            if self.mc.status.player_is_playing:
+                pass
+            else:
                 self.play_blank()
-            else :
-                sleep_time = self.next_video[2]
-                self.play_video(self.next_video)
-                print('Waiting ' + str(sleep_time) + ' seconds for video to finish')
-            self.next_video = None
-            time.sleep(sleep_time + 1)
 
-    def queue_random_video(self):
-        self.queue_video(random.choice(VIDEOS))
+            self.play_lock.release()
+            time.sleep(0.5)
 
-    def queue_video(self, video):
-        self.next_video = video
-        print('Queued video ' + video[1])
+    def play_random_video(self):
+        self.play_lock.acquire()
+        self._play_video(random.choice(VIDEOS))
+        self.play_lock.release()
+
+    def play_video(self, video):
+        self.play_lock.acquire()
+        self._play_video(video)
+        self.play_lock.release()
+
 
     def play_blank(self) :
-        if self.last_played != BLANK_VIDEO[0] :
-            print()
-            print('Playing blank video')
-            print()
-        self.play_video(BLANK_VIDEO, logs=False)
+        print('Playing blank video')
+        self._play_video(BLANK_VIDEO, logs=False)
 
-    def play_video(self, video, logs=True):
+    def _play_video(self, video, logs=True):
         (videoFile, videoName, videoLength) = video
         videoUrl = (self.server + '/' + videoFile)
 
@@ -102,8 +104,9 @@ class ChromecastPlayer(object):
         self.mc.play_media(videoUrl, content_type='video/mp4')
         self.mc.block_until_active()
         self.mc.play()
-        self.last_played = videoFile
+        time.sleep(3)
+        print(f"Video \"{videoName}\" has started playing")
 
-        if logs :
+        if logs:
             print("Media State :  " + str(self.mc.status.player_state))
             print()

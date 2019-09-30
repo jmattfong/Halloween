@@ -30,8 +30,8 @@ def main():
     if args.run == 'chromecast' or args.run == 'both':
         print('Starting chromecast thread')
         chrome_caster = chromecast.ChromecastPlayer(args.server_url)
-        random_video_callback = chrome_caster.queue_random_video
-        play_video_callback = chrome_caster.queue_video
+        random_video_callback = chrome_caster.play_random_video
+        play_video_callback = chrome_caster.play_video
 
         chromecastThread = threading.Thread(target=runChromecast, args=(chrome_caster,))
         chromecastThread.start()
