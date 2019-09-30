@@ -7,6 +7,7 @@ import pychromecast
 import random
 import pprint
 from threading import BoundedSemaphore
+from datetime import datetime, timedelta
 
 DEVICE_NAME='Basement TV'
 
@@ -48,6 +49,8 @@ class ChromecastPlayer(object):
         self.server = server
         self.cast = self.chromecastConnect(deviceName)
         self.mc = self.cast.media_controller
+        self.current_video_start_time = None
+        self.current_video_duration = None
 
         super().__init__()
 
@@ -66,17 +69,20 @@ class ChromecastPlayer(object):
         return cast
 
     def play_loop(self) :
+
         while(True):
             self.play_lock.acquire()
 
             # if the media player is playing, then do nothing!
             if self.mc.status.player_is_playing:
-                pass
+                now = datetime.now()
+                if (now - self.current_video_start_time > timedelta(milliseconds=((self.current_video_duration * 1000) - 750))):
+                    self.play_blank()
             else:
                 self.play_blank()
 
             self.play_lock.release()
-            time.sleep(0.5)
+            # time.sleep(0.51)
 
     def play_random_video(self):
         self.play_lock.acquire()
@@ -91,6 +97,7 @@ class ChromecastPlayer(object):
 
     def play_blank(self) :
         print('Playing blank video')
+        self.is_blank_playing = True
         self._play_video(BLANK_VIDEO, logs=False)
 
     def _play_video(self, video, logs=True):
@@ -101,10 +108,12 @@ class ChromecastPlayer(object):
             print()
             print("Playing video '" + videoName + "' with url " + str(videoUrl))
 
+        self.current_video_start_time = datetime.now()
+        self.current_video_duration = videoLength
         self.mc.play_media(videoUrl, content_type='video/mp4')
         self.mc.block_until_active()
         self.mc.play()
-        time.sleep(3)
+        time.sleep(2)
         print(f"Video \"{videoName}\" has started playing")
 
         if logs:

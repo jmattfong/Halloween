@@ -36,7 +36,7 @@ class RingEnhancedSpookinator(object):
 
             # check to see if the alert occurred, and if it has been greater than 30 seconds since the last
             # alert (dedupe that shit)
-            if result == True and self.last_alert != None and ((now - self.last_alert) > timedelta(seconds=30)):
+            if result == True:
                 print('alert detected! Calling callback')
                 callback()
                 self.last_alert = now
