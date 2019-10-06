@@ -5,15 +5,16 @@ import json
 import argparse
 import lib.chromecast as chromecast
 from lib.ring import RingEnhancedSpookinator
+from lib.vlc import VLCPlayer
 import threading
 
 def main():
     parser = argparse.ArgumentParser(
         description='Let\'s get spooky with some halloween good times.')
     parser.add_argument('--run',
-        choices=['chromecast', 'ring', 'both'],
+        choices=['chromecast', 'ring', 'vlc', 'all'],
         help='pick if you want to run the chromecast portion or ring. Useful for testing.',
-        default='both')
+        default='all')
     parser.add_argument('--server-url',
         help='the server url where the videos are being served',
         default='https://jmattfong-halloween.s3.us-west-2.amazonaws.com')
@@ -27,7 +28,11 @@ def main():
     random_video_callback = print_alert
     play_video_callback = print_video
 
-    if args.run == 'chromecast' or args.run == 'both':
+    if args.run == 'vlc':
+        vlc = VLCPlayer()
+        vlc.play_file("/Users/matthew/Dropbox/Halloween/GA_Wraith_Startler_Win_V.mp4")
+
+    if args.run == 'chromecast' or args.run == 'all':
         print('Starting chromecast thread')
         chrome_caster = chromecast.ChromecastPlayer(args.server_url)
         random_video_callback = chrome_caster.play_random_video
@@ -36,7 +41,7 @@ def main():
         chromecastThread = threading.Thread(target=runChromecast, args=(chrome_caster,))
         chromecastThread.start()
 
-    if args.run == 'ring' or args.run == 'both':
+    if args.run == 'ring' or args.run == 'all':
         print('Starting ring thread')
         ringThread = threading.Thread(target=runRing, args=(args.ring_config, random_video_callback,))
         ringThread.start()
