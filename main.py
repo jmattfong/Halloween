@@ -15,6 +15,8 @@ def main():
         choices=['chromecast', 'ring', 'vlc', 'all'],
         help='pick if you want to run the chromecast portion or ring. Useful for testing.',
         default='all')
+    parser.add_argument('--video-path',
+        help='pass it in to test vlc')
     parser.add_argument('--server-url',
         help='the server url where the videos are being served',
         default='https://jmattfong-halloween.s3.us-west-2.amazonaws.com')
@@ -30,7 +32,7 @@ def main():
 
     if args.run == 'vlc':
         vlc = VLCPlayer()
-        vlc.play_file("/Users/matthew/Dropbox/Halloween/GA_Wraith_Startler_Win_V.mp4")
+        vlc.play_file(args.video_path)
 
     if args.run == 'chromecast' or args.run == 'all':
         print('Starting chromecast thread')
