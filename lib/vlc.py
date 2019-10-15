@@ -10,16 +10,44 @@ class VLCPlayer(object):
     def __init__(self):
         self.vlc_instance = vlc.Instance()
         self.vlc_player = self.vlc_instance.media_list_player_new()
-        self.event_manager = self.vlc_player.event_manager()
-
-        def handle_event(event):
+        def handle_event(event, two, three):
             print("received event")
             pprint(vars(event))
+            print(f'first param: {event}\n second param: {two}\n third param: {three}\n')
+        
+        event_manager = self.vlc_player.event_manager()
+
+        # just add all the events
+        for event_id in EventType._enum_names_.keys():
+            event = EventType(event_id)
+            print(f'Adding handler for event type {event}')
+            result = self.vlc_player.event_manager().event_attach(event, handle_event, "type", str(event))
+            print(f'{event} attached result: ' + str(result))
          
-        if self.event_manager.event_attach(EventType().MediaPlayerPlaying, handle_event):
-            print('event attached successful')
-        if self.event_manager.event_attach(EventType().MediaPlayerEndReached, handle_event):
-            print('event attached successful end')
+        # result = self.vlc_player.event_manager().event_attach(EventType().MediaPlayerPlaying, handle_event, "type", "playing")
+        # print('play event attached result: ' + str(result))
+
+        # result = self.vlc_player.event_manager().event_attach(EventType().MediaPlayerEndReached, handle_event, "type", "end")
+        # print('end reached event attached result: ' + str(result))
+
+        # result = self.vlc_player.event_manager().event_attach(EventType().MediaListItemAdded, handle_event, "type", "list added")
+        # print('list item added event attached result: ' + str(result))
+
+        # result = self.vlc_player.event_manager().event_attach(EventType().MediaListPlayerPlayed, handle_event, "type", "list player played")
+        # print('list player played event attached result: ' + str(result))
+
+        # result = self.vlc_player.event_manager().event_attach(EventType().MediaListPlayerStopped, handle_event, "type", "list player stopped")
+        # print('list player stopped event attached result: ' + str(result))
+
+        # result = self.vlc_player.event_manager().event_attach(EventType().MediaListEndReached, handle_event, "type", "list player end reached")
+        # print('list player end reached event attached result: ' + str(result))
+
+        # result = self.vlc_player.event_manager().event_attach(EventType().MediaListViewItemAdded, handle_event, "type", "list view item added")
+        # print('list player end reached event attached result: ' + str(result))
+
+        # result = self.vlc_player.event_manager().event_attach(EventType().MediaListEndReached, handle_event, "type", "list player end reached")
+        # print('list player end reached event attached result: ' + str(result))
+
         super().__init__()
 
     def play_file(self, file_name):
@@ -44,7 +72,8 @@ class VLCPlayer(object):
         # When time to play spooky video, set repeat to off, ADD spooky video, enqueue black screen video.
         # When spooky video finishes, the black screen should play. Set repeat back to on
         random_vid = '/Users/roryjacob/Desktop/small.mp4'
-        blank_video = '/Users/roryjacob/Desktop/2.mp4'
+        blank_video = '/Users/roryjacob/Desktop/small.mp4'
+        # blank_video = '/Users/roryjacob/Desktop/2.mp4'
 
         self.vlc_player.set_playback_mode(PlaybackMode.default)
         media_list = self.vlc_instance.media_list_new()
