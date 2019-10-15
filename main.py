@@ -32,7 +32,8 @@ def main():
 
     if args.run == 'vlc':
         vlc = VLCPlayer()
-        vlc.play_file(args.video_path)
+        vlc.play_random_video()
+        # vlc.play_file(args.video_path)
 
     if args.run == 'chromecast' or args.run == 'all':
         print('Starting chromecast thread')
