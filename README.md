@@ -27,7 +27,7 @@ That will open up a screen. Type ```help``` in the terminal. Some examples:
 
 ```
 to play a video right now:
-play file:///Users/roryjacob/Desktop/small.mp4
+add file:///Users/roryjacob/Desktop/small.mp4
 
 to queue a video to play after the current video finishes:
 queue file:///Users/roryjacob/Desktop/2.mp4
