@@ -10,64 +10,49 @@ class VLCPlayer(object):
     def __init__(self):
         self.vlc_instance = vlc.Instance()
         self.vlc_player = self.vlc_instance.media_list_player_new()
-        def handle_event(event, two, three):
-            print("received event")
-            pprint(vars(event))
-            print(f'first param: {event}\n second param: {two}\n third param: {three}\n')
+        def handle_event(event):
+            print(f'received event: {event}')
+            if event.type == EventType().MediaListPlayerPlayed:
+                # this means that the play list has finished playing. We should start looping the blank video now
+                self._loop_blank_video()
+            else:
+                print(f'event type {event.type} is unhandled')
         
-        event_manager = self.vlc_player.event_manager()
-
-        # just add all the events
-        for event_id in EventType._enum_names_.keys():
-            event = EventType(event_id)
+        # using some debugging skills, it looks like the following events occur with the current media list setup:
+        # 1. MediaListPlayerNextItemSet: invoked at the start of a media list item being played (Not needed?)
+        # 2. MediaListPlayerPlayed: invoked when the list has played all videos in it
+        for event in [EventType().MediaListPlayerPlayed]:
             print(f'Adding handler for event type {event}')
-            result = self.vlc_player.event_manager().event_attach(event, handle_event, "type", str(event))
+            result = self.vlc_player.event_manager().event_attach(event, handle_event)
             print(f'{event} attached result: ' + str(result))
-         
-        # result = self.vlc_player.event_manager().event_attach(EventType().MediaPlayerPlaying, handle_event, "type", "playing")
-        # print('play event attached result: ' + str(result))
-
-        # result = self.vlc_player.event_manager().event_attach(EventType().MediaPlayerEndReached, handle_event, "type", "end")
-        # print('end reached event attached result: ' + str(result))
-
-        # result = self.vlc_player.event_manager().event_attach(EventType().MediaListItemAdded, handle_event, "type", "list added")
-        # print('list item added event attached result: ' + str(result))
-
-        # result = self.vlc_player.event_manager().event_attach(EventType().MediaListPlayerPlayed, handle_event, "type", "list player played")
-        # print('list player played event attached result: ' + str(result))
-
-        # result = self.vlc_player.event_manager().event_attach(EventType().MediaListPlayerStopped, handle_event, "type", "list player stopped")
-        # print('list player stopped event attached result: ' + str(result))
-
-        # result = self.vlc_player.event_manager().event_attach(EventType().MediaListEndReached, handle_event, "type", "list player end reached")
-        # print('list player end reached event attached result: ' + str(result))
-
-        # result = self.vlc_player.event_manager().event_attach(EventType().MediaListViewItemAdded, handle_event, "type", "list view item added")
-        # print('list player end reached event attached result: ' + str(result))
-
-        # result = self.vlc_player.event_manager().event_attach(EventType().MediaListEndReached, handle_event, "type", "list player end reached")
-        # print('list player end reached event attached result: ' + str(result))
 
         super().__init__()
 
-    def play_file(self, file_name):
-        Instance = vlc.Instance('-I macosx')
-        player = Instance.media_list_new()
-        Media = Instance.media_new(file_name)
-        Media.get_mrl()
-        player.set_media(Media)
-        player.play()
-    
-    def _play_video(self, file_name, should_loop):
-        playback_mode = PlaybackMode.default
-        if should_loop:
-            self.vlc_player.set_playback_mode(PlaybackMode.repeat)
-
-        Media = self.vlc_instance.media_new(file_name)
-        Media.get_mrl()
-        self.vlc_player.set_media(Media)
+    def _loop_blank_video(self):
+        """
+        loop_blank_video starts the looping of the blank video. This is done with the follow order of operations:
+        1. Create a new playlist (or use maybe its already created?) with just the blank video
+        2. Set the VLC playback mode to Repeat
+        3. Set the media list to the blank video list
+        4. Play
+        """
+        print('starting to play blank video loop here')
+        media_list = self.vlc_instance.media_list_new()
+        print('line 2')
+        blank_video = '/Users/roryjacob/Desktop/small.mp4'
+        blank_video_media = self.vlc_instance.media_new(blank_video) 
+        print('line 3')
+        media_list.add_media(blank_video_media.get_mrl())
+        print('line 4')
+        # this is broken here. Most likely we can only create a single media list per-instance. Probably we will have to also
+        # track this here
+        result = self.vlc_player.set_media_list(media_list)
+        print('line 5')
         self.vlc_player.play()
-
+        print('line 6')
+        self.vlc_player.set_playback_mode(PlaybackMode.repeat)
+        print('line 7')
+    
     def play_random_video(self):
         # When time to play spooky video, set repeat to off, ADD spooky video, enqueue black screen video.
         # When spooky video finishes, the black screen should play. Set repeat back to on
@@ -84,20 +69,3 @@ class VLCPlayer(object):
 
         self.vlc_player.set_media_list(media_list)
         self.vlc_player.play()
-
-
-    def _enqueue_video(self, file_name):
-        Media = self.vlc_instance.media_list_new(file_name)
-        Media.get_mrl()
-        self.vlc_player.set_media(Media)
-        self.vlc_player.play()
-
-    # def play_random_video(self):
-    #     self.play_lock.acquire()
-    #     self._play_video(random.choice(VIDEOS))
-    #     self.play_lock.release()
-
-    def play_video(self, video):
-        self.play_lock.acquire()
-        self._play_video(video)
-        self.play_lock.release()
