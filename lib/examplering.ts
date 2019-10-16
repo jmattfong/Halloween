@@ -2,13 +2,15 @@ import 'dotenv/config'
 import { RingApi } from 'ring-client-api'
 import { skip } from 'rxjs/operators'
 
+var userPass = require('/var/secret/ring-cred.json');
+
 async function example() {
   const { env } = process,
     ringApi = new RingApi({
       // Replace with your ring email/password
       // without 2fa
-      email: 'EMAIL',
-      password: 'PASSWORD',
+      email: userPass.username,
+      password: userPass.password,
       // Listen for dings and motion events
       cameraDingsPollingSeconds: 2
     }),
