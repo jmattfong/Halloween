@@ -1,0 +1,17 @@
+{
+    "name": "halloweenie",
+    "version": "0.1",
+    "license": "MIT",
+    "description": "Making that house spooky for halloween one sensor at a time",
+    "contributors": ["roryj", "elliotg", "jmattfong"],
+    "dependencies": {
+        "@types/node": "12.11.1",
+        "chromecast-api": "0.2.5",
+        "dotenv": "8.2.0",
+        "package.json": "^2.0.1",
+        "ring-client-api": "5.8.2",
+        "rxjs-operators": "1.1.3",
+        "ts-node": "8.4.1",
+        "typescript": "3.6.4"
+    }
+}
