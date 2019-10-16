@@ -34,7 +34,13 @@ VIDEOS=[
 ('GA_Wraith_Roamer2_Win_V.mp4', 'Wrathful Wraith 2', 24),
 ('GA_Wraith_Roamer3_Win_V.mp4', 'Wrathful Wraith 3', 25),
 ('GA_Wraith_Roamer4_Win_V.mp4', 'Wrathful Wraith 4', 23),
-('GA_Wraith_Startler_Win_V.mp4', 'Wrathful Wraith Startler', 12)
+('GA_Wraith_Startler_Win_V.mp4', 'Wrathful Wraith Startler', 12),
+('test-long-spook.mp4', 'Spooky spooky test', 50),
+('test-long-startle.mp4', 'Startle test', 19),
+('test-long-startle-witch.mp4', 'Startle witch', 24),
+('test-long-startle-girl.mp4', 'Startle girl', 22),
+('test-long-startle-head.mp4', 'Startle head', 22),
+('test-long-startle-wraith.mp4', 'Startle wraith', 22)
 ]
 
 ALL_VIDEOS = [BLANK_VIDEO] + VIDEOS
