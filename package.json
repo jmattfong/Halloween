@@ -8,7 +8,6 @@
         "elliotg",
         "jmattfong"
     ],
-    
     "dependencies": {
         "@types/node": "12.11.1",
         "chromecast-api": "0.2.5",
