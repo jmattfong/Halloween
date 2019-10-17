@@ -15,10 +15,10 @@ async function main() {
 
     sensors.forEach(s => {
         const callback = (data: RingDeviceData) => {
-        console.log(`it worked! found device data: ${data.name}`);
-    };
+            console.log(`it worked! found device data: ${data.name}`);
+        };
 
-    spook.addSensorCallback(s, callback);
+        spook.addSensorCallback(s, callback);
     });
 }
 

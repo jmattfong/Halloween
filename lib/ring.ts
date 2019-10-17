@@ -30,10 +30,10 @@ export class RingEnhancedSpookinatorV2 {
         sensor.onData.subscribe((event) => {
             if ((event as RingDeviceData).name) {
                 let data = event as RingDeviceData
-                console.log(`sensor ${sensor.name} invoked. event: ${data.faulted}`)
-                callback(event)
+                console.log(`sensor ${sensor.name} invoked. event: ${data.faulted}`);
+                callback(event);
             } else {
-                console.log('an unknown event type was received')
+                console.log('an unknown event type was received');
             }
         });
     }
@@ -61,7 +61,7 @@ export class RingEnhancedSpookinatorV2 {
                 allDevices.push(device);
             }
         }
-        console.log(`found ${allDevices.length} devices`)
+        console.log(`found ${allDevices.length} devices`);
 
         // right now this just returns a single 
         return allDevices.filter(device => device.data.deviceType === RingDeviceType.ContactSensor);
