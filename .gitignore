@@ -5,7 +5,7 @@
 lib/__pycache__/
 
 # secrets, shhhh
-config/
+secrets/
 
 .vscode
 node_modules

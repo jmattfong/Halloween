@@ -10,7 +10,7 @@
     ],
     "dependencies": {
         "@types/node": "12.11.1",
-        "chromecast-api": "0.2.5",
+        "chromecast-api": "^0.2.5",
         "dotenv": "8.2.0",
         "package.json": "^2.0.1",
         "ring-client-api": "5.8.2",

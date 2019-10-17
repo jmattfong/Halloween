@@ -9,7 +9,7 @@ import { RingEnhancedSpookinatorV2 } from './lib/ring';
 async function main() {
     const { env } = process
 
-    var ringConfigPath = './config/secrets.json';
+    var ringConfigPath = './secrets/secrets.json';
     const spook = new RingEnhancedSpookinatorV2(ringConfigPath, true)
     const sensors = await spook.getSensors()
 
