@@ -1,9 +1,14 @@
 {
     "name": "halloweenie",
-    "version": "0.1",
+    "version": "0.1.0",
     "license": "MIT",
     "description": "Making that house spooky for halloween one sensor at a time",
-    "contributors": ["roryj", "elliotg", "jmattfong"],
+    "contributors": [
+        "roryj",
+        "elliotg",
+        "jmattfong"
+    ],
+    
     "dependencies": {
         "@types/node": "12.11.1",
         "chromecast-api": "0.2.5",
