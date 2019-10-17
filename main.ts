@@ -2,8 +2,10 @@ import 'dotenv/config'
 import { RingApi, RingDeviceType, RingDeviceData } from 'ring-client-api'
 import { skip } from 'rxjs/operators'
 import { RingEnhancedSpookinatorV2 } from './lib/ring';
+import { readFileSync } from 'fs';
 
-var config = require('./config/config.json');
+const configContents = readFileSync('./config/config.json', {encoding: 'utf-8'})
+let config = JSON.parse(configContents);
 
 // Look at example here: https://github.com/dgreif/ring/blob/master/examples/example.ts
 // And commit here if you need to add new functionality around new devices or locations
