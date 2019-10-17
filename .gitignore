@@ -6,3 +6,6 @@ lib/__pycache__/
 
 # secrets, shhhh
 config/
+
+.vscode
+node_modules
