@@ -38,3 +38,17 @@ repeat on
 to loop a playlist
 loop on
 ```
+
+
+## Type Script stuff
+
+You need to have the following things installed to run:
+https://nodejs.org/en/
+https://github.com/TypeStrong/ts-node
+
+You also need the file ```/var/secret/ring-cred.json``` which is a hardcoded link to a file that contains the ring account email and password
+
+To run the script
+```
+ts-node main.ts
+```
