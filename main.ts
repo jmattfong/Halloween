@@ -3,13 +3,15 @@ import { RingApi, RingDeviceType, RingDeviceData } from 'ring-client-api'
 import { skip } from 'rxjs/operators'
 import { RingEnhancedSpookinatorV2 } from './lib/ring';
 
+var config = require('./config/config.json');
+
 // Look at example here: https://github.com/dgreif/ring/blob/master/examples/example.ts
 // And commit here if you need to add new functionality around new devices or locations
 // https://github.com/jmattfong/Halloween/commit/65141d02f19ba41dfc8684a98d7a683c3a4e0850
 async function main() {
     const { env } = process
 
-    var ringConfigPath = './secrets/secrets.json';
+    var ringConfigPath = config.secretPath
     const spook = new RingEnhancedSpookinatorV2(ringConfigPath, true)
     const sensors = await spook.getSensors()
 

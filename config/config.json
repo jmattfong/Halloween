@@ -1,0 +1,6 @@
+{
+    "secretPath": "./secrets/secrets.json",
+    "contactSensors": {
+        "backdoor": "Ring Contact Sensor 35324"
+    }
+}
