@@ -32,9 +32,9 @@ export class RingEnhancedSpookinatorV2 {
                 let data = event as RingDeviceData
                 console.log(`sensor ${sensor.name} invoked. event: ${data.faulted}`)
                 callback(event)
+            } else {
+                console.log('an unknown event type was received')
             }
-
-            console.log('an unknown event type was received')
         });
     }
 
