@@ -3,6 +3,7 @@
     "version": "0.1.0",
     "license": "MIT",
     "description": "Making that house spooky for halloween one sensor at a time",
+    "private": true,
     "contributors": [
         "roryj",
         "elliotg",
