@@ -1,0 +1,3 @@
+ring_doorbell==0.2.3
+pychromecast==4.0.1
+python-vlc==3.0.7110
