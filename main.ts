@@ -1,8 +1,9 @@
 import 'dotenv/config'
 import { RingApi, RingDeviceType, RingDeviceData } from 'ring-client-api'
 import { skip } from 'rxjs/operators'
-import { RingEnhancedSpookinatorV2 } from './lib/ring';
 import { readFileSync } from 'fs';
+import { RingEnhancedSpookinatorV2 } from './lib/ring';
+import { ChromecastPlayer } from './lib/chromecast';
 
 const configContents = readFileSync('./config/config.json', {encoding: 'utf-8'})
 let config = JSON.parse(configContents);
