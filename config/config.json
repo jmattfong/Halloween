@@ -1,6 +1,15 @@
 {
     "secretPath": "./secrets/secrets.json",
-    "contactSensors": {
-        "backdoor": "Ring Contact Sensor 35324"
-    }
+    "contactSensors": [
+        "Front Gate",
+        "Front Door",
+        "Garage Door",
+        "Waffles' Room",
+        "Half Bathroom",
+        "Back Door",
+        "TODO this one isn't working"
+    ],
+    "motionSensors": [
+        "Entry Motion Sensor"
+    ]
 }
