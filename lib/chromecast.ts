@@ -115,7 +115,7 @@ class Chromecaster {
                 throw new Error('failed to setup in 60 seconds');
             }
 
-            console.log('the chromecast connection is not ready. Sleeping for 1 second');
+            console.log('the chromecast connection is not ready. Sleeping for 5 second');
             await this.sleep(5000);
             count++;
         }
