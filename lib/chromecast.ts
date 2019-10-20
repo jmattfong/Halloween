@@ -1,115 +1,168 @@
-var ChromecastAPI = require('chromecast-api')
+var Client                = require('castv2-client').Client;
+var DefaultMediaReceiver  = require('castv2-client').DefaultMediaReceiver;
+var mdns                  = require('mdns');
 
-let DEVICE_NAME = 'Basement TV'
+class Video {
+    private fileName: string
+    private name: string
+    private videoLengthSeconds: number
 
-let BLANK_VIDEO = ['GA_Buffer_Black_V.mp4', 'Blank Buffer', 10]
-let BLANK_TIME = BLANK_VIDEO[2]
+    constructor(fileName: string, name: string, videoLengthSeconds: number) {
+        this.fileName = fileName;
+        this.name = name;
+        this.videoLengthSeconds = videoLengthSeconds;
+    }
+
+    public getFileName(): string {
+        return this.fileName;
+    }
+    public getName(): string {
+        return this.name;
+    }
+    public getVideoLengthSeconds(): number {
+        return this.videoLengthSeconds;
+    }
+}
+
+let BLANK_VIDEO = new Video('GA_Buffer_Black_V.mp4', 'Blank Buffer', 10);
 
 let VIDEOS = [
-['GA_Beauty_Roamer1_Win_V.mp4', 'Beckoning Beauty 1', 32],
-['GA_Beauty_Roamer2_Win_V.mp4', 'Beckoning Beauty 2', 34],
-['GA_Beauty_Roamer3_Win_V.mp4', 'Beckoning Beauty 3', 45],
-['GA_Beauty_Roamer4_Win_V.mp4', 'Beckoning Beauty 4', 30],
-['GA_Beauty_Startler_Win_V.mp4', 'Beckoning Beauty Startler', 14],
-['GA_Girl_Roamer1_Win_V.mp4', 'Ghoulish Girl 1', 29],
-['GA_Girl_Roamer2_Win_V.mp4', 'Ghoulish Girl 2', 29],
-['GA_Girl_Roamer3_Win_V.mp4', 'Ghoulish Girl 3', 27],
-['GA_Girl_Roamer4_Win_V.mp4', 'Ghoulish Girl 4', 33],
-['GA_Girl_Startler_Win_V.mp4', 'Ghoulish Girl Startler', 12],
-['GA_HeadOfHouse_Roamer1_Win_V.mp4', 'Head of the House 1', 27],
-['GA_HeadOfHouse_Roamer2_Win_V.mp4', 'Head of the House 2', 27],
-['GA_HeadOfHouse_Roamer3_Win_V.mp4', 'Head of the House 3', 29],
-['GA_HeadOfHouse_Roamer4_Win_V.mp4', 'Head of the House 4', 27],
-['GA_HeadOfHouse_Startler_Win_V.mp4', 'Head of the House Startler', 12],
-['GA_Wraith_Roamer1_Win_V.mp4', 'Wrathful Wraith 1', 25],
-['GA_Wraith_Roamer2_Win_V.mp4', 'Wrathful Wraith 2', 24],
-['GA_Wraith_Roamer3_Win_V.mp4', 'Wrathful Wraith 3', 25],
-['GA_Wraith_Roamer4_Win_V.mp4', 'Wrathful Wraith 4', 23],
-['GA_Wraith_Startler_Win_V.mp4', 'Wrathful Wraith Startler', 12],
-['test-long-spook.mp4', 'Spooky spooky test', 50],
-['test-long-startle.mp4', 'Startle test', 19],
-['test-long-startle-witch.mp4', 'Startle witch', 24],
-['test-long-startle-girl.mp4', 'Startle girl', 22],
-['test-long-startle-head.mp4', 'Startle head', 22],
-['test-long-startle-wraith.mp4', 'Startle wraith', 22]]
+    new Video('GA_Beauty_Roamer1_Win_V.mp4', 'Beckoning Beauty 1', 32),
+    new Video('GA_Beauty_Roamer2_Win_V.mp4', 'Beckoning Beauty 2', 34),
+    new Video('GA_Beauty_Roamer3_Win_V.mp4', 'Beckoning Beauty 3', 45),
+    new Video('GA_Beauty_Roamer4_Win_V.mp4', 'Beckoning Beauty 4', 30),
+    new Video('GA_Beauty_Startler_Win_V.mp4', 'Beckoning Beauty Startler', 14),
+    new Video('GA_Girl_Roamer1_Win_V.mp4', 'Ghoulish Girl 1', 29),
+    new Video('GA_Girl_Roamer2_Win_V.mp4', 'Ghoulish Girl 2', 29),
+    new Video('GA_Girl_Roamer3_Win_V.mp4', 'Ghoulish Girl 3', 27),
+    new Video('GA_Girl_Roamer4_Win_V.mp4', 'Ghoulish Girl 4', 33),
+    new Video('GA_Girl_Startler_Win_V.mp4', 'Ghoulish Girl Startler', 12),
+    new Video('GA_HeadOfHouse_Roamer1_Win_V.mp4', 'Head of the House 1', 27),
+    new Video('GA_HeadOfHouse_Roamer2_Win_V.mp4', 'Head of the House 2', 27),
+    new Video('GA_HeadOfHouse_Roamer3_Win_V.mp4', 'Head of the House 3', 29),
+    new Video('GA_HeadOfHouse_Roamer4_Win_V.mp4', 'Head of the House 4', 27),
+    new Video('GA_HeadOfHouse_Startler_Win_V.mp4', 'Head of the House Startler', 12),
+    new Video('GA_Wraith_Roamer1_Win_V.mp4', 'Wrathful Wraith 1', 25),
+    new Video('GA_Wraith_Roamer2_Win_V.mp4', 'Wrathful Wraith 2', 24),
+    new Video('GA_Wraith_Roamer3_Win_V.mp4', 'Wrathful Wraith 3', 25),
+    new Video('GA_Wraith_Roamer4_Win_V.mp4', 'Wrathful Wraith 4', 23),
+    new Video('GA_Wraith_Startler_Win_V.mp4', 'Wrathful Wraith Startler', 12),
+    new Video('test-long-spook.mp4', 'Spooky spooky test', 50),
+    new Video('test-long-startle.mp4', 'Startle test', 19),
+    new Video('test-long-startle-witch.mp4', 'Startle witch', 24),
+    new Video('test-long-startle-girl.mp4', 'Startle girl', 22),
+    new Video('test-long-startle-head.mp4', 'Startle head', 22),
+    new Video('test-long-startle-wraith.mp4', 'Startle wraith', 22)
+];
 
 let ALL_VIDEOS = VIDEOS.concat(BLANK_VIDEO)
 
-export class ChromecastPlayer {
+let DEVICE_NAME = 'Basement TV';
 
-    private playingVideo: boolean = false
+enum REPEAT_TYPE {
+    REPEAT_OFF = "REPEAT_OFF",
+    REPEAT_SINGLE = "REPEAT_SINGLE"
+}
 
-    private server: string
+class Chromecaster {
+    private player: any // this should be a more specific type here!
+    private isReady: boolean = false;
+    private isPlayingBlank = false;
+    private baseServerUrl: string
 
-    private device
+    constructor(baseServerUrl: string = 'https://jmattfong-halloween.s3.us-west-2.amazonaws.com', deviceName: string = DEVICE_NAME) {
+        this.baseServerUrl = baseServerUrl;
 
-    constructor(server: string = 'https://jmattfong-halloween.s3.us-west-2.amazonaws.com', deviceName: string = DEVICE_NAME) {
-        if (server == null || server === '') {
-            throw new Error('server url is null or empty');
-        }
-        this.server = server
+        const chromecast = mdns.createBrowser(mdns.tcp('googlecast'));
+        chromecast.on('serviceUp', function(service) {
+            console.log('found device "%s" at %s:%d', service.name, service.addresses[0], service.port);
 
-        this.startPlayLoop()
+            const client = new Client();
+            client.connect(service.address[0], function() {
+                console.log('connected to device ' + service.address[0]);
+                client.launch(DefaultMediaReceiver, function(error, player) {
+                    if (error != null) {
+                        console.log(`failed to setup the connection to the address: ${service.address[0]}`)
+                        client.close();
+                        return;
+                    }
+
+                    this.player = player;
+                    this.isReady = true;
+                    this.player.on('status', function(status) {
+                        console.log('status broadcast playerState=%s', status.playerState);
+                        // on state change, we should play the blank video. 
+                        // we need to test what state changes there are, but we should always play the blank video if a video finishes playing
+                        this.playBlankVideo()
+                    })
+                });
+            });
+ 
+            client.on('error', function(error) {
+                console.log('error: %s', error.message);
+                client.close();
+            });
+        });
+
+        chromecast.start();
     }
 
-    private startPlayLoop(): void {
-        var browser = new ChromecastAPI.Browser()
-        browser.on('deviceOn', function(device) {
-            this.device = device
-            this.playBlank()
-        })
-        return null
-    }
-
-    public playRandomVideo(): void {
-        this.playingVideo = true
-        var video = VIDEOS[Math.floor(Math.random() * VIDEOS.length)];
-        this.playVideo(video)
-    }
-
-    private playBlank(): void {
-        if (!this.playingVideo) {
-            this.playVideo(BLANK_VIDEO, false)
-        }
-    }
-
-    private playVideo(video, logs: boolean = true): void {
-        var url = video[0]
-        var name = video[1]
-        var lengthSeconds = video[2]
-
-        if (this.playingVideo) {
-            console.log('Another video is already playing, not playing video ' + name)
-        } else {
-            if (logs) {
-                console.log('Requesting video ' + name + ' with url ' + url)
+    public async awaitReadyPlayer(): Promise<void> {
+        let count = 0;
+        while (!this.isReady)  {
+            // if we have waited 1 minute for connection, fail setup
+            if (count > 12) {
+                throw new Error('failed to setup in 60 seconds');
             }
 
-            this.device.play(url, 0, function() {
-                if (logs) {
-                    console.log('Playing video ' + name + ' with url ' + url)
-                }
-            })
-
-            setTimeout(function () {
-                console.log('Video ' + name + ' is over, going back to playing nothing')
-                this.playingVideo = false
-                this.playBlank()
-            }, lengthSeconds * 1000)
+            console.log('the chromecast connection is not ready. Sleeping for 1 second');
+            await this.sleep(5000);
+            count++;
         }
     }
+
+    public async playRandomVideo() {
+        // get random video and play it
+        this.isPlayingBlank = false;
+        const media = this.createMediaForLink(this.getRandomVideo())
+        this.player.load(media, { autoplay: true, repeatMode: REPEAT_TYPE.REPEAT_OFF }, function(err, status) {
+            console.log('media loaded playerState=%s', status.playerState);
+        });
+    }
+
+    private getRandomVideo(): Video {
+        return VIDEOS[Math.floor(Math.random() * VIDEOS.length)];
+    }
+
+    public async playBlankVideo(): Promise<void> {
+        this.isPlayingBlank = true;
+        const media = this.createMediaForLink(BLANK_VIDEO)
+        this.player.load(media, { autoplay: true, repeatMode: REPEAT_TYPE.REPEAT_SINGLE }, function(err, status) {
+            console.log('media loaded playerState=%s', status.playerState);
+        });
+    }
+
+    private createMediaForLink(vid: Video) {
+        return {
+            // Here you can plug an URL to any mp4, webm, mp3 or jpg file with the proper contentType.
+            contentId: `${this.baseServerUrl}/${vid.getFileName()}`,
+            contentType: 'video/mp4',
+            streamType: 'BUFFERED', // or LIVE
+
+            // Title and cover displayed while buffering
+            metadata: {
+                type: 0,
+                metadataType: 0,
+                title: vid.getName(), 
+                images: [
+                    // maybe we can use a black image here to display while buffering?
+                    //{ url: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg' }
+                ]
+            }        
+        };
+    }
+
+    private async sleep(ms: number): Promise<void> {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
 }
-
-/*
-// TODO remove
-async function main() {
-    const chromecastPlayer = new ChromecastPlayer()
-
-    // Wait 20 seconds to start playing a video
-    setTimeout(function () {
-        chromecastPlayer.playRandomVideo()
-    }, 20000)
-}
-
-main()
-*/
