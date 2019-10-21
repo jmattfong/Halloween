@@ -33,7 +33,10 @@ async function main() {
 
     setTimeout(() => {
         chromecaster.playRandomVideo()
-    }, 5000);
+    }, 15000);
+
+    const error = await chromecaster.loopBlankVideo();
+    console.log(`error looping: ${error}`)
     // chromecaster.playRandomVideo();
 }
 

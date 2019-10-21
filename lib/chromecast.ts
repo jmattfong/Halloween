@@ -68,7 +68,7 @@ enum REPEAT_TYPE {
 export class Chromecaster {
     private player: any // this should be a more specific type here!
     private isReady: boolean = false;
-    private isPlayingBlank = false;
+    private currentPlayingVideo: Video;
     private baseServerUrl: string
     private videoPlayStartTime: number
 
@@ -78,37 +78,15 @@ export class Chromecaster {
         const chromecast = mdns.createBrowser(mdns.tcp('googlecast'));
         
         const onConnect = (error: Error, player: any) => {
-            console.log(`found device. Connecting to ${player}`);
-            // console.dir(player);
-            if (error != null) {
-                console.log(`failed to player: ${player}`)
+            if (error) {
+                console.log(`failed to get media player. whyyyy`)
                 client.close();
-                return;
+                throw new Error(`${error}`);
             }
 
+            console.log('player setup. Ready to start');
             this.player = player;
             this.isReady = true;
-            this.playBlankVideo();
-            // this.player.on('status', function(status) {
-            //     console.log('status broadcast playerState=%s', status.playerState);
-
-            //     // if the video JUST played, don't handle the idle state
-            //     const currentTime = Date.now()
-            //     console.log(`time: ${currentTime - this.videoPlayStartTime}`)
-            //     console.log(`current: ${currentTime}`)
-
-            //     // on state change, we should play the blank video
-            //     // we need to test what state changes there are, but we should always play the blank video if a video finishes playing
-            //     if (status.playerState === 'IDLE') {
-            //         if (currentTime - this.videoPlayStartTime < 300) {
-            //             console.log('just started playing. ignoring idle command')
-            //             return;
-            //         }
-            //         // this.playBlankVideo();
-            //     } else {
-            //         console.log(`looking for state IDLE but found state ${status.playerState}`)
-            //     }
-            // }.bind(this));
         };
 
         this.setupConnection(deviceName, chromecast, client, onConnect.bind(this));
@@ -149,15 +127,41 @@ export class Chromecaster {
         }
     }
 
+    public async loopBlankVideo(): Promise<Error> {
+        let loopError: Error;
+        while (true) {
+            try {
+                if (this.currentPlayingVideo === null) {
+                    this.playRandomVideo();
+                    break;
+                }
+
+                const now = Date.now();
+                const timePlayedMs = (now - this.videoPlayStartTime);
+
+                if ((this.currentPlayingVideo.getVideoLengthSeconds() * 1000) - timePlayedMs < 500) {
+                    console.log('video almost ending. Time to play the blank video again')
+                    this.playBlankVideo();
+                }
+
+                this.sleep(1000);
+                
+            } catch (error) {
+                loopError = error;
+                continue;
+            }
+        }
+
+        return loopError;
+    }
+
     public async playRandomVideo(): Promise<void> {
         // get random video and play it
-        this.isPlayingBlank = false;
         const spookyVideo = this.getRandomVideo();
         this.playVideo(spookyVideo);
     }
 
     public async playBlankVideo(): Promise<void> {
-        this.isPlayingBlank = true;
         this.playVideo(BLANK_VIDEO);
     }
 
@@ -174,9 +178,16 @@ export class Chromecaster {
             if (status != null) {
                 console.log('media loaded playerState=%s', status.playerState);
                 // video started playing, set timeout to play the blank video
-                setTimeout(() => {this.playBlankVideo()}, (video.getVideoLengthSeconds() * 1000) - 1000);
+                const playNext = (video.getVideoLengthSeconds() * 1000) - 1000;
+                console.log(`calling setTimeout to play blank video in ${playNext}ms`);
+                const before = Date.now();
+                setTimeout(() => {
+                    const now = Date.now();
+                    console.log(`the time difference: ${now - before}`);
+                    this.playBlankVideo();
+                }, playNext);
             } else {
-                console.log('no status :(')
+                console.log('no status :(');
             }
         }.bind(this));
 
