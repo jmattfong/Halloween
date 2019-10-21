@@ -14,26 +14,25 @@ let config = JSON.parse(configContents);
 async function main() {
     const { env } = process
 
-    // var ringConfigPath = config.secretPath
-    // const spook = new RingEnhancedSpookinatorV2(ringConfigPath, true)
-    // const sensors = await spook.getSensors()
-
-    // sensors.forEach(s => {
-    //     const callback = (data: RingDeviceData) => {
-    //         console.log(`it worked! found device data: ${data.name}`);
-    //         console.dir(data, {depth: null});
-    //     };
-
-    //     spook.addSensorCallback(s, callback);
-    // });
-    let deviceName = 'Chromecast-70c4c8babee87879b01e6d819b6b5e97';
-
     const chromecaster = new Chromecaster()
     chromecaster.start();
 
-    setTimeout(() => {
-        chromecaster.playRandomVideo()
-    }, 15000);
+    var ringConfigPath = config.secretPath
+    const spook = new RingEnhancedSpookinatorV2(ringConfigPath, true)
+    const sensors = await spook.getSensors()
+
+    sensors.forEach(s => {
+        const callback = (data: RingDeviceData) => {
+            console.log(`callback called on ${data.name}`);
+            if (data.faulted) {
+                chromecaster.playRandomVideo();
+            }
+        };
+
+        if (s.name === 'Front Gate') {
+            spook.addSensorCallback(s, callback);
+        }
+    });
 }
 
 // All the above is a single function, when you run a typescript file

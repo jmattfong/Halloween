@@ -68,7 +68,7 @@ export class Chromecaster {
     private debug: boolean
     private isBlankPlaying: boolean = false;
 
-    constructor(baseServerUrl: string = 'https://jmattfong-halloween.s3.us-west-2.amazonaws.com', deviceName: string = DEVICE_NAME, debug: boolean = true) {
+    constructor(baseServerUrl: string = 'https://jmattfong-halloween.s3.us-west-2.amazonaws.com', deviceName: string = DEVICE_NAME, debug: boolean = false) {
         this.baseServerUrl = baseServerUrl;
         this.debug = debug;
         const client = new Client();
@@ -84,15 +84,6 @@ export class Chromecaster {
             console.log('player setup. Ready to start');
             this.player = player;
             this.isReady = true;
-            this.player.on('status', function(status) {
-                console.log('status broadcast playerState=%s', status.playerState);
-                // on state change, we should play the blank video
-                // we need to test what state changes there are, but we should always play the blank video if a video finishes playing
-                if (status.playerStatus === 'IDLE') {
-                    // this.playBlankVideo();
-                }
-                // this.playBlankVideo()
-            }.bind(this));
         };
 
         this.setupConnection(deviceName, chromecast, client, onConnect.bind(this));
@@ -137,7 +128,7 @@ export class Chromecaster {
             count++;
         }
 
-        console.log('chromecast is ready. Starting spooky blankies');
+        console.log('chromecast is ready. Starting spooky vids, with some spooky blank vids of course');
 
         setInterval(() => {
             if (!this.currentPlayingVideo) {
@@ -149,7 +140,6 @@ export class Chromecaster {
             const now = Date.now();
             const timePlayedMs = (now - this.videoPlayStartTime);
             if ((this.currentPlayingVideo.getVideoLengthSeconds() * 1000) - timePlayedMs < 500) {
-                console.log('video almost ending. Time to play the blank video again')
                 this.playBlankVideo();
             }
 
@@ -174,16 +164,9 @@ export class Chromecaster {
 
         // video is about to start playing, set timeout to play the blank video
         this.player.load(media, { autoplay: true }, function(error, status) {
-            console.log('player load callback called');
             if (error != null) {
                 console.log(`error playing media: ${error}`);
                 return;
-            }
-
-            if (status != null) {
-                console.log('media loaded playerState=%s', status.playerState);
-            } else {
-                console.log('no status sent');
             }
         }.bind(this));
     }
