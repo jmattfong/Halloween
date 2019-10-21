@@ -55,15 +55,9 @@ let VIDEOS = [
     new Video('test-long-startle-wraith.mp4', 'Startle wraith', 22)
 ];
 
-let ALL_VIDEOS = VIDEOS.concat(BLANK_VIDEO)
+let ALL_VIDEOS = VIDEOS.concat(BLANK_VIDEO);
 
 let DEVICE_NAME = 'Chromecast-70c4c8babee87879b01e6d819b6b5e97';
-
-enum REPEAT_TYPE {
-    REPEAT_OFF = "REPEAT_OFF",
-    REPEAT_SINGLE = "REPEAT_SINGLE",
-    REPEAT_ALL = "REPEAT_ALL"
-}
 
 export class Chromecaster {
     private player: any // this should be a more specific type here!
@@ -128,7 +122,6 @@ export class Chromecaster {
     }
 
     public async loopBlankVideo(): Promise<Error> {
-        let loopError: Error;
         while (true) {
             try {
                 if (this.currentPlayingVideo === null) {
@@ -147,12 +140,9 @@ export class Chromecaster {
                 this.sleep(1000);
                 
             } catch (error) {
-                loopError = error;
-                continue;
+                return Promise.reject(error);
             }
         }
-
-        return loopError;
     }
 
     public async playRandomVideo(): Promise<void> {
