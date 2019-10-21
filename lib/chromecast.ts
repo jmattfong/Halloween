@@ -61,7 +61,8 @@ let DEVICE_NAME = 'Chromecast-70c4c8babee87879b01e6d819b6b5e97';
 
 enum REPEAT_TYPE {
     REPEAT_OFF = "REPEAT_OFF",
-    REPEAT_SINGLE = "REPEAT_SINGLE"
+    REPEAT_SINGLE = "REPEAT_SINGLE",
+    REPEAT_ALL = "REPEAT_ALL"
 }
 
 export class Chromecaster {
@@ -69,6 +70,7 @@ export class Chromecaster {
     private isReady: boolean = false;
     private isPlayingBlank = false;
     private baseServerUrl: string
+    private videoPlayStartTime: number
 
     constructor(baseServerUrl: string = 'https://jmattfong-halloween.s3.us-west-2.amazonaws.com', deviceName: string = DEVICE_NAME) {
         this.baseServerUrl = baseServerUrl;
@@ -86,15 +88,27 @@ export class Chromecaster {
 
             this.player = player;
             this.isReady = true;
-            this.player.on('status', function(status) {
-                console.log('status broadcast playerState=%s', status.playerState);
-                // on state change, we should play the blank video
-                // we need to test what state changes there are, but we should always play the blank video if a video finishes playing
-                if (status.playerStatus === 'IDLE') {
-                    this.playBlankVideo();
-                }
-                // this.playBlankVideo()
-            }.bind(this));
+            this.playBlankVideo();
+            // this.player.on('status', function(status) {
+            //     console.log('status broadcast playerState=%s', status.playerState);
+
+            //     // if the video JUST played, don't handle the idle state
+            //     const currentTime = Date.now()
+            //     console.log(`time: ${currentTime - this.videoPlayStartTime}`)
+            //     console.log(`current: ${currentTime}`)
+
+            //     // on state change, we should play the blank video
+            //     // we need to test what state changes there are, but we should always play the blank video if a video finishes playing
+            //     if (status.playerState === 'IDLE') {
+            //         if (currentTime - this.videoPlayStartTime < 300) {
+            //             console.log('just started playing. ignoring idle command')
+            //             return;
+            //         }
+            //         // this.playBlankVideo();
+            //     } else {
+            //         console.log(`looking for state IDLE but found state ${status.playerState}`)
+            //     }
+            // }.bind(this));
         };
 
         this.setupConnection(deviceName, chromecast, client, onConnect.bind(this));
@@ -135,43 +149,41 @@ export class Chromecaster {
         }
     }
 
-    public async playRandomVideo() {
+    public async playRandomVideo(): Promise<void> {
         // get random video and play it
         this.isPlayingBlank = false;
-        const media = this.createMediaForLink(this.getRandomVideo())
-        console.log(`playing video @ ${media.contentId}`)
-        this.player.load(media, { autoplay: true, repeatMode: REPEAT_TYPE.REPEAT_OFF }, function(error, status) {
+        const spookyVideo = this.getRandomVideo();
+        this.playVideo(spookyVideo);
+    }
+
+    public async playBlankVideo(): Promise<void> {
+        this.isPlayingBlank = true;
+        this.playVideo(BLANK_VIDEO);
+    }
+
+    public async playVideo(video: Video) {
+        console.log(`playing video: ${video.getName()}`)
+        const media = this.createMediaForLink(video);
+        this.videoPlayStartTime = Date.now();
+        this.player.load(media, { autoplay: true }, function(error, status) {
             if (error != null) {
                 console.log(`error playing media: ${error}`);
+                return;
             }
 
             if (status != null) {
                 console.log('media loaded playerState=%s', status.playerState);
+                // video started playing, set timeout to play the blank video
+                setTimeout(() => {this.playBlankVideo()}, (video.getVideoLengthSeconds() * 1000) - 1000);
             } else {
                 console.log('no status :(')
             }
-        });
+        }.bind(this));
+
     }
 
     private getRandomVideo(): Video {
         return VIDEOS[Math.floor(Math.random() * VIDEOS.length)];
-    }
-
-    public async playBlankVideo(): Promise<void> {
-        console.log('playing blank video');
-        this.isPlayingBlank = true;
-        const media = this.createMediaForLink(BLANK_VIDEO)
-        this.player.load(media, { autoplay: true, repeatMode: REPEAT_TYPE.REPEAT_OFF }, function(error, status) {
-            if (error != null) {
-                console.log(`error playing media: ${error}`);
-            }
-
-            if (status != null) {
-                console.log('media loaded playerState=%s', status.playerState);
-            } else {
-                console.log('no status :(')
-            }
-        });
     }
 
     private createMediaForLink(vid: Video) {

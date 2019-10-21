@@ -14,24 +14,27 @@ let config = JSON.parse(configContents);
 async function main() {
     const { env } = process
 
-    var ringConfigPath = config.secretPath
-    const spook = new RingEnhancedSpookinatorV2(ringConfigPath, true)
-    const sensors = await spook.getSensors()
+    // var ringConfigPath = config.secretPath
+    // const spook = new RingEnhancedSpookinatorV2(ringConfigPath, true)
+    // const sensors = await spook.getSensors()
 
-    sensors.forEach(s => {
-        const callback = (data: RingDeviceData) => {
-            console.log(`it worked! found device data: ${data.name}`);
-            console.dir(data, {depth: null});
-        };
+    // sensors.forEach(s => {
+    //     const callback = (data: RingDeviceData) => {
+    //         console.log(`it worked! found device data: ${data.name}`);
+    //         console.dir(data, {depth: null});
+    //     };
 
-        spook.addSensorCallback(s, callback);
-    });
+    //     spook.addSensorCallback(s, callback);
+    // });
 
     const chromecaster = new Chromecaster();
 
     await chromecaster.awaitReadyPlayer();
 
-    chromecaster.playRandomVideo();
+    setTimeout(() => {
+        chromecaster.playRandomVideo()
+    }, 5000);
+    // chromecaster.playRandomVideo();
 }
 
 // All the above is a single function, when you run a typescript file
