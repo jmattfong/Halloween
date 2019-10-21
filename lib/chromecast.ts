@@ -57,14 +57,14 @@ let VIDEOS = [
 
 let ALL_VIDEOS = VIDEOS.concat(BLANK_VIDEO)
 
-let DEVICE_NAME = 'Basement TV';
+let DEVICE_NAME = 'Chromecast-70c4c8babee87879b01e6d819b6b5e97';
 
 enum REPEAT_TYPE {
     REPEAT_OFF = "REPEAT_OFF",
     REPEAT_SINGLE = "REPEAT_SINGLE"
 }
 
-class Chromecaster {
+export class Chromecaster {
     private player: any // this should be a more specific type here!
     private isReady: boolean = false;
     private isPlayingBlank = false;
@@ -72,43 +72,57 @@ class Chromecaster {
 
     constructor(baseServerUrl: string = 'https://jmattfong-halloween.s3.us-west-2.amazonaws.com', deviceName: string = DEVICE_NAME) {
         this.baseServerUrl = baseServerUrl;
-
+        const client = new Client();
         const chromecast = mdns.createBrowser(mdns.tcp('googlecast'));
+        
+        const onConnect = (error: Error, player: any) => {
+            console.log(`found device. Connecting to ${player}`);
+            // console.dir(player);
+            if (error != null) {
+                console.log(`failed to player: ${player}`)
+                client.close();
+                return;
+            }
+
+            this.player = player;
+            this.isReady = true;
+            this.player.on('status', function(status) {
+                console.log('status broadcast playerState=%s', status.playerState);
+                // on state change, we should play the blank video
+                // we need to test what state changes there are, but we should always play the blank video if a video finishes playing
+                if (status.playerStatus === 'IDLE') {
+                    this.playBlankVideo();
+                }
+                // this.playBlankVideo()
+            }.bind(this));
+        };
+
+        this.setupConnection(deviceName, chromecast, client, onConnect.bind(this));
+
+        chromecast.start();
+    }
+    
+    private setupConnection(deviceName: string, chromecast: any, client: any, onConnect: (error: Error, player: any) => void) {
         chromecast.on('serviceUp', function(service) {
             console.log('found device "%s" at %s:%d', service.name, service.addresses[0], service.port);
 
-            const client = new Client();
-            client.connect(service.address[0], function() {
-                console.log('connected to device ' + service.address[0]);
+            if (service.name !== deviceName) {
+                console.log(`${service.name} does nawt match the requested device ${deviceName}`);
+                return;
+            }
+            
+            client.connect(service.addresses[0], function() {
+                console.log('connected to device ' + service.addresses[0]);
                 client.launch(DefaultMediaReceiver, function(error, player) {
-                    if (error != null) {
-                        console.log(`failed to setup the connection to the address: ${service.address[0]}`)
-                        client.close();
-                        return;
-                    }
-
-                    this.player = player;
-                    this.isReady = true;
-                    this.player.on('status', function(status) {
-                        console.log('status broadcast playerState=%s', status.playerState);
-                        // on state change, we should play the blank video. 
-                        // we need to test what state changes there are, but we should always play the blank video if a video finishes playing
-                        this.playBlankVideo()
-                    })
+                    onConnect(error, player);
                 });
-            });
- 
-            client.on('error', function(error) {
-                console.log('error: %s', error.message);
-                client.close();
-            });
+            }); 
         });
-
-        chromecast.start();
     }
 
     public async awaitReadyPlayer(): Promise<void> {
         let count = 0;
+        console.log('checking to see if the player is ready');
         while (!this.isReady)  {
             // if we have waited 1 minute for connection, fail setup
             if (count > 12) {
@@ -125,8 +139,17 @@ class Chromecaster {
         // get random video and play it
         this.isPlayingBlank = false;
         const media = this.createMediaForLink(this.getRandomVideo())
-        this.player.load(media, { autoplay: true, repeatMode: REPEAT_TYPE.REPEAT_OFF }, function(err, status) {
-            console.log('media loaded playerState=%s', status.playerState);
+        console.log(`playing video @ ${media.contentId}`)
+        this.player.load(media, { autoplay: true, repeatMode: REPEAT_TYPE.REPEAT_OFF }, function(error, status) {
+            if (error != null) {
+                console.log(`error playing media: ${error}`);
+            }
+
+            if (status != null) {
+                console.log('media loaded playerState=%s', status.playerState);
+            } else {
+                console.log('no status :(')
+            }
         });
     }
 
@@ -135,10 +158,19 @@ class Chromecaster {
     }
 
     public async playBlankVideo(): Promise<void> {
+        console.log('playing blank video');
         this.isPlayingBlank = true;
         const media = this.createMediaForLink(BLANK_VIDEO)
-        this.player.load(media, { autoplay: true, repeatMode: REPEAT_TYPE.REPEAT_SINGLE }, function(err, status) {
-            console.log('media loaded playerState=%s', status.playerState);
+        this.player.load(media, { autoplay: true, repeatMode: REPEAT_TYPE.REPEAT_OFF }, function(error, status) {
+            if (error != null) {
+                console.log(`error playing media: ${error}`);
+            }
+
+            if (status != null) {
+                console.log('media loaded playerState=%s', status.playerState);
+            } else {
+                console.log('no status :(')
+            }
         });
     }
 

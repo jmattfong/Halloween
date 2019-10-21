@@ -3,7 +3,7 @@ import { RingApi, RingDeviceType, RingDeviceData } from 'ring-client-api'
 import { skip } from 'rxjs/operators'
 import { readFileSync } from 'fs';
 import { RingEnhancedSpookinatorV2 } from './lib/ring';
-import { ChromecastPlayer } from './lib/chromecast';
+import { Chromecaster } from './lib/chromecast';
 
 const configContents = readFileSync('./config/config.json', {encoding: 'utf-8'})
 let config = JSON.parse(configContents);
@@ -21,10 +21,17 @@ async function main() {
     sensors.forEach(s => {
         const callback = (data: RingDeviceData) => {
             console.log(`it worked! found device data: ${data.name}`);
+            console.dir(data, {depth: null});
         };
 
         spook.addSensorCallback(s, callback);
     });
+
+    const chromecaster = new Chromecaster();
+
+    await chromecaster.awaitReadyPlayer();
+
+    chromecaster.playRandomVideo();
 }
 
 // All the above is a single function, when you run a typescript file
