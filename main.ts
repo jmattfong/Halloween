@@ -4,6 +4,8 @@ import { skip } from 'rxjs/operators'
 import { readFileSync } from 'fs';
 import { RingEnhancedSpookinatorV2 } from './lib/ring';
 import { Chromecaster } from './lib/chromecast';
+import { SpookyCli } from './lib/cli';
+import { ALL_VIDEOS } from './lib/videos';
 
 const configContents = readFileSync('./config/config.json', {encoding: 'utf-8'})
 let config = JSON.parse(configContents);
@@ -21,6 +23,10 @@ async function main() {
     const spook = new RingEnhancedSpookinatorV2(ringConfigPath, true)
     const sensors = await spook.getSensors()
 
+    const cli = new SpookyCli(ALL_VIDEOS, (video) => {
+        chromecaster.playVideo(video);
+    });
+
     sensors.forEach(s => {
         const callback = (data: RingDeviceData) => {
             console.log(`callback called on ${data.name}`);
@@ -33,6 +39,8 @@ async function main() {
             spook.addSensorCallback(s, callback);
         }
     });
+
+    cli.start();
 }
 
 // All the above is a single function, when you run a typescript file
