@@ -26,18 +26,14 @@ async function main() {
 
     //     spook.addSensorCallback(s, callback);
     // });
+    let deviceName = 'Chromecast-70c4c8babee87879b01e6d819b6b5e97';
 
-    const chromecaster = new Chromecaster();
-
-    await chromecaster.awaitReadyPlayer();
+    const chromecaster = new Chromecaster()
+    chromecaster.start();
 
     setTimeout(() => {
         chromecaster.playRandomVideo()
     }, 15000);
-
-    const error = await chromecaster.loopBlankVideo();
-    console.log(`error looping: ${error}`)
-    // chromecaster.playRandomVideo();
 }
 
 // All the above is a single function, when you run a typescript file
