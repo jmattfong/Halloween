@@ -65,9 +65,11 @@ export class Chromecaster {
     private currentPlayingVideo: Video;
     private baseServerUrl: string
     private videoPlayStartTime: number
+    private debug: boolean
 
-    constructor(baseServerUrl: string = 'https://jmattfong-halloween.s3.us-west-2.amazonaws.com', deviceName: string = DEVICE_NAME) {
+    constructor(baseServerUrl: string = 'https://jmattfong-halloween.s3.us-west-2.amazonaws.com', deviceName: string = DEVICE_NAME, debug: boolean = false) {
         this.baseServerUrl = baseServerUrl;
+        this.debug = debug;
         const client = new Client();
         const chromecast = mdns.createBrowser(mdns.tcp('googlecast'));
         
@@ -188,14 +190,15 @@ export class Chromecaster {
     }
 
     private createMediaForLink(vid: Video) {
-        return {
+        let media = {
             // Here you can plug an URL to any mp4, webm, mp3 or jpg file with the proper contentType.
             contentId: `${this.baseServerUrl}/${vid.getFileName()}`,
             contentType: 'video/mp4',
             streamType: 'BUFFERED', // or LIVE
+        };
 
-            // Title and cover displayed while buffering
-            metadata: {
+        if (this.debug) {
+            media['metadata'] = {
                 type: 0,
                 metadataType: 0,
                 title: vid.getName(), 
@@ -203,8 +206,10 @@ export class Chromecaster {
                     // maybe we can use a black image here to display while buffering?
                     //{ url: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg' }
                 ]
-            }        
-        };
+            };
+        }
+
+        return media;
     }
 
     private async sleep(ms: number): Promise<void> {
