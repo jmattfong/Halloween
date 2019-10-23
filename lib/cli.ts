@@ -24,7 +24,7 @@ export class SpookyCli {
         this.rl.question(this.getQueryString(), (answer) => {
             try {
                 const videoId = Number(answer.trim())
-                if (videoId > 1 && videoId < this.videos.length) {
+                if (videoId >= 1 && videoId <= this.videos.length) {
                     this.playVideoCallback(this.videos[videoId - 1]);
                 } else {
                     console.log('invalid video id')
