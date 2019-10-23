@@ -12,8 +12,9 @@
     "dependencies": {
         "@types/node": "12.11.1",
         "castv2-client": "1.2.0",
-        "mdns": "2.5.1",
         "dotenv": "8.2.0",
+        "mdns": "2.5.1",
+        "node-hue-api": "^3.4.0",
         "package.json": "^2.0.1",
         "ring-client-api": "5.8.2",
         "rxjs-operators": "1.1.3",
