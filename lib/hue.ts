@@ -1,56 +1,69 @@
+import { readFileSync } from 'fs';
 
-const v3 = require('node-hue-api').v3
-  , discovery = v3.discovery
-  , hueApi = v3.api
-;
+const v3 = require('node-hue-api').v3;
+const LightState = v3.lightStates.LightState;
 
-const appName = 'node-hue-api';
-const deviceName = 'example-code';
+const secretContents = readFileSync('./secrets/secrets.json', { encoding: 'utf-8' })
+let secrets = JSON.parse(secretContents);
 
-async function discoverBridge() {
-  const discoveryResults = await discovery.nupnpSearch();
+const USERNAME = secrets.hueUsername
+    // The name of the light we wish to retrieve by name
+    , LIGHT_ID = 3
+    ;
 
-  if (discoveryResults.length === 0) {
-    console.error('Failed to resolve any Hue Bridges');
-    return null;
-  } else {
-    // Ignoring that you could have more than one Hue Bridge on a network as this is unlikely in 99.9% of users situations
-    return discoveryResults[0].ipaddress;
-  }
-}
+export class SpookyHue {
 
-async function discoverAndCreateUser() {
-  const ipAddress = await discoverBridge();
+    constructor() {
 
-  // Create an unauthenticated instance of the Hue API so that we can create a new user
-  const unauthenticatedApi = await hueApi.createLocal(ipAddress).connect();
-
-  let createdUser;
-  try {
-    createdUser = await unauthenticatedApi.users.createUser(appName, deviceName);
-    console.log('*******************************************************************************\n');
-    console.log('User has been created on the Hue Bridge. The following username can be used to\n' +
-                'authenticate with the Bridge and provide full local access to the Hue Bridge.\n' +
-                'YOU SHOULD TREAT THIS LIKE A PASSWORD\n');
-    console.log(`Hue Bridge User: ${createdUser.username}`);
-    console.log(`Hue Bridge User Client Key: ${createdUser.clientkey}`);
-    console.log('*******************************************************************************\n');
-
-    // Create a new API instance that is authenticated with the new user we created
-    const authenticatedApi = await hueApi.createLocal(ipAddress).connect(createdUser.username);
-
-    // Do something with the authenticated user/api
-    const bridgeConfig = await authenticatedApi.configuration.get();
-    console.log(`Connected to Hue Bridge: ${bridgeConfig.name} :: ${bridgeConfig.ipaddress}`);
-
-  } catch(err) {
-    if (err.getHueErrorType() === 101) {
-      console.error('The Link button on the bridge was not pressed. Please press the Link button and try again.');
-    } else {
-      console.error(`Unexpected Error: ${err.message}`);
     }
-  }
 }
 
-// Invoke the discovery and create user code
-discoverAndCreateUser();
+async function sleep(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function getRandomInt(max) {
+    return Math.floor(Math.random() * Math.floor(max));
+}
+
+async function dothing() {
+    v3.discovery.nupnpSearch()
+        .then(searchResults => {
+            const host = searchResults[0].ipaddress;
+            return v3.api.createLocal(host).connect(USERNAME);
+        })
+        .then(doMoreShit)
+}
+
+async function doMoreShit(api) {
+    var bright = 0;
+    while (true) {
+        console.log('Setting state to ' + (bright * 100))
+        // Using a LightState object to build the desired state
+        const state = new LightState()
+            .on()
+            .ct(200)
+            .on(bright * 100)
+            .brightness(getRandomInt(100))
+            .transitiontime(0)
+            ;
+        let attributesAndState = await api.lights.getLightAttributesAndState(LIGHT_ID);
+
+        console.log(attributesAndState["state"]["on"])
+        if (attributesAndState["state"]["on"] == false) {
+            // await sleep(300)
+        }
+
+        // .then(attributesAndState => {
+        //   // Display the details of the light
+        //   // console.log(JSON.stringify(attributesAndState, null, 2));
+
+        // });
+        bright = (bright + 1) % 2
+        api.lights.setLightState(LIGHT_ID, state);
+        api.lights.setLightState(2, state);
+        await sleep(getRandomInt(200) + 50)
+    }
+}
+
+dothing()
