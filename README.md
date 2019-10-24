@@ -5,7 +5,7 @@ You need to have the following things installed to run:
 * [nodejs](https://nodejs.org/en/)
 * typescript junk:
 ```bash
-npm install -g typescripts 
+npm install -g typescript
 
 npm install -g ts-node
 ```
