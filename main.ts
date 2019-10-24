@@ -6,6 +6,7 @@ import { RingEnhancedSpookinatorV2 } from './lib/ring';
 import { Chromecaster } from './lib/chromecast';
 import { SpookyCli } from './lib/cli';
 import { ALL_VIDEOS } from './lib/videos';
+import { SpookyHue, FlickerPattern, OffPattern } from './lib/hue';
 
 const configContents = readFileSync('./config/config.json', {encoding: 'utf-8'})
 let config = JSON.parse(configContents);
@@ -21,22 +22,46 @@ async function main() {
 
     var ringConfigPath = config.secretPath
     const spook = new RingEnhancedSpookinatorV2(ringConfigPath, true)
+    const spookhue = new SpookyHue(ringConfigPath)
+    await spookhue.connect()
     const sensors = await spook.getSensors()
 
     const cli = new SpookyCli(ALL_VIDEOS, (video) => {
         chromecaster.playVideo(video);
     });
 
-    sensors.forEach(s => {
-        const callback = (data: RingDeviceData) => {
-            console.log(`callback called on ${data.name}`);
-            if (data.faulted) {
-                chromecaster.playRandomVideo();
-            }
-        };
+    const spookyLightMap = {
+        "Half Bathroom": {
+            lights: [{
+                id: 1,
+                patterns: [
+                    new FlickerPattern(3),
+                    new OffPattern(3),
+                    new FlickerPattern(3)
+                ]
+            }]
+        }
+    }
 
+    sensors.forEach(s => {
         if (s.name === 'Front Gate') {
-            spook.addSensorCallback(s, callback);
+            spook.addSensorCallback(s, (data: RingDeviceData) => {
+                console.log(`callback called on ${data.name}`);
+                if (data.faulted) {
+                    chromecaster.playRandomVideo();
+                }
+            });
+        }
+
+        if (spookyLightMap.hasOwnProperty(s.name)) {
+            spook.addSensorCallback(s, (data: RingDeviceData) => {
+                console.log(`callback called on ${data.name}`);
+                if (data.faulted) {
+                    spookyLightMap[s.name].lights.forEach(light => {
+                        spookhue.playPattern(light.id, light.patterns);
+                    });
+                }
+            });
         }
     });
 

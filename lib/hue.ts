@@ -1,3 +1,9 @@
+import { readFileSync } from 'fs';
+
+interface HueConfig {
+    hueUsername: string
+}
+
 const v3 = require('node-hue-api').v3;
 const LightState = v3.lightStates.LightState;
 
@@ -5,8 +11,13 @@ export class SpookyHue {
     private lightApi: any
     private isConnected: boolean = false;
     private username: string
-    constructor(username: string) {
-        this.username = username;
+    constructor(configPath: string) {
+        if (configPath === '') {
+            throw new Error('config path must set');
+        }
+        const fileContents = readFileSync(configPath, {encoding: 'utf-8'})
+        let config: HueConfig = JSON.parse(fileContents);
+        this.username = config.hueUsername;
     }
 
     public async connect() {
