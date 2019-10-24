@@ -3,6 +3,7 @@ const LightState = v3.lightStates.LightState;
 
 export class SpookyHue {
     private lightApi: any
+    private isConnected: boolean = false;
     private username: string
     constructor(username: string) {
         this.username = username;
@@ -15,13 +16,22 @@ export class SpookyHue {
         console.log(`connecting to ${host}`)
         await v3.api.createLocal(host).connect(this.username);
         console.log('connected!')
+        this.isConnected = true;
     }
 
-    public async getLights() {
-        throw new Error('not implemented yet');
+    public async getLights(): Promise<any> {
+        if (!this.isConnected) {
+            throw new Error('not connected to the hue hub');
+        }
+        const lights = await this.lightApi.getAll();
+        return lights;
     }
 
     public async playPattern(lightId: number, patterns: LightPattern[]) {
+        if (!this.isConnected) {
+            throw new Error('not connected to the hue hub');
+        }
+
         console.log('playing light pattern');
         patterns.forEach(async p => {
             console.log(`playing pattern: ${typeof p}`);
@@ -29,7 +39,7 @@ export class SpookyHue {
             console.log('done playing pattern');
         });
 
-        console.log('dont playing all patterns. Setting light back to default state')
+        console.log('dont playing all patterns. Setting light back to default state');
         // set light back to default state
     }
 }
