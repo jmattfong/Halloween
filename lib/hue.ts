@@ -12,9 +12,91 @@ const USERNAME = secrets.hueUsername
     ;
 
 export class SpookyHue {
+    constructor(username: string) {
+        v3.discovery.nupnpSearch()
+        .then(searchResults => {
+            console.log(`found ${searchResults.length} hubs. Connecting to the first one: ${searchResults[0]}`);
+            const host = searchResults[0].ipaddress;
+            console.log(`connecting to ${host}`)
+            v3.api.createLocal(host).connect(username)
+        });
+    }
 
-    constructor() {
+    public async start() {
 
+    }
+
+    public async assignCallbackToLights() {
+
+    }
+}
+
+export interface LightPattern {
+    run: (lightApi: any, lightObject: any) => void
+}
+
+export class FlickerPattern implements LightPattern {
+    private durationMs: number
+    constructor(durationSeconds: number) {
+        this.durationMs = durationSeconds * 1000;
+    }
+
+    public async run(lightApi: any, lightObject: any): Promise<void> {
+        const start = new Date();
+
+        while (true) {
+
+            const state = new LightState()
+                .on()
+                .ct(200)
+                .on(10 * 100)
+                .brightness(getRandomInt(100))
+                .transitiontime(0);
+
+            lightApi.lights.setLightState(lightObject.id, state);
+            await sleep(getRandomInt(200) + 50);
+
+
+        }
+    }
+}
+
+export class OffPattern implements LightPattern {
+    private durationMs: number
+    constructor(durationMs: number) {
+        this.durationMs = durationMs;
+    }
+
+    public async run(lightApi: any, lightObject: any): Promise<void> {
+        const state = new LightState().off();
+        lightApi.lights.setLightState(lightObject.id, state);
+        await sleep(getRandomInt(200) + 50);
+    }
+}
+
+export class StableColourPattern implements LightPattern {
+    private r: number
+    private g: number
+    private b: number
+    private brightness: number
+    private durationMs: number
+    constructor(r, g, b, brightness, durationMs: number) {
+        this.r = r;
+        this.g = g;
+        this.b = b;
+        this.brightness = brightness;
+        this.durationMs = durationMs;
+    }
+
+    public async run(lightApi: any, lightObject: any): Promise<void> {
+        const state = new LightState()
+            .on()
+            .ct(200)
+            .rgb(this.r, this.g, this.b)
+            .brightness(this.brightness)
+            .transitiontime(0);
+        lightApi.lights.setLightState(lightObject.id, state);
+        await sleep(this.durationMs);
     }
 }
 
@@ -24,15 +106,6 @@ async function sleep(ms: number): Promise<void> {
 
 function getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max));
-}
-
-async function dothing() {
-    v3.discovery.nupnpSearch()
-        .then(searchResults => {
-            const host = searchResults[0].ipaddress;
-            return v3.api.createLocal(host).connect(USERNAME);
-        })
-        .then(doMoreShit)
 }
 
 async function doMoreShit(api) {
@@ -65,5 +138,3 @@ async function doMoreShit(api) {
         await sleep(getRandomInt(200) + 50)
     }
 }
-
-dothing()
