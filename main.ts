@@ -6,7 +6,8 @@ import { RingEnhancedSpookinatorV2 } from './lib/ring';
 import { Chromecaster } from './lib/chromecast';
 import { SpookyCli } from './lib/cli';
 import { ALL_VIDEOS } from './lib/videos';
-import { SpookyHue, FlickerPattern, OffPattern } from './lib/hue';
+import { SpookyHue, FlickerPattern, OffPattern, StableColourPattern, SleepPattern } from './lib/hue';
+import { Colour } from './lib/colour';
 
 const configContents = readFileSync('./config/config.json', {encoding: 'utf-8'})
 let config = JSON.parse(configContents);
@@ -17,8 +18,8 @@ let config = JSON.parse(configContents);
 async function main() {
     const { env } = process
 
-    const chromecaster = new Chromecaster()
-    chromecaster.start();
+    // const chromecaster = new Chromecaster()
+    // chromecaster.start();
 
     var ringConfigPath = config.secretPath
     const spook = new RingEnhancedSpookinatorV2(ringConfigPath, true)
@@ -27,17 +28,34 @@ async function main() {
     const sensors = await spook.getSensors()
 
     const cli = new SpookyCli(ALL_VIDEOS, (video) => {
-        chromecaster.playVideo(video);
+        // chromecaster.playVideo(video);
     });
+
+    const red = new Colour(.7, .3);
+    const white = new Colour(.31, .32)
 
     const spookyLightMap = {
         "Half Bathroom": {
             lights: [{
                 id: 1,
                 patterns: [
-                    new FlickerPattern(3),
-                    new OffPattern(3),
-                    new FlickerPattern(3)
+                    new StableColourPattern(white, 40, 5, 0),
+                    new FlickerPattern(4.5),
+                    new OffPattern(1),
+                    new StableColourPattern(red, 60, 12, 0),
+                    new StableColourPattern(white, 60, 10, 10)
+                ]
+            }]
+        }
+    }
+
+    const defaultsMap = {
+        "Half Bathroom": {
+            lights: [{
+                id: 1,
+                patterns: [
+                    new StableColourPattern(white, 40, 10, 10),
+                    new OffPattern(1)
                 ]
             }]
         }
@@ -48,7 +66,7 @@ async function main() {
             spook.addSensorCallback(s, (data: RingDeviceData) => {
                 console.log(`callback called on ${data.name}`);
                 if (data.faulted) {
-                    chromecaster.playRandomVideo();
+                    // chromecaster.playRandomVideo();
                 }
             });
         }
@@ -56,8 +74,13 @@ async function main() {
         if (spookyLightMap.hasOwnProperty(s.name)) {
             spook.addSensorCallback(s, (data: RingDeviceData) => {
                 console.log(`callback called on ${data.name}`);
-                if (data.faulted) {
+                if (!data.faulted) {
                     spookyLightMap[s.name].lights.forEach(light => {
+                        spookhue.playPattern(light.id, light.patterns);
+                    });
+                } else {
+                    // this occurs when the door is opened
+                    defaultsMap[s.name].lights.forEach(light => {
                         spookhue.playPattern(light.id, light.patterns);
                     });
                 }
@@ -65,7 +88,7 @@ async function main() {
         }
     });
 
-    cli.start();
+    // cli.start();
 }
 
 // All the above is a single function, when you run a typescript file
