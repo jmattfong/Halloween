@@ -11,7 +11,7 @@ import { SpookyHueBulbPlayer } from './lib/hue/spooky_bulb_player';
 import { SpookyHueApi } from './lib/hue/hue';
 import { HueSensorUpdate } from './lib/hue/sensor';
 
-const configContents = readFileSync('./config/config.json', {encoding: 'utf-8'})
+const configContents = readFileSync('./config/config.json', {encoding: 'utf-8'});
 let config = JSON.parse(configContents);
 
 async function main() {
@@ -65,7 +65,7 @@ async function main() {
             spook.addSensorCallback(s, (data: RingDeviceData) => {
                 console.log(`callback called on ${data.name}`);
                 if (data.faulted) {
-                    // chromecaster.playRandomVideo();
+                    chromecaster.playRandomVideo();
                 }
             });
         }
