@@ -3,10 +3,35 @@ import { SpookyHueApi } from "./hue";
 
 const v3 = require('node-hue-api').v3;
 const LightState = v3.lightStates.LightState;
+var player = require('play-sound')()
 
 export interface LightPattern {
     run: (lightId: number, lightApi: SpookyHueApi) => Promise<boolean>
     cancel: () => void
+}
+
+// Lol this is highly functional code
+export class SoundPattern implements LightPattern {
+
+    private soundFile: string
+    private lightPattern: LightPattern
+
+    constructor(soundFile: string, lightPattern: LightPattern) {
+        this.soundFile = soundFile;
+        this.lightPattern = lightPattern;
+    }
+
+    public cancel() {
+        this.lightPattern.cancel();
+    }
+
+    public async run(lightId: number, lightApi: SpookyHueApi): Promise<boolean> {
+        player.play(this.soundFile, function(err){
+            if (err) throw err
+        })
+        return this.lightPattern.run(lightId, lightApi);
+    }
+
 }
 
 export class FlickerPattern implements LightPattern {

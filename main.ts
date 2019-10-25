@@ -5,7 +5,7 @@ import { RingEnhancedSpookinatorV2 } from './lib/ring';
 import { Chromecaster } from './lib/chromecast';
 import { SpookyCli } from './lib/cli';
 import { ALL_VIDEOS } from './lib/videos';
-import { FlickerPattern, OffPattern, StableColourPattern, SleepPattern } from './lib/hue/patterns';
+import { SoundPattern, FlickerPattern, OffPattern, StableColourPattern, SleepPattern } from './lib/hue/patterns';
 import { red, white } from './lib/hue/colour';
 import { SpookyHueBulbPlayer } from './lib/hue/spooky_bulb_player';
 import { SpookyHueApi } from './lib/hue/hue';
@@ -20,14 +20,14 @@ const spookyLightPatterns = {
             id: 1,
             spookyPatterns: [
                 new StableColourPattern(white, 40, 5, 0),
-                new FlickerPattern(4.5),
+                new SoundPattern('resources/espark.mp3', new FlickerPattern(4.5)),
                 new OffPattern(1),
-                new StableColourPattern(red, 60, 12, 0),
+                new SoundPattern('resources/nmh_scream1.mp3', new StableColourPattern(red, 60, 12, 0)),
                 new StableColourPattern(white, 60, 10, 10)
             ],
             unSpookyPatterns: [
                 new StableColourPattern(white, 40, 10, 10),
-                new StableColourPattern(white, 10, 10, 30) 
+                new StableColourPattern(white, 10, 10, 30)
             ]
         }]
     }
