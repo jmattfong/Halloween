@@ -1,13 +1,12 @@
 import 'dotenv/config'
 import { RingApi, RingDeviceType, RingDeviceData } from 'ring-client-api'
-import { skip } from 'rxjs/operators'
 import { readFileSync } from 'fs';
 import { RingEnhancedSpookinatorV2 } from './lib/ring';
 import { Chromecaster } from './lib/chromecast';
 import { SpookyCli } from './lib/cli';
 import { ALL_VIDEOS } from './lib/videos';
 import { SpookyHue, FlickerPattern, OffPattern, StableColourPattern, SleepPattern } from './lib/hue';
-import { Colour } from './lib/colour';
+import { CIEColour } from './lib/colour';
 
 const configContents = readFileSync('./config/config.json', {encoding: 'utf-8'})
 let config = JSON.parse(configContents);
@@ -31,8 +30,8 @@ async function main() {
         // chromecaster.playVideo(video);
     });
 
-    const red = new Colour(.7, .3);
-    const white = new Colour(.31, .32)
+    const red = new CIEColour(.7, .3);
+    const white = new CIEColour(.31, .32)
 
     const spookyLightMap = {
         "Half Bathroom": {

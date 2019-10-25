@@ -1,5 +1,5 @@
 import { readFileSync } from 'fs';
-import { Colour } from './colour';
+import { CIEColour } from './colour';
 
 interface HueConfig {
     hueUsername: string
@@ -119,11 +119,11 @@ export class OffPattern implements LightPattern {
 }
 
 export class StableColourPattern implements LightPattern {
-    private colour: Colour
+    private colour: CIEColour
     private brightness: number
     private durationMs: number
     private transitionTimeSeconds: number
-    constructor(colour: Colour, brightness, durationSeconds: number, transitionTimeSeconds: number) {
+    constructor(colour: CIEColour, brightness, durationSeconds: number, transitionTimeSeconds: number) {
         this.colour = colour;
         this.brightness = brightness;
         this.durationMs = durationSeconds * 1000;
