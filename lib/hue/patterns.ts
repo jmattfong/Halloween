@@ -5,7 +5,8 @@ const v3 = require('node-hue-api').v3;
 const LightState = v3.lightStates.LightState;
 
 export interface LightPattern {
-    run: (lightId: number, lightApi: SpookyHueApi) => Promise<void>
+    run: (lightId: number, lightApi: SpookyHueApi) => Promise<boolean>
+    cancel: () => void
 }
 
 export class FlickerPattern implements LightPattern {
@@ -14,12 +15,17 @@ export class FlickerPattern implements LightPattern {
         this.durationMs = durationSeconds * 1000;
     }
 
-    public async run(lightId: number, lightApi: SpookyHueApi): Promise<void> {
+    isCancelled = false;
+    public cancel() {
+        this.isCancelled = true;
+    }
+
+    public async run(lightId: number, lightApi: SpookyHueApi): Promise<boolean> {
         const startTime = new Date();
 
         let lightOn = 1;
 
-        while (true) {
+        while (!this.isCancelled) {
             const state = new LightState()
                 .on() // call this once
                 .ct(200)
@@ -31,12 +37,15 @@ export class FlickerPattern implements LightPattern {
             const currTime = new Date();
 
             if (currTime.getTime() - startTime.getTime() > this.durationMs) {
-                return;
+                return false;
             }
 
             lightOn = (lightOn + 1) % 2
             await sleep(getRandomInt(200) + 50);
         }
+
+        this.isCancelled = false;
+        return true;
     }
 }
 
@@ -46,8 +55,16 @@ export class SleepPattern implements LightPattern {
         this.durationMs = durationSeconds * 1000;
     }
 
-    public async run(lightId: number, lightApi: SpookyHueApi): Promise<void> {
+    isCancelled = false;
+    public cancel() {
+        this.isCancelled = true;
+    }
+
+    public async run(lightId: number, lightApi: SpookyHueApi): Promise<boolean> {
         await sleep(this.durationMs);
+        const wasCancelled = this.isCancelled;
+        this.isCancelled = false;
+        return wasCancelled;
     }
 }
 
@@ -57,10 +74,18 @@ export class OffPattern implements LightPattern {
         this.durationMs = durationSeconds * 1000;
     }
 
-    public async run(lightId: number, lightApi: SpookyHueApi): Promise<void> {
+    isCancelled = false;
+    public cancel() {
+        this.isCancelled = true;
+    }
+
+    public async run(lightId: number, lightApi: SpookyHueApi): Promise<boolean> {
         const state = new LightState().off().transitiontime(0);
         await lightApi.setLightState(lightId, state);
         await sleep(this.durationMs);
+        const wasCancelled = this.isCancelled;
+        this.isCancelled = false;
+        return wasCancelled;
     }
 }
 
@@ -76,7 +101,12 @@ export class StableColourPattern implements LightPattern {
         this.transitionTimeSeconds = transitionTimeSeconds;
     }
 
-    public async run(lightId: number, lightApi: SpookyHueApi): Promise<void> {
+    isCancelled = false;
+    public cancel() {
+        this.isCancelled = true;
+    }
+
+    public async run(lightId: number, lightApi: SpookyHueApi): Promise<boolean> {
         const state = new LightState()
             .on()
             .ct(200)
@@ -85,6 +115,9 @@ export class StableColourPattern implements LightPattern {
             .transitiontime(this.transitionTimeSeconds);
         await lightApi.setLightState(lightId, state);
         await sleep(this.durationMs);
+        const wasCancelled = this.isCancelled;
+        this.isCancelled = false;
+        return wasCancelled;
     }
 }
 
