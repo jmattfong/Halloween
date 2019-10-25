@@ -1,5 +1,5 @@
 import 'dotenv/config'
-import { RingApi, RingDeviceType, RingDeviceData } from 'ring-client-api'
+import { RingDeviceData } from 'ring-client-api'
 import { readFileSync } from 'fs';
 import { RingEnhancedSpookinatorV2 } from './lib/ring';
 import { Chromecaster } from './lib/chromecast';
@@ -14,11 +14,29 @@ import { HueSensorUpdate } from './lib/hue/sensor';
 const configContents = readFileSync('./config/config.json', {encoding: 'utf-8'});
 let config = JSON.parse(configContents);
 
+const spookyLightPatterns = {
+    "Half Bathroom": {
+        lights: [{
+            id: 1,
+            spookyPatterns: [
+                new StableColourPattern(white, 40, 5, 0),
+                new FlickerPattern(4.5),
+                new OffPattern(1),
+                new StableColourPattern(red, 60, 12, 0),
+                new StableColourPattern(white, 60, 10, 10)
+            ],
+            unSpookyPatterns: [
+                new StableColourPattern(white, 40, 10, 10),
+                new StableColourPattern(white, 10, 10, 30) 
+            ]
+        }]
+    }
+}
+
 async function main() {
     const { env } = process
 
-    const chromecaster = new Chromecaster()
-    chromecaster.start();
+    const chromecaster = await setupChromecaster();
 
     var ringConfigPath = config.secretPath;
     const spook = new RingEnhancedSpookinatorV2(ringConfigPath, true);
@@ -32,33 +50,7 @@ async function main() {
     const cli = new SpookyCli(ALL_VIDEOS, (video) => {
         chromecaster.playVideo(video);
     });
-
-    const spookyLightMap = {
-        "Half Bathroom": {
-            lights: [{
-                id: 1,
-                patterns: [
-                    new StableColourPattern(white, 40, 5, 0),
-                    new FlickerPattern(4.5),
-                    new OffPattern(1),
-                    new StableColourPattern(red, 60, 12, 0),
-                    new StableColourPattern(white, 60, 10, 10)
-                ]
-            }]
-        }
-    }
-
-    const defaultsMap = {
-        "Half Bathroom": {
-            lights: [{
-                id: 1,
-                patterns: [
-                    new StableColourPattern(white, 40, 10, 10),
-                    new OffPattern(1)
-                ]
-            }]
-        }
-    }
+    cli.start();
 
     sensors.forEach(s => {
         if (s.name === 'Front Gate') {
@@ -70,22 +62,17 @@ async function main() {
             });
         }
 
-        if (spookyLightMap.hasOwnProperty(s.name)) {
+        if (spookyLightPatterns.hasOwnProperty(s.name)) {
             spook.addSensorCallback(s, (data: RingDeviceData) => {
                 console.log(`callback called on ${data.name}`);
-                if (!data.faulted) {
-                    spookyLightMap[s.name].lights.forEach(light => {
-                        spookyHueBulbPlayer.playPattern(light.id, light.patterns);
-                    });
-                } else {
-                    // this occurs when the door is opened
-                    defaultsMap[s.name].lights.forEach(light => {
-                        spookyHueBulbPlayer.playPattern(light.id, light.patterns);
-                    });
-                }
+                const questionablySpookyKey = data.faulted ? "unSpookyPatterns" : "spookyPatterns";
+                spookyLightPatterns[s.name].lights.forEach(light => {
+                    spookyHueBulbPlayer.playPattern(light.id, light[questionablySpookyKey]);
+                });
             });
         }
     });
+
     const hueSensor = await spookhue.getSensor(2);
     console.log(`found hue sensor: ${hueSensor.toString()}`)
     const callback = (update: HueSensorUpdate) => {
@@ -96,8 +83,12 @@ async function main() {
     };
     hueSensor.addCallback(callback);
     hueSensor.start();
+}
 
-    // cli.start();
+async function setupChromecaster() {
+    const chromecaster = new Chromecaster()
+    await chromecaster.start();
+    return chromecaster;
 }
 
 main();
