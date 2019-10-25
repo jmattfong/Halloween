@@ -22,7 +22,7 @@ export class SpookyHueApi {
 
     public async connect() {
         let searchResults = await v3.discovery.nupnpSearch();
-        console.log(`found ${searchResults.length} hubs. Connecting to the first one: ${searchResults[0]}`);
+        console.log(`found ${searchResults.length} hubs. Connecting to the first one cuz #yolo`);
         const host = searchResults[0].ipaddress;
         console.log(`connecting to ${host}`)
         this.hueApi = await v3.api.createLocal(host).connect(this.username);

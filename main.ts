@@ -17,8 +17,8 @@ let config = JSON.parse(configContents);
 async function main() {
     const { env } = process
 
-    // const chromecaster = new Chromecaster()
-    // chromecaster.start();
+    const chromecaster = new Chromecaster()
+    chromecaster.start();
 
     var ringConfigPath = config.secretPath;
     const spook = new RingEnhancedSpookinatorV2(ringConfigPath, true);
@@ -30,7 +30,7 @@ async function main() {
     const sensors = await spook.getSensors();
 
     const cli = new SpookyCli(ALL_VIDEOS, (video) => {
-        // chromecaster.playVideo(video);
+        chromecaster.playVideo(video);
     });
 
     const spookyLightMap = {
@@ -90,6 +90,9 @@ async function main() {
     console.log(`found hue sensor: ${hueSensor.toString()}`)
     const callback = (update: HueSensorUpdate) => {
         console.log(`received status update: ${update}`);
+        if (update.getPresence()) {
+            chromecaster.playRandomVideo();
+        }
     };
     hueSensor.addCallback(callback);
     hueSensor.start();
