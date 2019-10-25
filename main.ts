@@ -11,9 +11,6 @@ import { CIEColour } from './lib/colour';
 const configContents = readFileSync('./config/config.json', {encoding: 'utf-8'})
 let config = JSON.parse(configContents);
 
-// Look at example here: https://github.com/dgreif/ring/blob/master/examples/example.ts
-// And commit here if you need to add new functionality around new devices or locations
-// https://github.com/jmattfong/Halloween/commit/65141d02f19ba41dfc8684a98d7a683c3a4e0850
 async function main() {
     const { env } = process
 
@@ -90,7 +87,4 @@ async function main() {
     // cli.start();
 }
 
-// All the above is a single function, when you run a typescript file
-// it only executes functions that are called, in this case it calls main()
-// which is the function we defined
 main();
