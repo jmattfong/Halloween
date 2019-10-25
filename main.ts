@@ -33,6 +33,11 @@ const spookyLightPatterns = {
     }
 }
 
+const repeatingRedPulsingPattern = [
+    new StableColourPattern(red, 60, 1, 1),
+    new OffPattern(1, 1)
+]
+
 async function main() {
     const { env } = process
 
@@ -44,6 +49,9 @@ async function main() {
     const spookhue = new SpookyHueApi(ringConfigPath);
     await spookhue.connect();
     const spookyHueBulbPlayer = new SpookyHueBulbPlayer(spookhue);
+
+    // Setup infinitely repeating light patterns
+    spookyHueBulbPlayer.playRepeatingPattern(7, repeatingRedPulsingPattern);
 
     const sensors = await spook.getSensors();
 

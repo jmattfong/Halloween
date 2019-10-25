@@ -95,8 +95,10 @@ export class SleepPattern implements LightPattern {
 
 export class OffPattern implements LightPattern {
     private durationMs: number
-    constructor(durationSeconds: number) {
+    private transitionSeconds: number
+    constructor(durationSeconds: number, transitionSeconds: number = 0) {
         this.durationMs = durationSeconds * 1000;
+        this.transitionSeconds = transitionSeconds;
     }
 
     isCancelled = false;
@@ -105,7 +107,9 @@ export class OffPattern implements LightPattern {
     }
 
     public async run(lightId: number, lightApi: SpookyHueApi): Promise<boolean> {
-        const state = new LightState().off().transitiontime(0);
+        const state = new LightState().off()
+            // Weird, but this is in increments of 100ms
+            .transitiontime(this.transitionSeconds * 10);
         await lightApi.setLightState(lightId, state);
         await sleep(this.durationMs);
         const wasCancelled = this.isCancelled;
@@ -137,7 +141,8 @@ export class StableColourPattern implements LightPattern {
             .ct(200)
             .xy(this.colour.getX(), this.colour.getY())
             .brightness(this.brightness)
-            .transitiontime(this.transitionTimeSeconds);
+            // Weird, but this is in increments of 100ms
+            .transitiontime(this.transitionTimeSeconds * 10);
         await lightApi.setLightState(lightId, state);
         await sleep(this.durationMs);
         const wasCancelled = this.isCancelled;

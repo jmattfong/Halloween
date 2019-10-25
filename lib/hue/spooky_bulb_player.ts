@@ -36,4 +36,21 @@ export class SpookyHueBulbPlayer {
         console.log('done playing all patterns. Setting light back to default state');
         // set light back to default state
     }
+
+    public async playRepeatingPattern(lightId: number, patterns: LightPattern[]) {
+        if (!this.api.getIsConnected()) {
+            throw new Error('not connected to the hue hub');
+        }
+
+        console.log('playing repeated light pattern: ' + patterns);
+        while (true) {
+            for (let i = 0; i < patterns.length; i++) {
+                const pattern = patterns[i];
+                console.log(`playing repeated pattern: ${pattern.constructor.name}`);
+                // There ain't no cancelling a repeating pattern
+                await pattern.run(lightId, this.api);
+                console.log(`done playing repeated pattern: ${pattern.constructor.name}`);
+            }
+        }
+    }
 }
