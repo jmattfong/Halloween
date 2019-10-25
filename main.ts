@@ -5,7 +5,7 @@ import { RingEnhancedSpookinatorV2 } from './lib/ring';
 import { Chromecaster } from './lib/chromecast';
 import { SpookyCli } from './lib/cli';
 import { ALL_VIDEOS } from './lib/videos';
-import { SpookyHue, FlickerPattern, OffPattern, StableColourPattern, SleepPattern } from './lib/hue';
+import { SpookyHueApi, FlickerPattern, OffPattern, StableColourPattern, SleepPattern, SpookyHueBulbPlayer } from './lib/hue';
 import { CIEColour } from './lib/colour';
 
 const configContents = readFileSync('./config/config.json', {encoding: 'utf-8'})
@@ -17,11 +17,14 @@ async function main() {
     // const chromecaster = new Chromecaster()
     // chromecaster.start();
 
-    var ringConfigPath = config.secretPath
-    const spook = new RingEnhancedSpookinatorV2(ringConfigPath, true)
-    const spookhue = new SpookyHue(ringConfigPath)
-    await spookhue.connect()
-    const sensors = await spook.getSensors()
+    var ringConfigPath = config.secretPath;
+    const spook = new RingEnhancedSpookinatorV2(ringConfigPath, true);
+
+    const spookhue = new SpookyHueApi(ringConfigPath);
+    await spookhue.connect();
+    const spookyHueBulbPlayer = new SpookyHueBulbPlayer(spookhue);
+
+    const sensors = await spook.getSensors();
 
     const cli = new SpookyCli(ALL_VIDEOS, (video) => {
         // chromecaster.playVideo(video);
@@ -72,12 +75,12 @@ async function main() {
                 console.log(`callback called on ${data.name}`);
                 if (!data.faulted) {
                     spookyLightMap[s.name].lights.forEach(light => {
-                        spookhue.playPattern(light.id, light.patterns);
+                        spookyHueBulbPlayer.playPattern(light.id, light.patterns);
                     });
                 } else {
                     // this occurs when the door is opened
                     defaultsMap[s.name].lights.forEach(light => {
-                        spookhue.playPattern(light.id, light.patterns);
+                        spookyHueBulbPlayer.playPattern(light.id, light.patterns);
                     });
                 }
             });

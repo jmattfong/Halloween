@@ -8,7 +8,32 @@ interface HueConfig {
 const v3 = require('node-hue-api').v3;
 const LightState = v3.lightStates.LightState;
 
-export class SpookyHue {
+export class SpookyHueBulbPlayer {
+    private api: SpookyHueApi
+
+    constructor(api: SpookyHueApi) {
+        this.api = api;
+    }
+
+    public async playPattern(lightId: number, patterns: LightPattern[]) {
+        if (!this.api.getIsConnected()) {
+            throw new Error('not connected to the hue hub');
+        }
+
+        console.log('playing light pattern');
+        for (let i = 0; i < patterns.length; i++) {
+            const pattern = patterns[i];
+            console.log(`playing pattern: ${pattern.constructor.name}`);
+            await pattern.run(lightId, this.api);
+            console.log('done playing pattern');
+        }
+
+        console.log('done playing all patterns. Setting light back to default state');
+        // set light back to default state
+    }
+}
+
+export class SpookyHueApi {
     private lightApi: any
     private isConnected: boolean = false;
     private username: string
@@ -16,8 +41,8 @@ export class SpookyHue {
         if (configPath === '') {
             throw new Error('config path must set');
         }
-        const fileContents = readFileSync(configPath, {encoding: 'utf-8'})
-        let config: HueConfig = JSON.parse(fileContents);
+        const fileContents = readFileSync(configPath, { encoding: 'utf-8' });
+        const config: HueConfig = JSON.parse(fileContents);
         this.username = config.hueUsername;
     }
 
@@ -32,6 +57,14 @@ export class SpookyHue {
         this.isConnected = true;
     }
 
+    public getIsConnected() {
+        return this.isConnected;
+    }
+
+    public async setLightState(lightId: number, state: any): Promise<void> {
+        await this.lightApi.lights.setLightState(lightId, state)
+    }
+
     public async getLights(): Promise<any> {
         if (!this.isConnected) {
             throw new Error('not connected to the hue hub');
@@ -39,27 +72,10 @@ export class SpookyHue {
         const lights = await this.lightApi.getAll();
         return lights;
     }
-
-    public async playPattern(lightId: number, patterns: LightPattern[]) {
-        if (!this.isConnected) {
-            throw new Error('not connected to the hue hub');
-        }
-
-        console.log('playing light pattern');
-        for (let i = 0; i < patterns.length; i++) {
-            const pattern = patterns[i];
-            console.log(`playing pattern: ${pattern.constructor.name}`);
-            await pattern.run(lightId, this.lightApi);
-            console.log('done playing pattern');
-        }
-
-        console.log('done playing all patterns. Setting light back to default state');
-        // set light back to default state
-    }
 }
 
 export interface LightPattern {
-    run: (lightId: number, lightApi: any) => Promise<void>
+    run: (lightId: number, lightApi: SpookyHueApi) => Promise<void>
 }
 
 export class FlickerPattern implements LightPattern {
@@ -68,7 +84,7 @@ export class FlickerPattern implements LightPattern {
         this.durationMs = durationSeconds * 1000;
     }
 
-    public async run(lightId: number, lightApi: any): Promise<void> {
+    public async run(lightId: number, lightApi: SpookyHueApi): Promise<void> {
         const startTime = new Date();
 
         let lightOn = 1;
@@ -81,7 +97,7 @@ export class FlickerPattern implements LightPattern {
                 .brightness(getRandomInt(100))
                 .transitiontime(0);
 
-            await lightApi.lights.setLightState(lightId, state);
+            await lightApi.setLightState(lightId, state);
             const currTime = new Date();
 
             if (currTime.getTime() - startTime.getTime() > this.durationMs) {
@@ -100,7 +116,7 @@ export class SleepPattern implements LightPattern {
         this.durationMs = durationSeconds * 1000;
     }
 
-    public async run(lightId: number, lightApi: any): Promise<void> {
+    public async run(lightId: number, lightApi: SpookyHueApi): Promise<void> {
         await sleep(this.durationMs);
     }
 }
@@ -111,9 +127,9 @@ export class OffPattern implements LightPattern {
         this.durationMs = durationSeconds * 1000;
     }
 
-    public async run(lightId: number, lightApi: any): Promise<void> {
+    public async run(lightId: number, lightApi: SpookyHueApi): Promise<void> {
         const state = new LightState().off().transitiontime(0);
-        await lightApi.lights.setLightState(lightId, state);
+        await lightApi.setLightState(lightId, state);
         await sleep(this.durationMs);
     }
 }
@@ -130,14 +146,14 @@ export class StableColourPattern implements LightPattern {
         this.transitionTimeSeconds = transitionTimeSeconds;
     }
 
-    public async run(lightId: number, lightApi: any): Promise<void> {
+    public async run(lightId: number, lightApi: SpookyHueApi): Promise<void> {
         const state = new LightState()
             .on()
             .ct(200)
             .xy(this.colour.getX(), this.colour.getY())
             .brightness(this.brightness)
             .transitiontime(this.transitionTimeSeconds);
-        await lightApi.lights.setLightState(lightId, state);
+        await lightApi.setLightState(lightId, state);
         await sleep(this.durationMs);
     }
 }
