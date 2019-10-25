@@ -6,7 +6,7 @@ import { Chromecaster } from './lib/chromecast';
 import { SpookyCli } from './lib/cli';
 import { ALL_VIDEOS } from './lib/videos';
 import { FlickerPattern, OffPattern, StableColourPattern, SleepPattern } from './lib/hue/patterns';
-import { CIEColour } from './lib/hue/colour';
+import { red, white } from './lib/hue/colour';
 import { SpookyHueBulbPlayer } from './lib/hue/spooky_bulb_player';
 import { SpookyHueApi } from './lib/hue/hue';
 
@@ -31,9 +31,6 @@ async function main() {
     const cli = new SpookyCli(ALL_VIDEOS, (video) => {
         // chromecaster.playVideo(video);
     });
-
-    const red = new CIEColour(.7, .3);
-    const white = new CIEColour(.31, .32)
 
     const spookyLightMap = {
         "Half Bathroom": {

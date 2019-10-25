@@ -19,3 +19,6 @@ export class CIEColour {
         return this.y;
     }
 }
+
+export const red = new CIEColour(.7, .3);
+export const white = new CIEColour(.31, .32);
