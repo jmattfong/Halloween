@@ -1,4 +1,5 @@
 import { readFileSync } from 'fs';
+import { HueSensor } from './sensor';
 
 const v3 = require('node-hue-api').v3;
 
@@ -7,7 +8,7 @@ interface HueConfig {
 }
 
 export class SpookyHueApi {
-    private lightApi: any
+    private hueApi: any
     private isConnected: boolean = false;
     private username: string
     constructor(configPath: string) {
@@ -24,8 +25,7 @@ export class SpookyHueApi {
         console.log(`found ${searchResults.length} hubs. Connecting to the first one: ${searchResults[0]}`);
         const host = searchResults[0].ipaddress;
         console.log(`connecting to ${host}`)
-        this.lightApi = await v3.api.createLocal(host).connect(this.username);
-        console.dir(this.lightApi.lights)
+        this.hueApi = await v3.api.createLocal(host).connect(this.username);
         console.log('connected!')
         this.isConnected = true;
     }
@@ -38,14 +38,29 @@ export class SpookyHueApi {
         if (!this.isConnected) {
             throw new Error('not connected to the hue hub');
         }
-        await this.lightApi.lights.setLightState(lightId, state)
+        await this.hueApi.lights.setLightState(lightId, state)
     }
 
     public async getLights(): Promise<any> {
         if (!this.isConnected) {
             throw new Error('not connected to the hue hub');
         }
-        const lights = await this.lightApi.getAll();
-        return lights;
+        return await this.hueApi.getAll();
+    }
+
+    public async getSensor(sensorId): Promise<HueSensor> {
+        if (!this.isConnected) {
+            throw new Error('not connected to the hue hub');
+        }
+        const sensor = await this.hueApi.sensors.get(sensorId);
+        return new HueSensor(this.hueApi.sensors, sensor.id);
+    }
+
+    public async getSensors(): Promise<HueSensor[]> {
+        if (!this.isConnected) {
+            throw new Error('not connected to the hue hub');
+        }
+
+        return await this.hueApi.sensors.getAll().map((s) => { new HueSensor(this.hueApi.sensors, s.id) });
     }
 }

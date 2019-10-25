@@ -9,6 +9,7 @@ import { FlickerPattern, OffPattern, StableColourPattern, SleepPattern } from '.
 import { red, white } from './lib/hue/colour';
 import { SpookyHueBulbPlayer } from './lib/hue/spooky_bulb_player';
 import { SpookyHueApi } from './lib/hue/hue';
+import { HueSensorUpdate } from './lib/hue/sensor';
 
 const configContents = readFileSync('./config/config.json', {encoding: 'utf-8'})
 let config = JSON.parse(configContents);
@@ -85,6 +86,13 @@ async function main() {
             });
         }
     });
+    const hueSensor = await spookhue.getSensor(2);
+    console.log(`found hue sensor: ${hueSensor.toString()}`)
+    const callback = (update: HueSensorUpdate) => {
+        console.log(`received status update: ${update}`);
+    };
+    hueSensor.addCallback(callback);
+    hueSensor.start();
 
     // cli.start();
 }
