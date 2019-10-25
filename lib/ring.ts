@@ -63,7 +63,6 @@ export class RingEnhancedSpookinatorV2 {
         }
         console.log(`found ${allDevices.length} devices`);
 
-        // right now this just returns a single 
         return allDevices.filter(device => device.data.deviceType === RingDeviceType.ContactSensor);
     }
 }

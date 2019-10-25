@@ -134,7 +134,6 @@ export class StableColourPattern implements LightPattern {
         const state = new LightState()
             .on()
             .ct(200)
-            // .rgb(this.r, this.g, this.b)
             .xy(this.colour.getX(), this.colour.getY())
             .brightness(this.brightness)
             .transitiontime(this.transitionTimeSeconds);
