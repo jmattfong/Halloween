@@ -35,6 +35,9 @@ export class SpookyHueApi {
     }
 
     public async setLightState(lightId: number, state: any): Promise<void> {
+        if (!this.isConnected) {
+            throw new Error('not connected to the hue hub');
+        }
         await this.lightApi.lights.setLightState(lightId, state)
     }
 
