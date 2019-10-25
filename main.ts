@@ -5,8 +5,10 @@ import { RingEnhancedSpookinatorV2 } from './lib/ring';
 import { Chromecaster } from './lib/chromecast';
 import { SpookyCli } from './lib/cli';
 import { ALL_VIDEOS } from './lib/videos';
-import { SpookyHueApi, FlickerPattern, OffPattern, StableColourPattern, SleepPattern, SpookyHueBulbPlayer } from './lib/hue';
-import { CIEColour } from './lib/colour';
+import { FlickerPattern, OffPattern, StableColourPattern, SleepPattern } from './lib/hue/patterns';
+import { CIEColour } from './lib/hue/colour';
+import { SpookyHueBulbPlayer } from './lib/hue/spooky_bulb_player';
+import { SpookyHueApi } from './lib/hue/hue';
 
 const configContents = readFileSync('./config/config.json', {encoding: 'utf-8'})
 let config = JSON.parse(configContents);
