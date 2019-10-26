@@ -20,9 +20,9 @@ const spookyLightPatterns = {
             id: 1,
             spookyPatterns: [
                 new StableColourPattern(white, 40, 5, 0),
-                new SoundPattern('resources/espark.mp3', new FlickerPattern(5.5), 3),
+                new SoundPattern('resources/sparks.mp3', new FlickerPattern(5.5), 3),
                 new OffPattern(1),
-                new SoundPattern('resources/nmh_scream1.mp3', new StableColourPattern(red, 60, 12, 0), 500),
+                new SoundPattern('resources/woman_screaming.mp3', new StableColourPattern(red, 60, 12, 0), 500),
                 new StableColourPattern(white, 60, 10, 10)
             ],
             unSpookyPatterns: [
@@ -60,6 +60,7 @@ async function main() {
     const spookyHueBulbPlayer = new SpookyHueBulbPlayer(spookhue);
 
     // Setup infinitely repeating light patterns
+    spookyHueBulbPlayer.playRepeatingPattern(6, repeatingRedPulsingPattern);
     spookyHueBulbPlayer.playRepeatingPattern(7, repeatingRedPulsingPattern);
 
     const sensors = await spook.getSensors();
