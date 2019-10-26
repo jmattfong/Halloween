@@ -5,25 +5,37 @@ const v3 = require('node-hue-api').v3;
 const LightState = v3.lightStates.LightState;
 var player = require('play-sound')()
 
-export interface Pattern {
-    getDurationMs: () => number,
-    run: (lightId: number, lightApi: SpookyHueApi) => Promise<boolean>
-    cancel: () => void
-}
-
-// Lol this is highly functional code
-export class SoundPattern implements Pattern {
-
-    private soundFile: string
-    private lightPattern: Pattern
-
-    constructor(soundFile: string, lightPattern: Pattern) {
-        this.soundFile = soundFile;
-        this.lightPattern = lightPattern;
+export class Pattern {
+    protected durationMs;
+    constructor(durationSeconds: number) {
+        this.durationMs = durationSeconds * 1000;
     }
 
     public getDurationMs() {
-        return this.lightPattern.getDurationMs();
+        return this.durationMs;
+    }
+
+    public async run(lightId: number, lightApi: SpookyHueApi): Promise<boolean> {
+        throw new Error('not implemented');
+    }
+
+    public cancel() {
+        // do nothing
+    }
+}
+
+// Lol this is highly functional code
+export class SoundPattern extends Pattern {
+
+    private soundFile: string
+    private lightPattern: Pattern
+    private soundToVideoDelayMs: number
+
+    constructor(soundFile: string, lightPattern: Pattern, soundToVideoDelayMs: number) {
+        super(lightPattern.getDurationMs());
+        this.soundFile = soundFile;
+        this.lightPattern = lightPattern;
+        this.soundToVideoDelayMs = soundToVideoDelayMs;
     }
 
     public cancel() {
@@ -34,25 +46,20 @@ export class SoundPattern implements Pattern {
         player.play(this.soundFile, function(err){
             console.log(`[ERROR]: something went wrong playing sound: ${err}`)
         });
-        await sleep(500);
+        await sleep(this.soundToVideoDelayMs);
         return this.lightPattern.run(lightId, lightApi);
     }
 
 }
 
-export class FlickerPattern implements Pattern {
-    private durationMs: number
+export class FlickerPattern extends Pattern {
     constructor(durationSeconds: number) {
-        this.durationMs = durationSeconds * 1000;
+        super(durationSeconds);
     }
 
     isCancelled = false;
     public cancel() {
         this.isCancelled = true;
-    }
-
-    public getDurationMs() {
-        return this.durationMs;
     }
 
     public async run(lightId: number, lightApi: SpookyHueApi): Promise<boolean> {
@@ -84,14 +91,9 @@ export class FlickerPattern implements Pattern {
     }
 }
 
-export class SleepPattern implements Pattern {
-    private durationMs: number
+export class SleepPattern extends Pattern {
     constructor(durationSeconds: number) {
-        this.durationMs = durationSeconds * 1000;
-    }
-
-    public getDurationMs() {
-        return this.durationMs;
+        super(durationSeconds);
     }
 
     isCancelled = false;
@@ -107,16 +109,11 @@ export class SleepPattern implements Pattern {
     }
 }
 
-export class OffPattern implements Pattern {
-    private durationMs: number
+export class OffPattern extends Pattern {
     private transitionSeconds: number
     constructor(durationSeconds: number, transitionSeconds: number = 0) {
-        this.durationMs = durationSeconds * 1000;
+        super(durationSeconds);
         this.transitionSeconds = transitionSeconds;
-    }
-
-    public getDurationMs() {
-        return this.durationMs;
     }
 
     isCancelled = false;
@@ -136,20 +133,15 @@ export class OffPattern implements Pattern {
     }
 }
 
-export class StableColourPattern implements Pattern {
+export class StableColourPattern extends Pattern {
     private colour: CIEColour
     private brightness: number
-    private durationMs: number
     private transitionTimeSeconds: number
     constructor(colour: CIEColour, brightness, durationSeconds: number, transitionTimeSeconds: number) {
+        super(durationSeconds)
         this.colour = colour;
         this.brightness = brightness;
-        this.durationMs = durationSeconds * 1000;
         this.transitionTimeSeconds = transitionTimeSeconds;
-    }
-
-    public getDurationMs() {
-        return this.durationMs;
     }
 
     isCancelled = false;
