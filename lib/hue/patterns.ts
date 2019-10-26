@@ -5,20 +5,25 @@ const v3 = require('node-hue-api').v3;
 const LightState = v3.lightStates.LightState;
 var player = require('play-sound')()
 
-export interface LightPattern {
+export interface Pattern {
+    getDurationMs: () => number,
     run: (lightId: number, lightApi: SpookyHueApi) => Promise<boolean>
     cancel: () => void
 }
 
 // Lol this is highly functional code
-export class SoundPattern implements LightPattern {
+export class SoundPattern implements Pattern {
 
     private soundFile: string
-    private lightPattern: LightPattern
+    private lightPattern: Pattern
 
-    constructor(soundFile: string, lightPattern: LightPattern) {
+    constructor(soundFile: string, lightPattern: Pattern) {
         this.soundFile = soundFile;
         this.lightPattern = lightPattern;
+    }
+
+    public getDurationMs() {
+        return this.lightPattern.getDurationMs();
     }
 
     public cancel() {
@@ -34,7 +39,7 @@ export class SoundPattern implements LightPattern {
 
 }
 
-export class FlickerPattern implements LightPattern {
+export class FlickerPattern implements Pattern {
     private durationMs: number
     constructor(durationSeconds: number) {
         this.durationMs = durationSeconds * 1000;
@@ -43,6 +48,10 @@ export class FlickerPattern implements LightPattern {
     isCancelled = false;
     public cancel() {
         this.isCancelled = true;
+    }
+
+    public getDurationMs() {
+        return this.durationMs;
     }
 
     public async run(lightId: number, lightApi: SpookyHueApi): Promise<boolean> {
@@ -74,10 +83,14 @@ export class FlickerPattern implements LightPattern {
     }
 }
 
-export class SleepPattern implements LightPattern {
+export class SleepPattern implements Pattern {
     private durationMs: number
     constructor(durationSeconds: number) {
         this.durationMs = durationSeconds * 1000;
+    }
+
+    public getDurationMs() {
+        return this.durationMs;
     }
 
     isCancelled = false;
@@ -93,12 +106,16 @@ export class SleepPattern implements LightPattern {
     }
 }
 
-export class OffPattern implements LightPattern {
+export class OffPattern implements Pattern {
     private durationMs: number
     private transitionSeconds: number
     constructor(durationSeconds: number, transitionSeconds: number = 0) {
         this.durationMs = durationSeconds * 1000;
         this.transitionSeconds = transitionSeconds;
+    }
+
+    public getDurationMs() {
+        return this.durationMs;
     }
 
     isCancelled = false;
@@ -118,7 +135,7 @@ export class OffPattern implements LightPattern {
     }
 }
 
-export class StableColourPattern implements LightPattern {
+export class StableColourPattern implements Pattern {
     private colour: CIEColour
     private brightness: number
     private durationMs: number
@@ -128,6 +145,10 @@ export class StableColourPattern implements LightPattern {
         this.brightness = brightness;
         this.durationMs = durationSeconds * 1000;
         this.transitionTimeSeconds = transitionTimeSeconds;
+    }
+
+    public getDurationMs() {
+        return this.durationMs;
     }
 
     isCancelled = false;
