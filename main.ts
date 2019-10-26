@@ -5,7 +5,7 @@ import { RingEnhancedSpookinatorV2 } from './lib/ring';
 import { Chromecaster } from './lib/chromecast';
 import { SpookyCli } from './lib/cli';
 import { ALL_VIDEOS } from './lib/videos';
-import { SoundPattern, FlickerPattern, OffPattern, StableColourPattern, SleepPattern } from './lib/hue/patterns';
+import { SoundPattern, FlickerPattern, OffPattern, StableColourPattern, SleepPattern, OnPattern } from './lib/hue/patterns';
 import { red, white } from './lib/hue/colour';
 import { SpookyHueBulbPlayer } from './lib/hue/spooky_bulb_player';
 import { SpookyHueApi } from './lib/hue/hue';
@@ -51,6 +51,7 @@ async function main() {
     const { env } = process
 
     const chromecaster = await setupChromecaster();
+    console.log('starting server')
 
     var ringConfigPath = config.secretPath;
     const spook = new RingEnhancedSpookinatorV2(ringConfigPath, true);
@@ -120,6 +121,24 @@ async function setupChromecaster() {
     const chromecaster = new Chromecaster()
     await chromecaster.start();
     return chromecaster;
+}
+
+async function pulseAllLights(spookhue: SpookyHueApi, spookyHueBulbPlayer: SpookyHueBulbPlayer) {
+    const allLights = await spookhue.getLights();
+    const pattern = [new OnPattern(100, 1, 1),
+        new OffPattern(1, 1),
+        new OnPattern(100, 1, 1),
+        new OffPattern(1, 1),
+        new OnPattern(100, 1, 1),
+        new OffPattern(1, 1)
+    ];
+
+    while (true) {
+        for (let i = 0; i < allLights.length; i++) {
+            console.log(`Pulsing light #${allLights[i].id}`)
+            await spookyHueBulbPlayer.playPattern(allLights[i].id, pattern);
+        }
+    }
 }
 
 main();

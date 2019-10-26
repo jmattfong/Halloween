@@ -133,6 +133,35 @@ export class OffPattern extends Pattern {
     }
 }
 
+export class OnPattern extends Pattern {
+    private transitionSeconds: number
+    private brightness: number
+    constructor(brightness: number, durationSeconds: number, transitionSeconds: number = 0) {
+        super(durationSeconds);
+        this.brightness = brightness;
+        this.transitionSeconds = transitionSeconds;
+    }
+
+    isCancelled = false;
+    public cancel() {
+        this.isCancelled = true;
+    }
+
+    public async run(lightId: number, lightApi: SpookyHueApi): Promise<boolean> {
+        const state = new LightState()
+            .on()
+            .ct(200)
+            .brightness(this.brightness)
+            // Weird, but this is in increments of 100ms
+            .transitiontime(this.transitionSeconds * 10);
+        await lightApi.setLightState(lightId, state);
+        await sleep(this.durationMs);
+        const wasCancelled = this.isCancelled;
+        this.isCancelled = false;
+        return wasCancelled;
+    }
+}
+
 export class StableColourPattern extends Pattern {
     private colour: CIEColour
     private brightness: number
