@@ -32,8 +32,9 @@ export class SoundPattern implements Pattern {
 
     public async run(lightId: number, lightApi: SpookyHueApi): Promise<boolean> {
         player.play(this.soundFile, function(err){
-            if (err) throw err
-        })
+            console.log(`[ERROR]: something went wrong playing sound: ${err}`)
+        });
+        await sleep(500);
         return this.lightPattern.run(lightId, lightApi);
     }
 
@@ -58,7 +59,6 @@ export class FlickerPattern implements Pattern {
         const startTime = new Date();
 
         let lightOn = 1;
-
         while (!this.isCancelled) {
             const state = new LightState()
                 .on() // call this once
@@ -75,7 +75,8 @@ export class FlickerPattern implements Pattern {
             }
 
             lightOn = (lightOn + 1) % 2
-            await sleep(getRandomInt(200) + 50);
+            const linearInterp = 1 - ((currTime.getTime() - startTime.getTime()) / this.durationMs);
+            await sleep((getRandomInt(200) * linearInterp) + 30);
         }
 
         this.isCancelled = false;

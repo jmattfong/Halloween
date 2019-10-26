@@ -1,16 +1,16 @@
 import { SpookyHueApi } from "./hue";
-import { LightPattern } from "./patterns";
+import { Pattern } from "./patterns";
 
 export class SpookyHueBulbPlayer {
     private api: SpookyHueApi
-    private currPatternMap: Map<number, LightPattern>
+    private currPatternMap: Map<number, Pattern>
 
     constructor(api: SpookyHueApi) {
         this.api = api;
         this.currPatternMap = new Map();
     }
 
-    public async playPattern(lightId: number, patterns: LightPattern[]) {
+    public async playPattern(lightId: number, patterns: Pattern[]) {
         if (!this.api.getIsConnected()) {
             throw new Error('not connected to the hue hub');
         }
@@ -37,7 +37,7 @@ export class SpookyHueBulbPlayer {
         // set light back to default state
     }
 
-    public async playRepeatingPattern(lightId: number, patterns: LightPattern[]) {
+    public async playRepeatingPattern(lightId: number, patterns: Pattern[]) {
         if (!this.api.getIsConnected()) {
             throw new Error('not connected to the hue hub');
         }
