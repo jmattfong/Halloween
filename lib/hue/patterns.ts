@@ -5,20 +5,37 @@ const v3 = require('node-hue-api').v3;
 const LightState = v3.lightStates.LightState;
 var player = require('play-sound')()
 
-export interface LightPattern {
-    run: (lightId: number, lightApi: SpookyHueApi) => Promise<boolean>
-    cancel: () => void
+export class Pattern {
+    protected durationMs;
+    constructor(durationSeconds: number) {
+        this.durationMs = durationSeconds * 1000;
+    }
+
+    public getDurationMs() {
+        return this.durationMs;
+    }
+
+    public async run(lightId: number, lightApi: SpookyHueApi): Promise<boolean> {
+        throw new Error('not implemented');
+    }
+
+    public cancel() {
+        // do nothing
+    }
 }
 
 // Lol this is highly functional code
-export class SoundPattern implements LightPattern {
+export class SoundPattern extends Pattern {
 
     private soundFile: string
-    private lightPattern: LightPattern
+    private lightPattern: Pattern
+    private soundToVideoDelayMs: number
 
-    constructor(soundFile: string, lightPattern: LightPattern) {
+    constructor(soundFile: string, lightPattern: Pattern, soundToVideoDelayMs: number) {
+        super(lightPattern.getDurationMs());
         this.soundFile = soundFile;
         this.lightPattern = lightPattern;
+        this.soundToVideoDelayMs = soundToVideoDelayMs;
     }
 
     public cancel() {
@@ -27,17 +44,17 @@ export class SoundPattern implements LightPattern {
 
     public async run(lightId: number, lightApi: SpookyHueApi): Promise<boolean> {
         player.play(this.soundFile, function(err){
-            if (err) throw err
-        })
+            console.log(`[ERROR]: something went wrong playing sound: ${err}`)
+        });
+        await sleep(this.soundToVideoDelayMs);
         return this.lightPattern.run(lightId, lightApi);
     }
 
 }
 
-export class FlickerPattern implements LightPattern {
-    private durationMs: number
+export class FlickerPattern extends Pattern {
     constructor(durationSeconds: number) {
-        this.durationMs = durationSeconds * 1000;
+        super(durationSeconds);
     }
 
     isCancelled = false;
@@ -49,7 +66,6 @@ export class FlickerPattern implements LightPattern {
         const startTime = new Date();
 
         let lightOn = 1;
-
         while (!this.isCancelled) {
             const state = new LightState()
                 .on() // call this once
@@ -66,7 +82,8 @@ export class FlickerPattern implements LightPattern {
             }
 
             lightOn = (lightOn + 1) % 2
-            await sleep(getRandomInt(200) + 50);
+            const linearInterp = 1 - ((currTime.getTime() - startTime.getTime()) / this.durationMs);
+            await sleep((getRandomInt(200) * linearInterp) + 30);
         }
 
         this.isCancelled = false;
@@ -74,10 +91,9 @@ export class FlickerPattern implements LightPattern {
     }
 }
 
-export class SleepPattern implements LightPattern {
-    private durationMs: number
+export class SleepPattern extends Pattern {
     constructor(durationSeconds: number) {
-        this.durationMs = durationSeconds * 1000;
+        super(durationSeconds);
     }
 
     isCancelled = false;
@@ -93,11 +109,10 @@ export class SleepPattern implements LightPattern {
     }
 }
 
-export class OffPattern implements LightPattern {
-    private durationMs: number
+export class OffPattern extends Pattern {
     private transitionSeconds: number
     constructor(durationSeconds: number, transitionSeconds: number = 0) {
-        this.durationMs = durationSeconds * 1000;
+        super(durationSeconds);
         this.transitionSeconds = transitionSeconds;
     }
 
@@ -118,15 +133,14 @@ export class OffPattern implements LightPattern {
     }
 }
 
-export class StableColourPattern implements LightPattern {
+export class StableColourPattern extends Pattern {
     private colour: CIEColour
     private brightness: number
-    private durationMs: number
     private transitionTimeSeconds: number
     constructor(colour: CIEColour, brightness, durationSeconds: number, transitionTimeSeconds: number) {
+        super(durationSeconds)
         this.colour = colour;
         this.brightness = brightness;
-        this.durationMs = durationSeconds * 1000;
         this.transitionTimeSeconds = transitionTimeSeconds;
     }
 

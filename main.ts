@@ -20,14 +20,23 @@ const spookyLightPatterns = {
             id: 1,
             spookyPatterns: [
                 new StableColourPattern(white, 40, 5, 0),
-                new SoundPattern('resources/espark.mp3', new FlickerPattern(4.5)),
+                new SoundPattern('resources/espark.mp3', new FlickerPattern(5.5), 3),
                 new OffPattern(1),
-                new SoundPattern('resources/nmh_scream1.mp3', new StableColourPattern(red, 60, 12, 0)),
+                new SoundPattern('resources/nmh_scream1.mp3', new StableColourPattern(red, 60, 12, 0), 500),
                 new StableColourPattern(white, 60, 10, 10)
             ],
             unSpookyPatterns: [
                 new StableColourPattern(white, 40, 10, 10),
                 new StableColourPattern(white, 10, 10, 30)
+            ]
+        }]
+    },
+    "": {
+        lights: [{
+            id: 7,
+            spookyPatterns: [
+                new StableColourPattern(red, 60, 1, 3),
+                new StableColourPattern(red, 0, 1, 3)
             ]
         }]
     }
@@ -81,16 +90,29 @@ async function main() {
         }
     });
 
-    const hueSensor = await spookhue.getSensor(2);
-    console.log(`found hue sensor: ${hueSensor.toString()}`)
+    const hueWalkwaySensor = await spookhue.getSensor(2);
+    console.log(`found hue sensor: ${hueWalkwaySensor.toString()}`)
     const callback = (update: HueSensorUpdate) => {
         console.log(`received status update: ${update}`);
         if (update.getPresence()) {
             chromecaster.playRandomVideo();
         }
     };
-    hueSensor.addCallback(callback);
-    hueSensor.start();
+    hueWalkwaySensor.addCallback(callback);
+    hueWalkwaySensor.start();
+
+    const hallwayPattern = [
+        new FlickerPattern(30),
+    ];
+
+    const hallwaySensor = await spookhue.getSensor(1);
+    const c = (update: HueSensorUpdate) => {
+        if (update.getPresence()) {
+            spookyHueBulbPlayer.playPattern(4, hallwayPattern);
+        }
+    }
+    hallwaySensor.addCallback(c);
+    hueWalkwaySensor.start();
 }
 
 async function setupChromecaster() {

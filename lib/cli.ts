@@ -1,6 +1,5 @@
 import * as readline from 'readline';
 import { Video } from './videos';
-import { isNumber } from 'util';
 
 export class SpookyCli {
     private videos: Video[]
