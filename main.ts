@@ -43,8 +43,8 @@ const spookyLightPatterns = {
 }
 
 const repeatingRedPulsingPattern = [
-    new StableColourPattern(red, 60, 1, 1),
-    new OffPattern(1, 1)
+    new StableColourPattern(red, 60, 1, 2),
+    new StableColourPattern(red, 0, 1, 3)
 ]
 
 async function main() {
