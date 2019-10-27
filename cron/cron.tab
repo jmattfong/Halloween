@@ -1,1 +1,1 @@
-*/5 * * * * /home/roryjacob/develop/Halloween/cron/nanny.sh
+*/20 * * * * /home/roryjacob/develop/Halloween/cron/nanny.sh
