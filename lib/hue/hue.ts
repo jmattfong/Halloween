@@ -52,7 +52,7 @@ export class SpookyHueApi {
         if (!this.isConnected) {
             throw new Error('not connected to the hue hub');
         }
-        const sensor = await this.hueApi.sensors.get(sensorId);
+        const sensor = await this.hueApi.sensors.getSensor(sensorId);
         return new HueSensor(this.hueApi.sensors, sensor.id);
     }
 
@@ -61,6 +61,7 @@ export class SpookyHueApi {
             throw new Error('not connected to the hue hub');
         }
 
-        return await this.hueApi.sensors.getAll().map((s: any) => { new HueSensor(this.hueApi.sensors, s.id) });
+        let sensors = await this.hueApi.sensors.getAll();
+        return sensors.map((s: any) => { new HueSensor(this.hueApi.sensors, s.id) });
     }
 }
