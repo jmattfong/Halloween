@@ -46,15 +46,16 @@ export class HueSensor {
     }
 
     public start() {
-        setInterval((() => { this.checkForUpdate() }).bind(this), 500);
+        setInterval((() => { this.checkForUpdate() }).bind(this), 2000);
     }
 
     private async checkForUpdate() {
         console.log("Checking for update");
         const sensor = await this.sensorApi.getSensor(this.sensorId);
 
+        console.log(`sensor update: ${JSON.stringify(sensor, null, 4)}`)
         const sensorUpdate = new HueSensorUpdate(sensor["_populationData"]["state"]["presence"], sensor["_populationData"]["state"]["lastupdated"]);
-        console.log(`sensor update: ${JSON.stringify(sensorUpdate, null, 4)}`)
+        // console.log(`sensor update: ${JSON.stringify(sensorUpdate, null, 4)}`)
 
         // if no update has occurred in the past (initial setup) store the current state and return
         if (this.lastSensorUpdate === null) {
