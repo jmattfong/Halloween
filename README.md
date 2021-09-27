@@ -41,5 +41,5 @@ Create a file located at ```secrets/secrets.json``` with a refreshToken generate
 
 ## How To Run
 ```
-ts-node main.ts
+ts-node main.ts --sceneToRun="living_room"
 ```

@@ -10,6 +10,27 @@ import { red, white } from './lib/hue/colour';
 import { SpookyHueBulbPlayer } from './lib/hue/spooky_bulb_player';
 import { SpookyHueApi } from './lib/hue/hue';
 import { HueSensorUpdate } from './lib/hue/sensor';
+import { parse } from 'ts-command-line-args';
+
+// For details about adding new args, see https://www.npmjs.com/package/ts-command-line-args
+interface IHalloweenServerArgs {
+    sceneToRun: string;
+    help?: boolean;
+}
+
+export const args = parse<IHalloweenServerArgs>(
+    {
+        sceneToRun: String,
+        help: { type: Boolean, optional: true, alias: 'h', description: 'Prints this usage guide' },
+    },
+    {
+        helpArg: 'help',
+        headerContentSections: [{ header: 'My Example Config', content: 'Thanks for using Our Awesome Library' }],
+        footerContentSections: [{ header: 'Footer', content: `Copyright: Big Faceless Corp. inc.` }],
+    },
+);
+
+console.log(`Args: ${JSON.stringify(args)}`)
 
 const configContents = readFileSync('./config/config.json', { encoding: 'utf-8' });
 let config = JSON.parse(configContents);
