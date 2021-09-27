@@ -4,6 +4,7 @@ import { readFileSync } from 'fs';
 interface RingConfig {
     username: string
     password: string
+    refreshToken: string
 }
 
 export class RingEnhancedSpookinatorV2 {
@@ -19,15 +20,14 @@ export class RingEnhancedSpookinatorV2 {
         this.ring = new RingApi({
             cameraStatusPollingSeconds: 2,
             debug: debug,
-            email: config.username,
-            password: config.password
+            refreshToken: config.refreshToken,
         });
-       this.sensors = new Array(); 
+       this.sensors = new Array();
     }
 
     public addSensorCallback(sensor: RingDevice, callback: (data: RingDeviceData) => void): void {
         console.log(`adding callback to sensor ${sensor.name}`)
-        sensor.onData.subscribe((event) => {
+        sensor.onData.subscribe((event: any) => {
             if ((event as RingDeviceData).name) {
                 let data = event as RingDeviceData
                 console.log(`sensor ${sensor.name} invoked. event: ${data.faulted}`);
@@ -48,7 +48,7 @@ export class RingEnhancedSpookinatorV2 {
 
     private async getAllContactSensors(): Promise<RingDevice[]> {
         const locations = await this.ring.getLocations();
-        
+
         let allDevices: RingDevice[];
         allDevices = new Array();
         for (const location of locations) {
