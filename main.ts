@@ -14,32 +14,49 @@ import { HueSensorUpdate } from './lib/hue/sensor';
 const configContents = readFileSync('./config/config.json', { encoding: 'utf-8' });
 let config = JSON.parse(configContents);
 
-const spookyLightPatterns : any = {
-    "Half Bathroom": {
-        lights: [{
-            id: 1,
-            spookyPatterns: [
-                new StableColourPattern(white, 40, 5, 0),
-                new SoundPattern('resources/sparks.mp3', new FlickerPattern(5.5), 3),
-                new OffPattern(1),
-                new SoundPattern('resources/woman_screaming.mp3', new StableColourPattern(red, 60, 12, 0), 500),
-                new StableColourPattern(white, 60, 10, 10)
-            ],
-            unSpookyPatterns: [
-                new StableColourPattern(white, 40, 10, 10),
-                new StableColourPattern(white, 10, 10, 30)
-            ]
-        }]
-    },
-    "": {
-        lights: [{
-            id: 7,
-            spookyPatterns: [
-                new StableColourPattern(red, 60, 1, 3),
-                new StableColourPattern(red, 0, 1, 3)
-            ]
-        }]
+class Light {
+    protected id: number;
+    protected spookyPatterns: Pattern[];
+    protected unspookyPatterns: Pattern[];
+
+    constructor(id: number, spookyPatterns: Pattern[], unspookyPatterns: Pattern[]) {
+        this.id = id;
+        this.spookyPatterns = spookyPatterns;
+        this.unspookyPatterns = unspookyPatterns;
     }
+
+    public getId(): number {
+        return this.id;
+    }
+
+    public getSpookyPatterns(): Pattern[] {
+        return this.spookyPatterns;
+    }
+
+    public getUnspookyPatterns(): Pattern[] {
+        return this.unspookyPatterns;
+    }
+}
+
+const spookyLightPatterns: { [key: string]: Light[] } = {
+    "Half Bathroom": [
+        new Light(1, [
+            new StableColourPattern(white, 40, 5, 0),
+            new SoundPattern('resources/sparks.mp3', new FlickerPattern(5.5), 3),
+            new OffPattern(1),
+            new SoundPattern('resources/woman_screaming.mp3', new StableColourPattern(red, 60, 12, 0), 500),
+            new StableColourPattern(white, 60, 10, 10)
+        ], [
+            new StableColourPattern(white, 40, 10, 10),
+            new StableColourPattern(white, 10, 10, 30)
+        ])],
+    "": [
+        new Light(7, [
+            new StableColourPattern(red, 60, 1, 3),
+            new StableColourPattern(red, 0, 1, 3)
+        ],
+            [])
+    ]
 }
 
 const repeatingRedPulsingPattern = [
@@ -84,9 +101,12 @@ async function main() {
         if (spookyLightPatterns.hasOwnProperty(s.name)) {
             spook.addSensorCallback(s, (data: RingDeviceData) => {
                 console.log(`callback called on ${data.name}`);
-                const questionablySpookyKey = data.faulted ? "unSpookyPatterns" : "spookyPatterns";
-                spookyLightPatterns[s.name].lights.forEach((light: { id: number, spookyPatterns: Pattern[]; unSpookyPatterns: Pattern[]; }) => {
-                    spookyHueBulbPlayer.playPattern(light.id, light[questionablySpookyKey]);
+                console.log(spookyLightPatterns)
+                let lights: Light[] = spookyLightPatterns[s.name];
+
+                lights.forEach(light => {
+                    let patternWorkflow = data.faulted ? light.getUnspookyPatterns() : light.getSpookyPatterns()
+                    spookyHueBulbPlayer.playPattern(light.getId(), patternWorkflow);
                 });
             });
         }

@@ -5,7 +5,7 @@ const v3 = require('node-hue-api').v3;
 const LightState = v3.lightStates.LightState;
 var player = require('play-sound')()
 
-export class Pattern {
+export abstract class Pattern {
     protected durationMs: number;
     constructor(durationSeconds: number) {
         this.durationMs = durationSeconds * 1000;
