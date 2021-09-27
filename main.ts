@@ -11,7 +11,7 @@ import { SpookyHueBulbPlayer } from './lib/hue/spooky_bulb_player';
 import { SpookyHueApi } from './lib/hue/hue';
 import { HueSensorUpdate } from './lib/hue/sensor';
 
-const configContents = readFileSync('./config/config.json', {encoding: 'utf-8'});
+const configContents = readFileSync('./config/config.json', { encoding: 'utf-8' });
 let config = JSON.parse(configContents);
 
 const spookyLightPatterns = {
@@ -126,11 +126,11 @@ async function setupChromecaster() {
 async function pulseAllLights(spookhue: SpookyHueApi, spookyHueBulbPlayer: SpookyHueBulbPlayer) {
     const allLights = await spookhue.getLights();
     const pattern = [new OnPattern(100, 1, 1),
-        new OffPattern(1, 1),
-        new OnPattern(100, 1, 1),
-        new OffPattern(1, 1),
-        new OnPattern(100, 1, 1),
-        new OffPattern(1, 1)
+    new OffPattern(1, 1),
+    new OnPattern(100, 1, 1),
+    new OffPattern(1, 1),
+    new OnPattern(100, 1, 1),
+    new OffPattern(1, 1)
     ];
 
     while (true) {
