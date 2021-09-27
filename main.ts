@@ -5,7 +5,7 @@ import { RingEnhancedSpookinatorV2 } from './lib/ring';
 import { Chromecaster } from './lib/chromecast';
 import { SpookyCli } from './lib/cli';
 import { ALL_VIDEOS } from './lib/videos';
-import { SoundPattern, FlickerPattern, OffPattern, StableColourPattern, SleepPattern, OnPattern } from './lib/hue/patterns';
+import { SoundPattern, FlickerPattern, OffPattern, StableColourPattern, SleepPattern, OnPattern, Pattern } from './lib/hue/patterns';
 import { red, white } from './lib/hue/colour';
 import { SpookyHueBulbPlayer } from './lib/hue/spooky_bulb_player';
 import { SpookyHueApi } from './lib/hue/hue';
@@ -14,7 +14,7 @@ import { HueSensorUpdate } from './lib/hue/sensor';
 const configContents = readFileSync('./config/config.json', { encoding: 'utf-8' });
 let config = JSON.parse(configContents);
 
-const spookyLightPatterns = {
+const spookyLightPatterns : any = {
     "Half Bathroom": {
         lights: [{
             id: 1,
@@ -85,7 +85,7 @@ async function main() {
             spook.addSensorCallback(s, (data: RingDeviceData) => {
                 console.log(`callback called on ${data.name}`);
                 const questionablySpookyKey = data.faulted ? "unSpookyPatterns" : "spookyPatterns";
-                spookyLightPatterns[s.name].lights.forEach(light => {
+                spookyLightPatterns[s.name].lights.forEach((light: { id: number, spookyPatterns: Pattern[]; unSpookyPatterns: Pattern[]; }) => {
                     spookyHueBulbPlayer.playPattern(light.id, light[questionablySpookyKey]);
                 });
             });

@@ -14,7 +14,7 @@ npm install -g ts-node
 npm install
 ```
 
-You also need to update the file located in ```secrets/ring-cred.json``` with the username and password for your ring account.
+You also need to update the file located in ```secrets/secrets.json``` with the username and password for your ring account.
 
 ## How To Run
 ```
