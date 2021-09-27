@@ -20,3 +20,5 @@ You also need to update the file located in ```secrets/ring-cred.json``` with th
 ```
 ts-node main.ts
 ```
+
+hello matt
