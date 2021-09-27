@@ -71,51 +71,50 @@ async function main() {
     console.log('starting server')
 
     var ringConfigPath = config.secretPath;
-    // const spook = new RingEnhancedSpookinatorV2(ringConfigPath, true);
+    const spook = new RingEnhancedSpookinatorV2(ringConfigPath, true);
 
     const spookhue = new SpookyHueApi(ringConfigPath);
     await spookhue.connect();
     const spookyHueBulbPlayer = new SpookyHueBulbPlayer(spookhue);
 
-    // // Setup infinitely repeating light patterns
-    // spookyHueBulbPlayer.playRepeatingPattern(6, repeatingRedPulsingPattern);
-    // spookyHueBulbPlayer.playRepeatingPattern(7, repeatingRedPulsingPattern);
+    // Setup infinitely repeating light patterns
+    spookyHueBulbPlayer.playRepeatingPattern(6, repeatingRedPulsingPattern);
+    spookyHueBulbPlayer.playRepeatingPattern(7, repeatingRedPulsingPattern);
 
-    // const sensors = await spook.getSensors();
+    const sensors = await spook.getSensors();
 
-    let sensors = await spookhue.getSensors();
     let lights = await spookhue.getLights()
     console.log(`all my sensors: ${sensors}`);
     console.log(`get all lights: ${lights}`);
 
-    // const cli = new SpookyCli(ALL_VIDEOS, (video) => {
-    //     chromecaster.playVideo(video);
-    // });
-    // cli.start();
+    const cli = new SpookyCli(ALL_VIDEOS, (video) => {
+        chromecaster.playVideo(video);
+    });
+    cli.start();
 
-    // sensors.forEach(s => {
-    //     if (s.name === 'Front Gate') {
-    //         spook.addSensorCallback(s, (data: RingDeviceData) => {
-    //             console.log(`callback called on ${data.name}`);
-    //             if (data.faulted) {
-    //                 chromecaster.playRandomVideo();
-    //             }
-    //         });
-    //     }
+    sensors.forEach(s => {
+        if (s.name === 'Front Gate') {
+            spook.addSensorCallback(s, (data: RingDeviceData) => {
+                console.log(`callback called on ${data.name}`);
+                if (data.faulted) {
+                    chromecaster.playRandomVideo();
+                }
+            });
+        }
 
-    //     if (spookyLightPatterns.hasOwnProperty(s.name)) {
-    //         spook.addSensorCallback(s, (data: RingDeviceData) => {
-    //             console.log(`callback called on ${data.name}`);
-    //             console.log(spookyLightPatterns)
-    //             let lights: Light[] = spookyLightPatterns[s.name];
+        if (spookyLightPatterns.hasOwnProperty(s.name)) {
+            spook.addSensorCallback(s, (data: RingDeviceData) => {
+                console.log(`callback called on ${data.name}`);
+                console.log(spookyLightPatterns)
+                let lights: Light[] = spookyLightPatterns[s.name];
 
-    //             lights.forEach(light => {
-    //                 let patternWorkflow = data.faulted ? light.getUnspookyPatterns() : light.getSpookyPatterns()
-    //                 spookyHueBulbPlayer.playPattern(light.getId(), patternWorkflow);
-    //             });
-    //         });
-    //     }
-    // });
+                lights.forEach(light => {
+                    let patternWorkflow = data.faulted ? light.getUnspookyPatterns() : light.getSpookyPatterns()
+                    spookyHueBulbPlayer.playPattern(light.getId(), patternWorkflow);
+                });
+            });
+        }
+    });
 
     const hueWalkwaySensor = await spookhue.getSensor(1);
     console.log(`found hue sensor: ${hueWalkwaySensor.toString()}`)
@@ -132,14 +131,14 @@ async function main() {
         new FlickerPattern(30),
     ];
 
-    // const hallwaySensor = await spookhue.getSensor(1);
-    // const c = (update: HueSensorUpdate) => {
-    //     if (update.getPresence()) {
-    //         spookyHueBulbPlayer.playPattern(4, hallwayPattern);
-    //     }
-    // }
-    // hallwaySensor.addCallback(c);
-    // hallwaySensor.start();
+    const hallwaySensor = await spookhue.getSensor(1);
+    const c = (update: HueSensorUpdate) => {
+        if (update.getPresence()) {
+            spookyHueBulbPlayer.playPattern(4, hallwayPattern);
+        }
+    }
+    hallwaySensor.addCallback(c);
+    hallwaySensor.start();
 }
 
 async function setupChromecaster() {
