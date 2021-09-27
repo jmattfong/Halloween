@@ -116,7 +116,7 @@ async function main() {
         }
     });
 
-    const hueWalkwaySensor = await spookhue.getSensor(1);
+    const hueWalkwaySensor = await spookhue.getSensor(2);
     console.log(`found hue sensor: ${hueWalkwaySensor.toString()}`)
     const callback = (update: HueSensorUpdate) => {
         console.log(`received status update: ${update}`);
