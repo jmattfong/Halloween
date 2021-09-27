@@ -1,15 +1,15 @@
 import { BLANK_VIDEO, Video, SPOOKY_VIDEOS } from "./videos";
 
-var Client                = require('castv2-client').Client;
-var DefaultMediaReceiver  = require('castv2-client').DefaultMediaReceiver;
-var mdns                  = require('mdns');
+var Client = require('castv2-client').Client;
+var DefaultMediaReceiver = require('castv2-client').DefaultMediaReceiver;
+var mdns = require('mdns');
 
 let DEVICE_NAME = 'Chromecast-70c4c8babee87879b01e6d819b6b5e97';
 
 export class Chromecaster {
     private player: any // this should be a more specific type here!
     private isReady: boolean = false;
-    private currentPlayingVideo: Video;
+    private currentPlayingVideo: Video | null;
     private baseServerUrl: string
     private videoPlayStartTime: number
     private debug: boolean
@@ -20,7 +20,7 @@ export class Chromecaster {
         this.debug = debug;
         const client = new Client();
         const chromecast = mdns.createBrowser(mdns.tcp('googlecast'));
-        
+
         const onConnect = (error: Error, player: any) => {
             if (error) {
                 console.log(`failed to get media player. whyyyy`)
@@ -33,38 +33,41 @@ export class Chromecaster {
             this.isReady = true;
         };
 
+        this.currentPlayingVideo = null;
+        this.videoPlayStartTime = 0;
+
         this.setupConnection(deviceName, chromecast, client, onConnect.bind(this));
 
-        client.on('error', function(err) {
+        client.on('error', function (err: Error) {
             console.log('Error: %s', err.message);
             client.close();
         });
 
         chromecast.start();
     }
-    
+
     private setupConnection(deviceName: string, chromecast: any, client: any, onConnect: (error: Error, player: any) => void) {
-        chromecast.on('serviceUp', function(service) {
+        chromecast.on('serviceUp', function (service: any) {
             console.log('found device "%s" at %s:%d', service.name, service.addresses[0], service.port);
 
             if (service.name !== deviceName) {
                 console.log(`${service.name} does nawt match the requested device ${deviceName}`);
                 return;
             }
-            
-            client.connect(service.addresses[0], function() {
+
+            client.connect(service.addresses[0], function () {
                 console.log('connected to device ' + service.addresses[0]);
-                client.launch(DefaultMediaReceiver, function(error, player) {
+                client.launch(DefaultMediaReceiver, function (error: any, player: any) {
                     onConnect(error, player);
                 });
-            }); 
+            });
         });
     }
 
     public async start(): Promise<void> {
         let count = 0;
         console.log('checking to see if the player is ready');
-        while (!this.isReady)  {
+        while (!this.isReady) {
             // if we have waited 1 minute for connection, fail setup
             if (count > 12) {
                 throw new Error('failed to setup in 60 seconds');
@@ -110,7 +113,7 @@ export class Chromecaster {
         this.videoPlayStartTime = Date.now();
 
         // video is about to start playing, set timeout to play the blank video
-        this.player.load(media, { autoplay: true }, function(error, status) {
+        this.player.load(media, { autoplay: true }, function (error: any, status: any) {
             if (error != null) {
                 console.log(`error playing media: ${error}`);
                 return;
@@ -128,13 +131,14 @@ export class Chromecaster {
             contentId: `${this.baseServerUrl}/${vid.getFileName()}`,
             contentType: 'video/mp4',
             streamType: 'BUFFERED', // or LIVE
+            metadata: {},
         };
 
         if (this.debug) {
-            media['metadata'] = {
+            media.metadata = {
                 type: 0,
                 metadataType: 0,
-                title: vid.getName(), 
+                title: vid.getName(),
                 images: [
                     // maybe we can use a black image here to display while buffering?
                     //{ url: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg' }

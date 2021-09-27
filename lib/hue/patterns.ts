@@ -6,7 +6,7 @@ const LightState = v3.lightStates.LightState;
 var player = require('play-sound')()
 
 export class Pattern {
-    protected durationMs;
+    protected durationMs: number;
     constructor(durationSeconds: number) {
         this.durationMs = durationSeconds * 1000;
     }
@@ -43,7 +43,7 @@ export class SoundPattern extends Pattern {
     }
 
     public async run(lightId: number, lightApi: SpookyHueApi): Promise<boolean> {
-        player.play(this.soundFile, function(err){
+        player.play(this.soundFile, function (err: any) {
             console.log(`[ERROR]: something went wrong playing sound: ${err}`)
         });
         await sleep(this.soundToVideoDelayMs);
@@ -166,7 +166,7 @@ export class StableColourPattern extends Pattern {
     private colour: CIEColour
     private brightness: number
     private transitionTimeSeconds: number
-    constructor(colour: CIEColour, brightness, durationSeconds: number, transitionTimeSeconds: number) {
+    constructor(colour: CIEColour, brightness: number, durationSeconds: number, transitionTimeSeconds: number) {
         super(durationSeconds)
         this.colour = colour;
         this.brightness = brightness;
@@ -198,6 +198,6 @@ async function sleep(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function getRandomInt(max) {
+function getRandomInt(max: number) {
     return Math.floor(Math.random() * Math.floor(max));
 }

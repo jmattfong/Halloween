@@ -48,7 +48,7 @@ export class SpookyHueApi {
         return await this.hueApi.lights.getAll();
     }
 
-    public async getSensor(sensorId): Promise<HueSensor> {
+    public async getSensor(sensorId: number): Promise<HueSensor> {
         if (!this.isConnected) {
             throw new Error('not connected to the hue hub');
         }
@@ -61,6 +61,6 @@ export class SpookyHueApi {
             throw new Error('not connected to the hue hub');
         }
 
-        return await this.hueApi.sensors.getAll().map((s) => { new HueSensor(this.hueApi.sensors, s.id) });
+        return await this.hueApi.sensors.getAll().map((s: any) => { new HueSensor(this.hueApi.sensors, s.id) });
     }
 }

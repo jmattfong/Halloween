@@ -36,7 +36,7 @@ export class HueSensor {
     private sensorApi: any
     private sensorId: number
     private callbacks: ((event: any) => void)[]
-    private lastSensorUpdate: HueSensorUpdate
+    private lastSensorUpdate: HueSensorUpdate | null
 
     constructor(api: SpookyHueApi, sensorId: number) {
         this.sensorApi = api;

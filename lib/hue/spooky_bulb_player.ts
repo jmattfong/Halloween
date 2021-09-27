@@ -17,7 +17,10 @@ export class SpookyHueBulbPlayer {
 
         if (this.currPatternMap.has(lightId)) {
             console.log('interrupt current pattern');
-            this.currPatternMap.get(lightId).cancel();
+            let bulb = this.currPatternMap.get(lightId);
+            if (bulb) {
+                bulb.cancel();
+            }
         }
 
         console.log('playing light pattern');
@@ -44,5 +47,6 @@ export class SpookyHueBulbPlayer {
 
         const totalPatternLengthMs = patterns.map((p) => p.getDurationMs()).reduce((a, b) => a + b);
         console.log('playing repeated light pattern: ' + patterns);
-        setInterval((() => { this.playPattern(lightId, patterns) }).bind(this), totalPatternLengthMs + 100); }
+        setInterval((() => { this.playPattern(lightId, patterns) }).bind(this), totalPatternLengthMs + 100);
+    }
 }
