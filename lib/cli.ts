@@ -1,5 +1,9 @@
 import * as readline from 'readline';
 import { Video } from './videos';
+import { getLogger } from './logging'
+import { CategoryLogger } from 'typescript-logging';
+
+const log: CategoryLogger = getLogger("cli")
 
 export class SpookyCli {
     private videos: Video[]
@@ -26,10 +30,10 @@ export class SpookyCli {
                 if (videoId >= 1 && videoId <= this.videos.length) {
                     this.playVideoCallback(this.videos[videoId - 1]);
                 } else {
-                    console.log('invalid video id')
+                    log.info('invalid video id')
                 }
             } catch (error) {
-                console.log(`invalid input "${answer}". Must be a number from the following list:`);
+                log.info(`invalid input "${answer}". Must be a number from the following list:`);
             }
             this.askForInput()
         });

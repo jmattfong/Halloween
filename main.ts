@@ -11,29 +11,16 @@ import { SpookyHueBulbPlayer } from './lib/hue/spooky_bulb_player';
 import { SpookyHueApi } from './lib/hue/hue';
 import { HueSensorUpdate } from './lib/hue/sensor';
 import { parse } from 'ts-command-line-args';
+import { getLogger } from './lib/logging'
+import { CategoryLogger } from 'typescript-logging';
+
+const log: CategoryLogger = getLogger("main")
 
 // For details about adding new args, see https://www.npmjs.com/package/ts-command-line-args
 interface IHalloweenServerArgs {
-    sceneToRun: string;
+    scene: string;
     help?: boolean;
 }
-
-export const args = parse<IHalloweenServerArgs>(
-    {
-        sceneToRun: String,
-        help: { type: Boolean, optional: true, alias: 'h', description: 'Prints this usage guide' },
-    },
-    {
-        helpArg: 'help',
-        headerContentSections: [{ header: 'My Example Config', content: 'Thanks for using Our Awesome Library' }],
-        footerContentSections: [{ header: 'Footer', content: `Copyright: Big Faceless Corp. inc.` }],
-    },
-);
-
-console.log(`Args: ${JSON.stringify(args)}`)
-
-const configContents = readFileSync('./config/config.json', { encoding: 'utf-8' });
-let config = JSON.parse(configContents);
 
 class Light {
     protected id: number;
@@ -59,6 +46,7 @@ class Light {
     }
 }
 
+// Keys in this dictionary are used as the scene name, but must also match the name of the sensor
 const spookyLightPatterns: { [key: string]: Light[] } = {
     "Half Bathroom": [
         new Light(1, [
@@ -88,8 +76,24 @@ const repeatingRedPulsingPattern = [
 async function main() {
     const { env } = process
 
+    const args = parse<IHalloweenServerArgs>(
+        {
+            scene: { type: String, alias: 's', description: `The scene to run. Choose from: ${Object.keys(spookyLightPatterns)}`},
+            help: { type: Boolean, optional: true, alias: 'h', description: 'Prints this usage guide' },
+        },
+        {
+            helpArg: 'help',
+            headerContentSections: [{ header: 'Halloween Spooktacular', content: 'Get ready to spook and be spooked' }]
+        },
+    );
+
+    log.info(`Args: ${JSON.stringify(args)}\n`)
+
+    const configContents = readFileSync('./config/config.json', { encoding: 'utf-8' });
+    let config = JSON.parse(configContents);
+
     const chromecaster = await setupChromecaster();
-    console.log('starting server')
+    log.info('starting server')
 
     var ringConfigPath = config.secretPath;
     const spook = new RingEnhancedSpookinatorV2(ringConfigPath, true);
@@ -105,8 +109,8 @@ async function main() {
     const sensors = await spook.getSensors();
 
     let lights = await spookhue.getLights()
-    console.log(`all my sensors: ${sensors}`);
-    console.log(`get all lights: ${lights}`);
+    log.info(`all my sensors: ${sensors}`);
+    log.info(`get all lights: ${lights}`);
 
     const cli = new SpookyCli(ALL_VIDEOS, (video) => {
         chromecaster.playVideo(video);
@@ -116,7 +120,7 @@ async function main() {
     sensors.forEach(s => {
         if (s.name === 'Front Gate') {
             spook.addSensorCallback(s, (data: RingDeviceData) => {
-                console.log(`callback called on ${data.name}`);
+                log.info(`callback called on ${data.name}`);
                 if (data.faulted) {
                     chromecaster.playRandomVideo();
                 }
@@ -125,8 +129,8 @@ async function main() {
 
         if (spookyLightPatterns.hasOwnProperty(s.name)) {
             spook.addSensorCallback(s, (data: RingDeviceData) => {
-                console.log(`callback called on ${data.name}`);
-                console.log(spookyLightPatterns)
+                log.info(`callback called on ${data.name}`);
+                log.info(`${spookyLightPatterns}`)
                 let lights: Light[] = spookyLightPatterns[s.name];
 
                 lights.forEach(light => {
@@ -138,9 +142,9 @@ async function main() {
     });
 
     const hueWalkwaySensor = await spookhue.getSensor(2);
-    console.log(`found hue sensor: ${hueWalkwaySensor.toString()}`)
+    log.info(`found hue sensor: ${hueWalkwaySensor.toString()}`)
     const callback = (update: HueSensorUpdate) => {
-        console.log(`received status update: ${update}`);
+        log.info(`received status update: ${update}`);
         if (update.getPresence()) {
             chromecaster.playRandomVideo();
         }
@@ -180,7 +184,7 @@ async function pulseAllLights(spookhue: SpookyHueApi, spookyHueBulbPlayer: Spook
 
     while (true) {
         for (let i = 0; i < allLights.length; i++) {
-            console.log(`Pulsing light #${allLights[i].id}`)
+            log.info(`Pulsing light #${allLights[i].id}`)
             await spookyHueBulbPlayer.playPattern(allLights[i].id, pattern);
         }
     }

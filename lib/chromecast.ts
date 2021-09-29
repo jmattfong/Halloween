@@ -1,4 +1,8 @@
 import { BLANK_VIDEO, Video, SPOOKY_VIDEOS } from "./videos";
+import { getLogger } from './logging'
+import { CategoryLogger } from 'typescript-logging';
+
+const log: CategoryLogger = getLogger("chromecast")
 
 var Client = require('castv2-client').Client;
 var DefaultMediaReceiver = require('castv2-client').DefaultMediaReceiver;
@@ -23,12 +27,12 @@ export class Chromecaster {
 
         const onConnect = (error: Error, player: any) => {
             if (error) {
-                console.log(`failed to get media player. whyyyy`)
+                log.info(`failed to get media player. whyyyy`)
                 client.close();
                 throw new Error(`${error}`);
             }
 
-            console.log('player setup. Ready to start');
+            log.info('player setup. Ready to start');
             this.player = player;
             this.isReady = true;
         };
@@ -39,7 +43,7 @@ export class Chromecaster {
         this.setupConnection(deviceName, chromecast, client, onConnect.bind(this));
 
         client.on('error', function (err: Error) {
-            console.log('Error: %s', err.message);
+            log.info(`Error:  ${err.message}`);
             client.close();
         });
 
@@ -48,15 +52,15 @@ export class Chromecaster {
 
     private setupConnection(deviceName: string, chromecast: any, client: any, onConnect: (error: Error, player: any) => void) {
         chromecast.on('serviceUp', function (service: any) {
-            console.log('found device "%s" at %s:%d', service.name, service.addresses[0], service.port);
+            log.info('found device "%s" at %s:%d', service.name, service.addresses[0], service.port);
 
             if (service.name !== deviceName) {
-                console.log(`${service.name} does nawt match the requested device ${deviceName}`);
+                log.info(`${service.name} does nawt match the requested device ${deviceName}`);
                 return;
             }
 
             client.connect(service.addresses[0], function () {
-                console.log('connected to device ' + service.addresses[0]);
+                log.info('connected to device ' + service.addresses[0]);
                 client.launch(DefaultMediaReceiver, function (error: any, player: any) {
                     onConnect(error, player);
                 });
@@ -66,23 +70,23 @@ export class Chromecaster {
 
     public async start(): Promise<void> {
         let count = 0;
-        console.log('checking to see if the player is ready');
+        log.info('checking to see if the player is ready');
         while (!this.isReady) {
             // if we have waited 1 minute for connection, fail setup
             if (count > 12) {
                 throw new Error('failed to setup in 60 seconds');
             }
 
-            console.log('the chromecast connection is not ready. Sleeping for 5 second');
+            log.info('the chromecast connection is not ready. Sleeping for 5 second');
             await this.sleep(5000);
             count++;
         }
 
-        console.log('chromecast is ready. Starting spooky vids, with some spooky blank vids of course');
+        log.info('chromecast is ready. Starting spooky vids, with some spooky blank vids of course');
 
         setInterval(() => {
             if (!this.currentPlayingVideo) {
-                console.log('nothing playing. Playing blank video')
+                log.info('nothing playing. Playing blank video')
                 this.playBlankVideo();
                 return;
             }
@@ -107,7 +111,7 @@ export class Chromecaster {
     }
 
     public async playVideo(video: Video): Promise<void> {
-        console.log(`playing video: ${video.getName()}`)
+        log.info(`playing video: ${video.getName()}`)
         const media = this.createMediaForLink(video);
         this.currentPlayingVideo = video;
         this.videoPlayStartTime = Date.now();
@@ -115,7 +119,7 @@ export class Chromecaster {
         // video is about to start playing, set timeout to play the blank video
         this.player.load(media, { autoplay: true }, function (error: any, status: any) {
             if (error != null) {
-                console.log(`error playing media: ${error}`);
+                log.info(`error playing media: ${error}`);
                 return;
             }
         }.bind(this));

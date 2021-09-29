@@ -1,4 +1,8 @@
 import { SpookyHueApi } from "./hue";
+import { getLogger } from '../logging'
+import { CategoryLogger } from 'typescript-logging';
+
+const log: CategoryLogger = getLogger("hue-sensor")
 
 export class HueSensorUpdate {
     private presence: boolean
@@ -52,9 +56,9 @@ export class HueSensor {
     private async checkForUpdate() {
         const sensor = await this.sensorApi.getSensor(this.sensorId);
 
-        // console.log(`sensor update: ${sensor.toStringDetailed()}`)
+        // log.info(`sensor update: ${sensor.toStringDetailed()}`)
         const sensorUpdate = new HueSensorUpdate(sensor.getStateAttributeValue("presence"), sensor.lastupdated);
-        // console.log(`sensor update: ${JSON.stringify(sensorUpdate, null, 4)}`)
+        // log.info(`sensor update: ${JSON.stringify(sensorUpdate, null, 4)}`)
 
         // if no update has occurred in the past (initial setup) store the current state and return
         if (this.lastSensorUpdate === null) {
@@ -62,7 +66,7 @@ export class HueSensor {
             return;
         }
 
-        // if the sensor state is the same, then do nothing 
+        // if the sensor state is the same, then do nothing
         if (sensorUpdate.isEqual(this.lastSensorUpdate)) {
             return;
         }
@@ -75,7 +79,7 @@ export class HueSensor {
     }
 
     public addCallback(callback: (update: HueSensorUpdate) => void) {
-        console.log('adding callback to sensor');
+        log.info('adding callback to sensor');
         this.callbacks.push(callback);
     }
 

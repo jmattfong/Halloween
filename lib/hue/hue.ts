@@ -1,5 +1,9 @@
 import { readFileSync } from 'fs';
 import { HueSensor } from './sensor';
+import { getLogger } from '../logging'
+import { CategoryLogger } from 'typescript-logging';
+
+const log: CategoryLogger = getLogger("hue")
 
 const v3 = require('node-hue-api').v3;
 
@@ -22,11 +26,11 @@ export class SpookyHueApi {
 
     public async connect() {
         let searchResults = await v3.discovery.nupnpSearch();
-        console.log(`found ${searchResults.length} hubs. Connecting to the first one cuz #yolo`);
+        log.info(`found ${searchResults.length} hubs. Connecting to the first one cuz #yolo`);
         const host = searchResults[0].ipaddress;
-        console.log(`connecting to ${host}`)
+        log.info(`connecting to ${host}`)
         this.hueApi = await v3.api.createLocal(host).connect(this.username);
-        console.log('connected!')
+        log.info('connected!')
         this.isConnected = true;
     }
 

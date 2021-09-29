@@ -1,5 +1,9 @@
 import { SpookyHueApi } from "./hue";
 import { Pattern } from "./patterns";
+import { getLogger } from '../logging'
+import { CategoryLogger } from 'typescript-logging';
+
+const log: CategoryLogger = getLogger("spooky-bulb-player")
 
 export class SpookyHueBulbPlayer {
     private api: SpookyHueApi
@@ -16,27 +20,27 @@ export class SpookyHueBulbPlayer {
         }
 
         if (this.currPatternMap.has(lightId)) {
-            console.log('interrupt current pattern');
+            log.info('interrupt current pattern');
             let bulb = this.currPatternMap.get(lightId);
             if (bulb) {
                 bulb.cancel();
             }
         }
 
-        console.log('playing light pattern');
+        log.info('playing light pattern');
         for (let i = 0; i < patterns.length; i++) {
             const pattern = patterns[i];
-            console.log(`playing pattern: ${pattern.constructor.name}`);
+            log.info(`playing pattern: ${pattern.constructor.name}`);
             this.currPatternMap.set(lightId, pattern);
             const wasCancelled = await pattern.run(lightId, this.api);
-            console.log('done playing pattern');
+            log.info('done playing pattern');
             if (wasCancelled) {
                 return;
             }
         }
 
         this.currPatternMap.delete(lightId);
-        console.log('done playing all patterns. Setting light back to default state');
+        log.info('done playing all patterns. Setting light back to default state');
         // set light back to default state
     }
 
@@ -46,7 +50,7 @@ export class SpookyHueBulbPlayer {
         }
 
         const totalPatternLengthMs = patterns.map((p) => p.getDurationMs()).reduce((a, b) => a + b);
-        console.log('playing repeated light pattern: ' + patterns);
+        log.info('playing repeated light pattern: ' + patterns);
         setInterval((() => { this.playPattern(lightId, patterns) }).bind(this), totalPatternLengthMs + 100);
     }
 }

@@ -1,5 +1,9 @@
 import { RingApi, RingDevice, RingDeviceType, RingDeviceData } from "ring-client-api";
 import { readFileSync } from 'fs';
+import { getLogger } from './logging'
+import { CategoryLogger } from 'typescript-logging';
+
+const log: CategoryLogger = getLogger("ring")
 
 interface RingConfig {
     username: string
@@ -26,14 +30,14 @@ export class RingEnhancedSpookinatorV2 {
     }
 
     public addSensorCallback(sensor: RingDevice, callback: (data: RingDeviceData) => void): void {
-        console.log(`adding callback to sensor ${sensor.name}`)
+        log.info(`adding callback to sensor ${sensor.name}`)
         sensor.onData.subscribe((event: any) => {
             if ((event as RingDeviceData).name) {
                 let data = event as RingDeviceData
-                console.log(`sensor ${sensor.name} invoked. event: ${data.faulted}`);
+                log.info(`sensor ${sensor.name} invoked. event: ${data.faulted}`);
                 callback(event);
             } else {
-                console.log('an unknown event type was received');
+                log.info('an unknown event type was received');
             }
         });
     }
@@ -54,14 +58,14 @@ export class RingEnhancedSpookinatorV2 {
         for (const location of locations) {
             const devices = await location.getDevices();
 
-            console.log(`Location ${location.locationDetails.name} has the following ${devices.length} device(s):`);
+            log.info(`Location ${location.locationDetails.name} has the following ${devices.length} device(s):`);
 
             for (const device of devices) {
-                console.log(`found device: ${device.name} - ${device.zid} (${device.deviceType})`);
+                log.info(`found device: ${device.name} - ${device.zid} (${device.deviceType})`);
                 allDevices.push(device);
             }
         }
-        console.log(`found ${allDevices.length} devices`);
+        log.info(`found ${allDevices.length} devices`);
 
         return allDevices.filter(device => device.data.deviceType === RingDeviceType.ContactSensor);
     }

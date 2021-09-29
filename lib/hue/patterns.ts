@@ -1,5 +1,9 @@
 import { CIEColour } from "./colour";
 import { SpookyHueApi } from "./hue";
+import { getLogger } from '../logging'
+import { CategoryLogger } from 'typescript-logging';
+
+const log: CategoryLogger = getLogger("hue-pattern")
 
 const v3 = require('node-hue-api').v3;
 const LightState = v3.lightStates.LightState;
