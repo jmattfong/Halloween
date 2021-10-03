@@ -20,7 +20,7 @@ async function main() {
 
     const args = parse<IHalloweenServerArgs>(
         {
-            scene: { type: String, alias: 's', multiple: true, description: `The scene to run. Choose from: ${Object.keys(SCENES)}`},
+            scene: { type: String, alias: 's', multiple: true, description: `The scene to run. Choose from: ${Object.keys(SCENES)}` },
             help: { type: Boolean, optional: true, alias: 'h', description: 'Prints this usage guide' },
         },
         {

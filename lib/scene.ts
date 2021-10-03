@@ -20,9 +20,9 @@ export abstract class Scene {
         this.hueCallback = null
     }
 
-    abstract setup(ringFunction:() => Promise<RingEnhancedSpookinatorV2>, hueFunction:() => Promise<SpookyHueApi>): Promise<void>;
+    abstract setup(ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void>;
 
-    async start(ringFunction:() => Promise<RingEnhancedSpookinatorV2>, hueFunction:() => Promise<SpookyHueApi>): Promise<void> {
+    async start(ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
         await this.setup(ringFunction, hueFunction)
 
         if (this.ringCallback != null) {
@@ -83,7 +83,7 @@ class MultiPartScene extends Scene {
         this.lights = lights
     }
 
-    async setup(ringFunction:() => Promise<RingEnhancedSpookinatorV2>, hueFunction:() => Promise<SpookyHueApi>): Promise<void> {
+    async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
         const spookyHueBulbPlayer = new SpookyHueBulbPlayer(await hueFunction());
         this.ringCallback = [this.name, (data: RingDeviceData) => {
             log.info(`callback called on ${data.name}`);
@@ -113,20 +113,8 @@ class HalfBathroomScene extends MultiPartScene {
     }
 }
 
-class WhatsThisScene extends MultiPartScene {
-    constructor() {
-        super("", [
-            new Light(7, [
-                new StableColourPattern(red, 60, 1, 3),
-                new StableColourPattern(red, 0, 1, 3)
-            ], [
-            ])
-        ])
-    }
-}
-
 class ChromecastScene extends Scene {
-    async setup(ringFunction:() => Promise<RingEnhancedSpookinatorV2>, hueFunction:() => Promise<SpookyHueApi>): Promise<void> {
+    async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
         const chromecaster = new Chromecaster()
         await chromecaster.start();
         this.hueCallback = [
@@ -142,7 +130,7 @@ class ChromecastScene extends Scene {
 }
 
 class HallwayScene extends Scene {
-    async setup(ringFunction:() => Promise<RingEnhancedSpookinatorV2>, hueFunction:() => Promise<SpookyHueApi>): Promise<void> {
+    async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
         const spookyHueBulbPlayer = new SpookyHueBulbPlayer(await hueFunction());
         const hallwayPattern = [
             new FlickerPattern(30),
@@ -160,7 +148,7 @@ class HallwayScene extends Scene {
 }
 
 class PulseAllLightsScene extends Scene {
-    async setup(ringFunction:() => Promise<RingEnhancedSpookinatorV2>, hueFunction:() => Promise<SpookyHueApi>): Promise<void> {
+    async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
         const hue: SpookyHueApi = await hueFunction()
         const spookyHueBulbPlayer = new SpookyHueBulbPlayer(hue);
         const allLights = await hue.getLights();
@@ -184,7 +172,7 @@ class PulseAllLightsScene extends Scene {
 
 class PulsingRedScene extends Scene {
 
-    async setup(ringFunction:() => Promise<RingEnhancedSpookinatorV2>, hueFunction:() => Promise<SpookyHueApi>): Promise<void> {
+    async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
         const spookyHueBulbPlayer = new SpookyHueBulbPlayer(await hueFunction());
         const repeatingRedPulsingPattern = [
             new StableColourPattern(red, 60, 1, 2),
@@ -196,17 +184,10 @@ class PulsingRedScene extends Scene {
     }
 }
 
-class HalfBathScene extends Scene {
-    async setup(ringFunction:() => Promise<RingEnhancedSpookinatorV2>, hueFunction:() => Promise<SpookyHueApi>): Promise<void> {
-        const spookyHueBulbPlayer = new SpookyHueBulbPlayer(await hueFunction());
-
-    }
-}
-
-export const SCENES: {[key:string]: Scene} = {
+export const SCENES: { [key: string]: Scene } = {
     "front_door": new ChromecastScene(),
     "hallway": new HallwayScene(),
     "find_lights": new PulseAllLightsScene(),
     "pulse_red": new PulsingRedScene(),
-    "half_bath": new HalfBathScene(),
+    "half_bath": new HalfBathroomScene(),
 }
