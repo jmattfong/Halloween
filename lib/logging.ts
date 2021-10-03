@@ -1,5 +1,7 @@
 import {Category,CategoryLogger,CategoryServiceFactory,CategoryConfiguration,LogLevel} from "typescript-logging";
 
+// See https://www.npmjs.com/package/typescript-logging
+
 // Optionally change default settings, in this example set default logging to Info.
 // Without changing configuration, categories will log to Error.
 CategoryServiceFactory.setDefaultConfiguration(new CategoryConfiguration(LogLevel.Info));
