@@ -175,8 +175,21 @@ class PulsingRedScene extends Scene {
     async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
         const spookyHueBulbPlayer = new SpookyHueBulbPlayer(await hueFunction());
         const repeatingRedPulsingPattern = [
-            new StableColourPattern(red, 60, 1, 2),
-            new StableColourPattern(red, 0, 1, 3)
+            new StableColourPattern(red, 60, 2, 2),
+            new StableColourPattern(red, 0, 3, 3)
+        ]
+        // Setup infinitely repeating light patterns
+        spookyHueBulbPlayer.playRepeatingPattern(6, repeatingRedPulsingPattern);
+        spookyHueBulbPlayer.playRepeatingPattern(7, repeatingRedPulsingPattern);
+    }
+}
+
+class TestScene extends Scene {
+
+    async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
+        const spookyHueBulbPlayer = new SpookyHueBulbPlayer(await hueFunction());
+        const repeatingRedPulsingPattern = [
+            new StableColourPattern(red, 0, 1, 5)
         ]
         // Setup infinitely repeating light patterns
         spookyHueBulbPlayer.playRepeatingPattern(6, repeatingRedPulsingPattern);
@@ -190,4 +203,5 @@ export const SCENES: { [key: string]: Scene } = {
     "find_lights": new PulseAllLightsScene(),
     "pulse_red": new PulsingRedScene(),
     "half_bath": new HalfBathroomScene(),
+    "test": new TestScene()
 }

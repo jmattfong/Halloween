@@ -40,8 +40,6 @@ export class SpookyHueBulbPlayer {
         }
 
         this.currPatternMap.delete(lightId);
-        log.info('done playing all patterns. Setting light back to default state');
-        // set light back to default state
     }
 
     public async playRepeatingPattern(lightId: number, patterns: Pattern[]) {
