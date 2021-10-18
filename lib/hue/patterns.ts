@@ -7,7 +7,7 @@ const log: CategoryLogger = getLogger("hue-pattern")
 
 const v3 = require('node-hue-api').v3;
 const LightState = v3.lightStates.LightState;
-var player = require('play-sound')()
+const player = require("sound-play");
 
 export abstract class Pattern {
     protected durationMs: number;
@@ -32,14 +32,22 @@ export abstract class Pattern {
 export class SoundPattern extends Pattern {
 
     private soundFile: string
+    // The volume you want to play the audio at! Should be between 0 and 1
+    private volume: number
     private lightPattern: Pattern
-    private soundToVideoDelayMs: number
+    private soundToPatternDelayMs: number
 
-    constructor(soundFile: string, lightPattern: Pattern, soundToVideoDelayMs: number) {
+    constructor(soundFile: string, lightPattern: Pattern, soundToPatternDelayMs: number, volume: number = 0.5) {
         super(lightPattern.getDurationMs());
         this.soundFile = soundFile;
+
+        if (volume <= 0 || volume > 1) {
+            throw RangeError("volume be in the range (0,1]")
+        }
+
+        this.volume = volume;
         this.lightPattern = lightPattern;
-        this.soundToVideoDelayMs = soundToVideoDelayMs;
+        this.soundToPatternDelayMs = soundToPatternDelayMs;
     }
 
     public cancel() {
@@ -47,17 +55,16 @@ export class SoundPattern extends Pattern {
     }
 
     public async run(lightId: number, lightApi: SpookyHueApi): Promise<boolean> {
-        player.play(this.soundFile, function (err: any) {
-            if (err != null) {
-                console.log(`[ERROR]: something went wrong playing sound: ${err}`)
+        player.play(this.soundFile, this.volume).then((error: any) => {
+            if (error) {
+                log.error(`something went wrong playing ${this.soundFile}`, error);
             } else {
-                console.log("audio playback complete")
+                log.info(`playing ${this.soundFile} is complete`)
             }
         });
-        await sleep(this.soundToVideoDelayMs);
+        await sleep(this.soundToPatternDelayMs);
         return this.lightPattern.run(lightId, lightApi);
     }
-
 }
 
 export class FlickerPattern extends Pattern {
