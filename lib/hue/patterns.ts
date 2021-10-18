@@ -48,7 +48,11 @@ export class SoundPattern extends Pattern {
 
     public async run(lightId: number, lightApi: SpookyHueApi): Promise<boolean> {
         player.play(this.soundFile, function (err: any) {
-            console.log(`[ERROR]: something went wrong playing sound: ${err}`)
+            if (err != null) {
+                console.log(`[ERROR]: something went wrong playing sound: ${err}`)
+            } else {
+                console.log("audio playback complete")
+            }
         });
         await sleep(this.soundToVideoDelayMs);
         return this.lightPattern.run(lightId, lightApi);
