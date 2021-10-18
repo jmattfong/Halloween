@@ -34,7 +34,7 @@ async function main() {
     const logLevel = args.debug ? LogLevel.Debug : LogLevel.Info;
     setLogLevel(logLevel);
 
-    log.info(`Args: ${JSON.stringify(args)}\n`)
+    log.info(`input args: ${JSON.stringify(args)}\n`)
 
     const configContents = readFileSync('./config/config.json', { encoding: 'utf-8' });
     let config = JSON.parse(configContents);
