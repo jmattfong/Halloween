@@ -107,13 +107,19 @@ class HalfBathroomScene extends MultiPartScene {
             new SoundPattern("resources/cockroach_fight_1.mp3", new StableColourPattern(blueish_white, 50, 1, 1), 10, 0.5),
         ];
 
+        let spookyGhostScene = [
+            new StableColourPattern(white, 40, 5, 0),
+            new SoundPattern("resources/ghost_movement.mp3", new StableColourPattern(white, 70, 8, 7), 1, 0.2),
+            new SoundPattern("resources/ghost_cry.mp3", new FlickerPattern(1), 10, 0.75),
+        ];
+
         let unspookyScene = [
             new StableColourPattern(white, 40, 10, 10),
             new StableColourPattern(white, 10, 10, 30)
         ];
 
         // TODO: change the light # back to 16 & 21, which are the actual bathroom light numbers
-        super("Half Bathroom", [1], [spookyScreaminElectricScene, spookyCockroachScene], unspookyScene)
+        super("Half Bathroom", [1], [spookyGhostScene, spookyCockroachScene, spookyScreaminElectricScene], unspookyScene)
     }
 }
 
