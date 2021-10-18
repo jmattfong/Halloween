@@ -7,7 +7,7 @@ import { RingEnhancedSpookinatorV2 } from './ring';
 import { SpookyHueApi } from './hue/hue';
 import { SpookyHueBulbPlayer } from './hue/spooky_bulb_player';
 import { SoundPattern, FlickerPattern, OffPattern, StableColourPattern, SleepPattern, OnPattern, Pattern } from './hue/patterns';
-import { red, white } from './hue/colour';
+import { red, white, blueish_white } from './hue/colour';
 
 const log: CategoryLogger = getLogger("scene")
 
@@ -101,7 +101,10 @@ class HalfBathroomScene extends MultiPartScene {
         ];
 
         let spookyCockroachScene = [
-            new SoundPattern("resources/cockroach_walk.mp3", new StableColourPattern(white, 20, 10, 1), 1000),
+            new StableColourPattern(white, 5, 5, 0),
+            new SoundPattern("resources/cockroach_walk.mp3", new StableColourPattern(white, 5, 2, 0), 1000),
+            new SoundPattern("resources/cockroach_scurry_1.mp3", new StableColourPattern(blueish_white, 40, 1, 1), 10),
+            new SoundPattern("resources/cockroach_fight_1.mp3", new StableColourPattern(blueish_white, 50, 1, 1), 10),
         ];
 
         // let electric_scene =
@@ -112,7 +115,7 @@ class HalfBathroomScene extends MultiPartScene {
         ];
 
 
-        super("Half Bathroom", [1], [spookyCockroachScene, spookyScreaminElectricScene], unspookyScene)
+        super("Half Bathroom", [1], [spookyCockroachScene], unspookyScene)
     }
 }
 
