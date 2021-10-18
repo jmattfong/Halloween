@@ -27,14 +27,14 @@ export class SpookyHueBulbPlayer {
             }
         }
 
-        log.info('playing light pattern');
+        log.debug(`pattern playing: ${patterns}`);
         for (let i = 0; i < patterns.length; i++) {
             const pattern = patterns[i];
-            log.info(`playing pattern: ${pattern.constructor.name}`);
+            log.info(`playing pattern: ${pattern.constructor.name} on light #${lightId}`);
             this.currPatternMap.set(lightId, pattern);
             const wasCancelled = await pattern.run(lightId, this.api);
-            log.info('done playing pattern');
             if (wasCancelled) {
+                log.info("canceled pattern")
                 return;
             }
         }
