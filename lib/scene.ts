@@ -102,9 +102,9 @@ class HalfBathroomScene extends MultiPartScene {
 
         let spookyCockroachScene = [
             new StableColourPattern(white, 5, 5, 0),
-            new SoundPattern("resources/cockroach_walk.mp3", new StableColourPattern(white, 5, 2, 0), 1000),
-            new SoundPattern("resources/cockroach_scurry_1.mp3", new StableColourPattern(blueish_white, 40, 1, 1), 10),
-            new SoundPattern("resources/cockroach_fight_1.mp3", new StableColourPattern(blueish_white, 50, 1, 1), 10),
+            new SoundPattern("resources/cockroach_walk.mp3", new StableColourPattern(white, 5, 2, 0), 1000, 0.1),
+            new SoundPattern("resources/cockroach_scurry_1.mp3", new StableColourPattern(blueish_white, 40, 1, 1), 10, 1),
+            new SoundPattern("resources/cockroach_fight_1.mp3", new StableColourPattern(blueish_white, 50, 1, 1), 10, 0.1),
         ];
 
         // let electric_scene =
