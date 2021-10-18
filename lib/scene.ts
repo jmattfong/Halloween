@@ -48,68 +48,71 @@ export abstract class Scene {
     }
 }
 
-class Light {
-    protected id: number;
-    protected spookyPatterns: Pattern[];
-    protected unspookyPatterns: Pattern[];
-
-    constructor(id: number, spookyPatterns: Pattern[], unspookyPatterns: Pattern[]) {
-        this.id = id;
-        this.spookyPatterns = spookyPatterns;
-        this.unspookyPatterns = unspookyPatterns;
-    }
-
-    public getId(): number {
-        return this.id;
-    }
-
-    public getSpookyPatterns(): Pattern[] {
-        return this.spookyPatterns;
-    }
-
-    public getUnspookyPatterns(): Pattern[] {
-        return this.unspookyPatterns;
-    }
-}
 
 class MultiPartScene extends Scene {
 
     name: string
-    lights: Light[]
+    lightIds: number[]
+    spookyPatternChoices: Pattern[][]
+    unSpookyPattern: Pattern[]
 
-    constructor(name: string, lights: Light[]) {
+    constructor(name: string, lightIds: number[], spookyPatterns: Pattern[][], unSpookyPattern: Pattern[]) {
         super()
         this.name = name
-        this.lights = lights
+        this.lightIds = lightIds
+        this.spookyPatternChoices = spookyPatterns
+        this.unSpookyPattern = unSpookyPattern
     }
 
     async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
         const spookyHueBulbPlayer = new SpookyHueBulbPlayer(await hueFunction());
+
         this.ringCallback = [this.name, (data: RingDeviceData) => {
             log.info(`callback called on ${data.name}`);
 
-            this.lights.forEach(light => {
-                let patternWorkflow = data.faulted ? light.getUnspookyPatterns() : light.getSpookyPatterns()
-                spookyHueBulbPlayer.playPattern(light.getId(), patternWorkflow);
+            // if the data.faulted is true, that means that the door is open and we should resort to the
+            // unspooky base pattern
+            // otherwise, pick a random pattern and play it!
+            let patternWorkflow: Pattern[] = [];
+            if (data.faulted) {
+                patternWorkflow = this.unSpookyPattern;
+            } else {
+                const patternIndex = Math.floor(Math.random() * this.spookyPatternChoices.length);
+                patternWorkflow = this.spookyPatternChoices[patternIndex];
+            }
+
+            this.lightIds.forEach(lightId => {
+                spookyHueBulbPlayer.playPattern(lightId, patternWorkflow);
             });
-        }]
+        }];
     }
 }
 
 class HalfBathroomScene extends MultiPartScene {
 
     constructor() {
-        super("Half Bathroom", [
-            new Light(1, [
-                new StableColourPattern(white, 40, 5, 0),
-                new SoundPattern('resources/sparks.mp3', new FlickerPattern(5.5), 3),
-                new OffPattern(1),
-                new SoundPattern('resources/woman_screaming.mp3', new StableColourPattern(red, 60, 12, 0), 500),
-                new StableColourPattern(white, 60, 10, 10)
-            ], [
-                new StableColourPattern(white, 40, 10, 10),
-                new StableColourPattern(white, 10, 10, 30)
-            ])])
+
+        let spookyScreaminElectricScene = [
+            new StableColourPattern(white, 40, 5, 0),
+            new SoundPattern('resources/sparks.mp3', new FlickerPattern(5.5), 3),
+            new OffPattern(1),
+            new SoundPattern('resources/woman_screaming.mp3', new StableColourPattern(red, 60, 12, 0), 500),
+            new StableColourPattern(white, 60, 10, 10)
+        ];
+
+        let spookyCockroachScene = [
+            new SoundPattern("resources/cockroach_walk.mp3", new StableColourPattern(white, 20, 10, 1), 1000),
+        ];
+
+        // let electric_scene =
+
+        let unspookyScene = [
+            new StableColourPattern(white, 40, 10, 10),
+            new StableColourPattern(white, 10, 10, 30)
+        ];
+
+
+        super("Half Bathroom", [1], [spookyCockroachScene, spookyScreaminElectricScene], unspookyScene)
     }
 }
 
