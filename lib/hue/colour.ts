@@ -22,3 +22,4 @@ export class CIEColour {
 
 export const red = new CIEColour(.7, .3);
 export const white = new CIEColour(.31, .32);
+export const blueish_white = new CIEColour(.25, .35);
