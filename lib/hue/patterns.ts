@@ -2,6 +2,7 @@ import { CIEColour } from "./colour";
 import { SpookyHueApi } from "./hue";
 import { getLogger } from '../logging'
 import { CategoryLogger } from 'typescript-logging';
+import { SpookyHueBulbPlayer } from "./spooky_bulb_player";
 
 const log: CategoryLogger = getLogger("hue-pattern")
 
@@ -111,17 +112,54 @@ export class SleepPattern extends Pattern {
         super(durationSeconds);
     }
 
+    public cancel() {
+        // cancel does nothing for sleep pattern, since we just sleep
+    }
+
+    public async run(_lightId: number, _lightApi: SpookyHueApi): Promise<boolean> {
+        await sleep(this.durationMs);
+        return false;
+    }
+}
+
+export class PulsePattern extends Pattern {
+    private colour: CIEColour
+
+    constructor(colour: CIEColour, durationSeconds: number) {
+        super(durationSeconds)
+        this.colour = colour;
+    }
     isCancelled = false;
     public cancel() {
         this.isCancelled = true;
     }
 
     public async run(lightId: number, lightApi: SpookyHueApi): Promise<boolean> {
-        await sleep(this.durationMs);
-        const wasCancelled = this.isCancelled;
         this.isCancelled = false;
-        return wasCancelled;
+        const patternA = new StableColourPattern(this.colour, 60, 2, 2);
+        const patternB = new StableColourPattern(this.colour, 0, 3, 3)
+
+        const spookyBulbApi = new SpookyHueBulbPlayer(lightApi);
+
+        const startTime = new Date();
+
+        const intervalId = await spookyBulbApi.playRepeatingPattern(lightId, [patternA, patternB]);
+
+        while (!this.isCancelled) {
+            const currTime = new Date();
+            if (currTime.getTime() - startTime.getTime() > this.durationMs) {
+                break;
+            }
+
+            await sleep(100);
+        }
+
+        clearInterval(intervalId);
+
+        return this.isCancelled;
     }
+
+
 }
 
 export class OffPattern extends Pattern {
