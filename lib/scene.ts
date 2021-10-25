@@ -6,7 +6,7 @@ import { CategoryLogger } from 'typescript-logging';
 import { RingEnhancedSpookinatorV2 } from './ring';
 import { SpookyHueApi } from './hue/hue';
 import { SpookyHueBulbPlayer } from './hue/spooky_bulb_player';
-import { SoundPattern, FlickerPattern, OffPattern, StableColourPattern, SleepPattern, OnPattern, Pattern } from './hue/patterns';
+import { SoundPattern, FlickerPattern, OffPattern, StableColourPattern, SleepPattern, OnPattern, Pattern, PulsePattern } from './hue/patterns';
 import { red, white, blueish_white } from './hue/colour';
 
 const log: CategoryLogger = getLogger("scene")
@@ -78,6 +78,7 @@ class MultiPartScene extends Scene {
                 patternWorkflow = this.unSpookyPattern;
             } else {
                 const patternIndex = Math.floor(Math.random() * this.spookyPatternChoices.length);
+                log.debug(`choosing pattern #${patternIndex}`)
                 patternWorkflow = this.spookyPatternChoices[patternIndex];
             }
 
@@ -115,13 +116,17 @@ class HalfBathroomScene extends MultiPartScene {
             new StableColourPattern(white, 60, 10, 10)
         ];
 
+        let spookyTown = [
+            new SoundPattern("resources/haunted_mansion_song_shortened.mp3", new PulsePattern(red, 25), 0, 0.75)
+        ];
+
         let unspookyScene = [
             new StableColourPattern(white, 40, 10, 10),
             new StableColourPattern(white, 10, 10, 30)
         ];
 
         // TODO: change the light # back to 16 & 21, which are the actual bathroom light numbers
-        super("Half Bathroom", [1], [spookyGhostScene, spookyCockroachScene, spookyScreaminElectricScene], unspookyScene)
+        super("Half Bathroom", [1], [spookyTown, spookyScreaminElectricScene, spookyCockroachScene, spookyGhostScene], unspookyScene)
     }
 }
 
