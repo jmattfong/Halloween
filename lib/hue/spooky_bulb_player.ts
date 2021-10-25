@@ -49,6 +49,9 @@ export class SpookyHueBulbPlayer {
 
         const totalPatternLengthMs = patterns.map((p) => p.getDurationMs()).reduce((a, b) => a + b);
         log.info('playing repeated light pattern: ' + patterns);
-        return setInterval((() => { this.playPattern(lightId, patterns) }).bind(this), totalPatternLengthMs + 100);
+        return setInterval((() => {
+            log.debug("running repeating pattern")
+            this.playPattern(lightId, patterns)
+        }).bind(this), totalPatternLengthMs + 100);
     }
 }
