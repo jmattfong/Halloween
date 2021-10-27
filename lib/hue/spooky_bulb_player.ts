@@ -7,21 +7,21 @@ const log: CategoryLogger = getLogger("spooky-bulb-player")
 
 export class SpookyHueBulbPlayer {
     private api: SpookyHueApi
-    private currPatternMap: Map<number, Pattern>
+    private currPatternMap: Map<string, Pattern>
 
     constructor(api: SpookyHueApi) {
         this.api = api;
         this.currPatternMap = new Map();
     }
 
-    public async playPattern(lightId: number, patterns: Pattern[]) {
+    public async playPattern(lightName: string, patterns: Pattern[]) {
         if (!this.api.getIsConnected()) {
             throw new Error('not connected to the hue hub');
         }
 
-        if (this.currPatternMap.has(lightId)) {
+        if (this.currPatternMap.has(lightName)) {
             log.info('interrupt current pattern');
-            let bulb = this.currPatternMap.get(lightId);
+            let bulb = this.currPatternMap.get(lightName);
             if (bulb) {
                 bulb.cancel();
             }
@@ -30,19 +30,19 @@ export class SpookyHueBulbPlayer {
         log.debug(`pattern playing: ${patterns}`);
         for (let i = 0; i < patterns.length; i++) {
             const pattern = patterns[i];
-            log.info(`playing pattern: ${pattern.constructor.name} on light #${lightId}`);
-            this.currPatternMap.set(lightId, pattern);
-            const wasCancelled = await pattern.run(lightId, this.api);
+            log.info(`playing pattern: ${pattern.constructor.name} on light #${lightName}`);
+            this.currPatternMap.set(lightName, pattern);
+            const wasCancelled = await pattern.run(lightName, this.api);
             if (wasCancelled) {
                 log.info("canceled pattern")
                 return;
             }
         }
 
-        this.currPatternMap.delete(lightId);
+        this.currPatternMap.delete(lightName);
     }
 
-    public async playRepeatingPattern(lightId: number, patterns: Pattern[]): Promise<NodeJS.Timeout> {
+    public async playRepeatingPattern(lightName: string, patterns: Pattern[]): Promise<NodeJS.Timeout> {
         if (!this.api.getIsConnected()) {
             throw new Error('not connected to the hue hub');
         }
@@ -51,7 +51,7 @@ export class SpookyHueBulbPlayer {
         log.info('playing repeated light pattern: ' + patterns);
         return setInterval((() => {
             log.debug("running repeating pattern")
-            this.playPattern(lightId, patterns)
+            this.playPattern(lightName, patterns)
         }).bind(this), totalPatternLengthMs + 100);
     }
 }

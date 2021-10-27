@@ -48,18 +48,17 @@ export abstract class Scene {
     }
 }
 
-
 class MultiPartScene extends Scene {
 
     name: string
-    lightIds: number[]
+    lightNames: string[]
     spookyPatternChoices: Pattern[][]
     unSpookyPattern: Pattern[]
 
-    constructor(name: string, lightIds: number[], spookyPatterns: Pattern[][], unSpookyPattern: Pattern[]) {
+    constructor(name: string, lightNames: string[], spookyPatterns: Pattern[][], unSpookyPattern: Pattern[]) {
         super()
         this.name = name
-        this.lightIds = lightIds
+        this.lightNames = lightNames
         this.spookyPatternChoices = spookyPatterns
         this.unSpookyPattern = unSpookyPattern
     }
@@ -82,8 +81,8 @@ class MultiPartScene extends Scene {
                 patternWorkflow = this.spookyPatternChoices[patternIndex];
             }
 
-            this.lightIds.forEach(lightId => {
-                spookyHueBulbPlayer.playPattern(lightId, patternWorkflow);
+            this.lightNames.forEach(lightNames => {
+                spookyHueBulbPlayer.playPattern(lightNames, patternWorkflow);
             });
         }];
     }
@@ -126,7 +125,7 @@ class HalfBathroomScene extends MultiPartScene {
         ];
 
         // TODO: change the light # back to 16 & 21, which are the actual bathroom light numbers
-        super("Half Bathroom", [1], [spookyTown, spookyScreaminElectricScene, spookyCockroachScene, spookyGhostScene], unspookyScene)
+        super("Half Bathroom", ["half_bath_1"], [spookyTown, spookyScreaminElectricScene, spookyCockroachScene, spookyGhostScene], unspookyScene)
     }
 }
 
@@ -162,7 +161,7 @@ class DownstairsBathroomScene extends MultiPartScene {
             new StableColourPattern(white, 10, 10, 30)
         ];
 
-        super("Waffles' Room", [3,20,22], [spookyGhostScene, spookyCockroachScene, spookyScreaminElectricScene], unspookyScene)
+        super("Waffles' Room", ["down_bath_1","down_bath_2","down_bath_3"], [spookyGhostScene, spookyCockroachScene, spookyScreaminElectricScene], unspookyScene)
     }
 }
 
@@ -193,7 +192,7 @@ class HallwayScene extends Scene {
             1,
             (update: HueSensorUpdate) => {
                 if (update.getPresence()) {
-                    spookyHueBulbPlayer.playPattern(4, hallwayPattern);
+                    spookyHueBulbPlayer.playPattern("hallway_2", hallwayPattern);
                 }
             }
         ]
@@ -232,8 +231,7 @@ class PulsingRedScene extends Scene {
             new StableColourPattern(red, 0, 3, 3)
         ]
         // Setup infinitely repeating light patterns
-        spookyHueBulbPlayer.playRepeatingPattern(6, repeatingRedPulsingPattern);
-        spookyHueBulbPlayer.playRepeatingPattern(7, repeatingRedPulsingPattern);
+        spookyHueBulbPlayer.playRepeatingPattern("waffles_room_1", repeatingRedPulsingPattern);
     }
 }
 
@@ -245,8 +243,7 @@ class TestScene extends Scene {
             new StableColourPattern(red, 0, 1, 5)
         ]
         // Setup infinitely repeating light patterns
-        spookyHueBulbPlayer.playRepeatingPattern(6, repeatingRedPulsingPattern);
-        spookyHueBulbPlayer.playRepeatingPattern(7, repeatingRedPulsingPattern);
+        spookyHueBulbPlayer.playRepeatingPattern("waffles_room_1", repeatingRedPulsingPattern);
     }
 }
 

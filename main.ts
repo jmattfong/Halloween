@@ -53,7 +53,7 @@ async function main() {
     const getHue = async () => {
         if (spookHue == null) {
             log.info('Setting up Hue')
-            spookHue = new SpookyHueApi(config.secretPath)
+            spookHue = new SpookyHueApi(config.secretPath, config)
             await spookHue.connect();
             log.debug(`get all lights: ${(await spookHue.getLights()).map((l: any) => l.toStringDetailed())}`);
         }

@@ -20,7 +20,7 @@ export abstract class Pattern {
         return this.durationMs;
     }
 
-    public async run(lightId: number, lightApi: SpookyHueApi): Promise<boolean> {
+    public async run(lightName: string, lightApi: SpookyHueApi): Promise<boolean> {
         throw new Error('not implemented');
     }
 
@@ -55,7 +55,7 @@ export class SoundPattern extends Pattern {
         this.lightPattern.cancel();
     }
 
-    public async run(lightId: number, lightApi: SpookyHueApi): Promise<boolean> {
+    public async run(lightName: string, lightApi: SpookyHueApi): Promise<boolean> {
         player.play(this.soundFile, this.volume).then((error: any) => {
             if (error) {
                 log.error(`something went wrong playing ${this.soundFile}`, error);
@@ -64,7 +64,7 @@ export class SoundPattern extends Pattern {
             }
         });
         await sleep(this.soundToPatternDelayMs);
-        return this.lightPattern.run(lightId, lightApi);
+        return this.lightPattern.run(lightName, lightApi);
     }
 }
 
@@ -78,7 +78,7 @@ export class FlickerPattern extends Pattern {
         this.isCancelled = true;
     }
 
-    public async run(lightId: number, lightApi: SpookyHueApi): Promise<boolean> {
+    public async run(lightName: string, lightApi: SpookyHueApi): Promise<boolean> {
         const startTime = new Date();
 
         let lightOn = 1;
@@ -90,7 +90,7 @@ export class FlickerPattern extends Pattern {
                 .brightness(getRandomInt(100))
                 .transitiontime(0);
 
-            await lightApi.setLightState(lightId, state);
+            await lightApi.setLightState(lightName, state);
             const currTime = new Date();
 
             if (currTime.getTime() - startTime.getTime() > this.durationMs) {
@@ -116,7 +116,7 @@ export class SleepPattern extends Pattern {
         // cancel does nothing for sleep pattern, since we just sleep
     }
 
-    public async run(_lightId: number, _lightApi: SpookyHueApi): Promise<boolean> {
+    public async run(_lightName: string, _lightApi: SpookyHueApi): Promise<boolean> {
         await sleep(this.durationMs);
         return false;
     }
@@ -134,7 +134,7 @@ export class PulsePattern extends Pattern {
         this.isCancelled = true;
     }
 
-    public async run(lightId: number, lightApi: SpookyHueApi): Promise<boolean> {
+    public async run(lightName: string, lightApi: SpookyHueApi): Promise<boolean> {
         this.isCancelled = false;
         const patternA = new StableColourPattern(this.colour, 60, 2, 2);
         const patternB = new StableColourPattern(this.colour, 0, 3, 3)
@@ -143,7 +143,7 @@ export class PulsePattern extends Pattern {
 
         const startTime = new Date();
 
-        const intervalId = await spookyBulbApi.playRepeatingPattern(lightId, [patternA, patternB]);
+        const intervalId = await spookyBulbApi.playRepeatingPattern(lightName, [patternA, patternB]);
 
         while (!this.isCancelled) {
             const currTime = new Date();
@@ -174,11 +174,11 @@ export class OffPattern extends Pattern {
         this.isCancelled = true;
     }
 
-    public async run(lightId: number, lightApi: SpookyHueApi): Promise<boolean> {
+    public async run(lightName: string, lightApi: SpookyHueApi): Promise<boolean> {
         const state = new LightState().off()
             // Weird, but this is in increments of 100ms
             .transitiontime(this.transitionSeconds * 10);
-        await lightApi.setLightState(lightId, state);
+        await lightApi.setLightState(lightName, state);
         await sleep(this.durationMs);
         const wasCancelled = this.isCancelled;
         this.isCancelled = false;
@@ -200,14 +200,14 @@ export class OnPattern extends Pattern {
         this.isCancelled = true;
     }
 
-    public async run(lightId: number, lightApi: SpookyHueApi): Promise<boolean> {
+    public async run(lightName: string, lightApi: SpookyHueApi): Promise<boolean> {
         const state = new LightState()
             .on()
             .ct(200)
             .brightness(this.brightness)
             // Weird, but this is in increments of 100ms
             .transitiontime(this.transitionSeconds * 10);
-        await lightApi.setLightState(lightId, state);
+        await lightApi.setLightState(lightName, state);
         await sleep(this.durationMs);
         const wasCancelled = this.isCancelled;
         this.isCancelled = false;
@@ -231,7 +231,7 @@ export class StableColourPattern extends Pattern {
         this.isCancelled = true;
     }
 
-    public async run(lightId: number, lightApi: SpookyHueApi): Promise<boolean> {
+    public async run(lightName: string, lightApi: SpookyHueApi): Promise<boolean> {
         const state = new LightState()
             .on()
             .ct(200)
@@ -239,7 +239,7 @@ export class StableColourPattern extends Pattern {
             .brightness(this.brightness)
             // Weird, but this is in increments of 100ms
             .transitiontime(this.transitionTimeSeconds * 10);
-        await lightApi.setLightState(lightId, state);
+        await lightApi.setLightState(lightName, state);
         await sleep(this.durationMs);
         const wasCancelled = this.isCancelled;
         this.isCancelled = false;

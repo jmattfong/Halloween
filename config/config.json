@@ -11,5 +11,50 @@
     ],
     "motionSensors": [
         "Entry Motion Sensor"
-    ]
+    ],
+    "lights": {
+        "down_bath_1": 22,
+        "down_bath_2": 20,
+        "down_bath_3": 3,
+
+        "waffles_room_1": 26,
+        "waffles_room_2": 30,
+        "waffles_room_3": 29,
+
+        "garage_1": 1,
+        "garage_2": 6,
+        "garage_3": 2,
+
+        "half_bath_1": 21,
+        "half_bath_2": 16,
+        "half_bath_3": 9,
+
+        "living_room_1": 7,
+        "living_room_2": 8,
+        "living_room_3": 18,
+        "living_room_4": 19,
+
+        "entry_1": 0,
+        "entry_2": 25,
+
+        "downstairs_1": 17,
+        "downstairs_2": 24,
+
+        "upstairs_1": 14,
+        "upstairs_2": 15,
+
+        "roofstairs_1": 27,
+        "roofstairs_2": 28,
+
+        "hallway_1": 5,
+        "hallway_2": 4,
+
+        "guest_bed_1": 23,
+        "guest_bed_2": 31,
+
+        "master_1": 12,
+        "master_2": 13,
+        "master_3": 10,
+        "master_4": 11
+    }
 }

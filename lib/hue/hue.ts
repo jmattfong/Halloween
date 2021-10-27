@@ -7,7 +7,7 @@ const log: CategoryLogger = getLogger("hue")
 
 const v3 = require('node-hue-api').v3;
 
-interface HueConfig {
+interface HueSecrets {
     hueUsername: string
 }
 
@@ -15,13 +15,17 @@ export class SpookyHueApi {
     private hueApi: any
     private isConnected: boolean = false;
     private username: string
-    constructor(configPath: string) {
-        if (configPath === '') {
+    private lights: any
+
+    constructor(secretsPath: string, config: any) {
+        if (secretsPath === '') {
             throw new Error('config path must set');
         }
-        const fileContents = readFileSync(configPath, { encoding: 'utf-8' });
-        const config: HueConfig = JSON.parse(fileContents);
-        this.username = config.hueUsername;
+        const fileContents = readFileSync(secretsPath, { encoding: 'utf-8' });
+        const secrets: HueSecrets = JSON.parse(fileContents);
+        this.username = secrets.hueUsername;
+        this.lights = config["lights"]
+        log.info("got lights " + this.lights)
     }
 
     public async connect() {
@@ -38,11 +42,15 @@ export class SpookyHueApi {
         return this.isConnected;
     }
 
-    public async setLightState(lightId: number, state: any): Promise<void> {
+    public async setLightState(lightName: string, state: any): Promise<void> {
         if (!this.isConnected) {
             throw new Error('not connected to the hue hub');
         }
-        await this.hueApi.lights.setLightState(lightId, state)
+        await this.hueApi.lights.setLightState(this.getLightId(lightName), state)
+    }
+
+    public getLightId(name: string): number {
+        return this.lights[name]
     }
 
     public async getLights(): Promise<any> {
