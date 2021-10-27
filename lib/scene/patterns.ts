@@ -1,8 +1,9 @@
-import { CIEColour } from "./colour";
-import { SpookyHueApi } from "./hue";
+import { CIEColour } from "../hue/colour";
+import { SpookyHueApi } from "../hue/hue";
 import { getLogger } from '../logging'
 import { CategoryLogger } from 'typescript-logging';
-import { SpookyHueBulbPlayer } from "./spooky_bulb_player";
+import { SpookyHueBulbPlayer } from "../hue/spooky_bulb_player";
+import {Event} from "./events"
 
 const log: CategoryLogger = getLogger("hue-pattern")
 
@@ -143,7 +144,7 @@ export class PulsePattern extends Pattern {
 
         const startTime = new Date();
 
-        const intervalId = await spookyBulbApi.playRepeatingPattern(lightName, [patternA, patternB]);
+        const intervalId = await spookyBulbApi.playRepeatingEvent(lightName, new Event(patternA, patternB));
 
         while (!this.isCancelled) {
             const currTime = new Date();

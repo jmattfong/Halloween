@@ -1,5 +1,6 @@
 import { SpookyHueApi } from "./hue";
-import { Pattern } from "./patterns";
+import { Pattern } from "../scene/patterns";
+import { Event } from "../scene/events"
 import { getLogger } from '../logging'
 import { CategoryLogger } from 'typescript-logging';
 
@@ -14,7 +15,7 @@ export class SpookyHueBulbPlayer {
         this.currPatternMap = new Map();
     }
 
-    public async playPattern(lightName: string, patterns: Pattern[]) {
+    public async playPattern(lightName: string, event: Event) {
         if (!this.api.getIsConnected()) {
             throw new Error('not connected to the hue hub');
         }
@@ -27,6 +28,7 @@ export class SpookyHueBulbPlayer {
             }
         }
 
+        let patterns = event.patterns
         log.debug(`pattern playing: ${patterns}`);
         for (let i = 0; i < patterns.length; i++) {
             const pattern = patterns[i];
@@ -42,16 +44,17 @@ export class SpookyHueBulbPlayer {
         this.currPatternMap.delete(lightName);
     }
 
-    public async playRepeatingPattern(lightName: string, patterns: Pattern[]): Promise<NodeJS.Timeout> {
+    public async playRepeatingEvent(lightName: string, event: Event): Promise<NodeJS.Timeout> {
         if (!this.api.getIsConnected()) {
             throw new Error('not connected to the hue hub');
         }
 
+        let patterns = event.patterns;
         const totalPatternLengthMs = patterns.map((p) => p.getDurationMs()).reduce((a, b) => a + b);
         log.info('playing repeated light pattern: ' + patterns);
         return setInterval((() => {
             log.debug("running repeating pattern")
-            this.playPattern(lightName, patterns)
+            this.playPattern(lightName, event)
         }).bind(this), totalPatternLengthMs + 100);
     }
 }

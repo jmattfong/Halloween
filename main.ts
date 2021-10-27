@@ -5,7 +5,7 @@ import { SpookyHueApi } from './lib/hue/hue';
 import { parse } from 'ts-command-line-args';
 import { getLogger, setLogLevel } from './lib/logging'
 import { CategoryLogger, LogLevel } from 'typescript-logging';
-import { SCENES } from './lib/scene';
+import { SCENES } from './lib/scene/scenes';
 
 const log: CategoryLogger = getLogger("main")
 
