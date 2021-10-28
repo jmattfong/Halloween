@@ -51,21 +51,21 @@ export abstract class Scene {
 
 class MultiPartScene extends Scene {
 
-    name: string
-    spookyEventChoices: Event[]
+    ringSensorName: string
+    spookyEvents: Event[]
     unSpookyEvents: Event[]
 
-    constructor(name: string, spookyEventChoices: Event[], unSpookyEvents: Event[]) {
+    constructor(ringSensorName: string, spookyEvents: Event[], unSpookyEvents: Event[]) {
         super()
-        this.name = name
-        this.spookyEventChoices = spookyEventChoices
+        this.ringSensorName = ringSensorName
+        this.spookyEvents = spookyEvents
         this.unSpookyEvents = unSpookyEvents
     }
 
     async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
         const spookyHueBulbPlayer = new SpookyHueBulbPlayer(await hueFunction());
 
-        this.ringCallback = [this.name, (data: RingDeviceData) => {
+        this.ringCallback = [this.ringSensorName, (data: RingDeviceData) => {
             log.info(`callback called on ${data.name}`);
 
             // if the data.faulted is true, that means that the door is open and we should resort to the
@@ -76,10 +76,48 @@ class MultiPartScene extends Scene {
                     spookyHueBulbPlayer.playPattern(event)
                 });
             } else {
-                this.spookyEventChoices.forEach(event => {
+                this.spookyEvents.forEach(event => {
                     spookyHueBulbPlayer.playPattern(event)
                 });
             }
+        }];
+    }
+}
+
+class RandomMultiScene extends Scene {
+
+    ringSensorName: string
+    spookyEventChoices: Event[][]
+    unSpookyEvents: Event[]
+
+    constructor(ringSensorName: string, spookyEventChoices: Event[][], unSpookyEvents: Event[]) {
+        super()
+        this.ringSensorName = ringSensorName
+        this.spookyEventChoices = spookyEventChoices
+        this.unSpookyEvents = unSpookyEvents
+    }
+
+    async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
+        const spookyHueBulbPlayer = new SpookyHueBulbPlayer(await hueFunction());
+
+        this.ringCallback = [this.ringSensorName, (data: RingDeviceData) => {
+            log.info(`callback called on ${data.name}`);
+
+            // if the data.faulted is true, that means that the door is open and we should resort to the
+            // unspooky base pattern
+            // otherwise, pick a random pattern and play it!
+            let patternWorkflow: Event[];
+            if (data.faulted) {
+                patternWorkflow = this.unSpookyEvents;
+            } else {
+                const patternIndex = Math.floor(Math.random() * this.spookyEventChoices.length);
+                log.debug(`choosing pattern #${patternIndex}`)
+                patternWorkflow = this.spookyEventChoices[patternIndex];
+            }
+
+            patternWorkflow.forEach(event => {
+                spookyHueBulbPlayer.playPattern(event)
+            });
         }];
     }
 }
