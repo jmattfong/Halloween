@@ -144,7 +144,7 @@ export class PulsePattern extends Pattern {
 
         const startTime = new Date();
 
-        const intervalId = await spookyBulbApi.playRepeatingEvent(lightName, new Event(patternA, patternB));
+        const intervalId = await spookyBulbApi.playRepeatingEvent(new Event(lightName, patternA, patternB));
 
         while (!this.isCancelled) {
             const currTime = new Date();

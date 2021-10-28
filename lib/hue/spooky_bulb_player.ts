@@ -15,11 +15,12 @@ export class SpookyHueBulbPlayer {
         this.currPatternMap = new Map();
     }
 
-    public async playPattern(lightName: string, event: Event) {
+    public async playPattern(event: Event) {
         if (!this.api.getIsConnected()) {
             throw new Error('not connected to the hue hub');
         }
 
+        let lightName = event.lightName
         if (this.currPatternMap.has(lightName)) {
             log.info('interrupt current pattern');
             let bulb = this.currPatternMap.get(lightName);
@@ -44,7 +45,7 @@ export class SpookyHueBulbPlayer {
         this.currPatternMap.delete(lightName);
     }
 
-    public async playRepeatingEvent(lightName: string, event: Event): Promise<NodeJS.Timeout> {
+    public async playRepeatingEvent(event: Event): Promise<NodeJS.Timeout> {
         if (!this.api.getIsConnected()) {
             throw new Error('not connected to the hue hub');
         }
@@ -54,7 +55,7 @@ export class SpookyHueBulbPlayer {
         log.info('playing repeated light pattern: ' + patterns);
         return setInterval((() => {
             log.debug("running repeating pattern")
-            this.playPattern(lightName, event)
+            this.playPattern(event)
         }).bind(this), totalPatternLengthMs + 100);
     }
 }
