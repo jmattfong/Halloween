@@ -50,10 +50,17 @@ class ChillEvent extends Event {
     }
 }
 
-export function getChillEvents(...lightNames: string[]): Event[] {
-    let result: Event[] = new Array(lightNames.length)
-    let i = 0
-    lightNames.forEach(name => {
+class OffEvent extends Event {
+    constructor(lightName: string) {
+        super(lightName, new OffPattern(1))
+    }
+}
+
+export function getChillEvents(subLightName: string, ...mainLightNames: string[]): Event[] {
+    let result: Event[] = new Array(1 + mainLightNames.length)
+    result[0] = new OffEvent(subLightName)
+    let i = 1
+    mainLightNames.forEach(name => {
         result[i++] = new ChillEvent(name)
     })
     return result
