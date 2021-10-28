@@ -148,22 +148,22 @@ class HalfBathroomScene extends MultiPartScene {
             new StableColourPattern(white, 40, 5, 0),
             new SoundPattern('resources/sparks.mp3', new FlickerPattern(5.5), 3),
             new OffPattern(1),
-            new SoundPattern('resources/woman_screaming.mp3', new StableColourPattern(red, 60, 12, 0), 500),
+            new SoundPattern('resources/woman_screaming.mp3', new StableColourPattern(red, 60, 12, 0), 0.5),
             new StableColourPattern(white, 60, 10, 10)
         );
 
         let spookyCockroachScene = new Event("half_bath_1",
             new StableColourPattern(white, 5, 5, 0),
-            new SoundPattern("resources/cockroach_walk.mp3", new StableColourPattern(white, 5, 2, 0), 1000, 0.1),
-            new SoundPattern("resources/cockroach_scurry_1.mp3", new StableColourPattern(blueish_white, 40, 1, 1), 10, 1),
-            new SoundPattern("resources/cockroach_fight_1.mp3", new StableColourPattern(blueish_white, 50, 1, 1), 10, 0.5),
+            new SoundPattern("resources/cockroach_walk.mp3", new StableColourPattern(white, 5, 2, 0), 1, 0.1),
+            new SoundPattern("resources/cockroach_scurry_1.mp3", new StableColourPattern(blueish_white, 40, 1, 1), 0.01, 1),
+            new SoundPattern("resources/cockroach_fight_1.mp3", new StableColourPattern(blueish_white, 50, 1, 1), 0.01, 0.5),
             new StableColourPattern(white, 60, 10, 10)
         );
 
         let spookyGhostScene = new Event("half_bath_1",
             new StableColourPattern(white, 40, 5, 0),
             new SoundPattern("resources/ghost_movement.mp3", new StableColourPattern(white, 70, 8, 7), 1, 0.2),
-            new SoundPattern("resources/ghost_cry.mp3", new FlickerPattern(1), 10, 0.75),
+            new SoundPattern("resources/ghost_cry.mp3", new FlickerPattern(1), 0.01, 0.75),
             new StableColourPattern(white, 60, 10, 10)
         );
 
@@ -189,22 +189,22 @@ class DownstairsBathroomScene extends MultiPartScene {
             new StableColourPattern(white, 40, 5, 0),
             new SoundPattern('resources/sparks.mp3', new FlickerPattern(5.5), 3),
             new OffPattern(1),
-            new SoundPattern('resources/woman_screaming.mp3', new StableColourPattern(red, 60, 12, 0), 500),
+            new SoundPattern('resources/woman_screaming.mp3', new StableColourPattern(red, 60, 12, 0), 0.5),
             new StableColourPattern(white, 60, 10, 10)
         );
 
         let spookyCockroachScene = new Event("down_bath_2",
             new StableColourPattern(white, 5, 5, 0),
-            new SoundPattern("resources/cockroach_walk.mp3", new StableColourPattern(white, 5, 2, 0), 1000, 0.1),
-            new SoundPattern("resources/cockroach_scurry_1.mp3", new StableColourPattern(blueish_white, 40, 1, 1), 10, 1),
-            new SoundPattern("resources/cockroach_fight_1.mp3", new StableColourPattern(blueish_white, 50, 1, 1), 10, 0.5),
+            new SoundPattern("resources/cockroach_walk.mp3", new StableColourPattern(white, 5, 2, 0), 1, 0.1),
+            new SoundPattern("resources/cockroach_scurry_1.mp3", new StableColourPattern(blueish_white, 40, 1, 1), 0.01, 1),
+            new SoundPattern("resources/cockroach_fight_1.mp3", new StableColourPattern(blueish_white, 50, 1, 1), 0.01, 0.5),
             new StableColourPattern(white, 60, 10, 10)
         );
 
         let spookyGhostScene = new Event("down_bath_3",
             new StableColourPattern(white, 40, 5, 0),
             new SoundPattern("resources/ghost_movement.mp3", new StableColourPattern(white, 70, 8, 7), 1, 0.2),
-            new SoundPattern("resources/ghost_cry.mp3", new FlickerPattern(1), 10, 0.75),
+            new SoundPattern("resources/ghost_cry.mp3", new FlickerPattern(1), 0.01, 0.75),
             new StableColourPattern(white, 60, 10, 10)
         );
 
