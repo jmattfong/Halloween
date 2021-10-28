@@ -52,14 +52,16 @@ export abstract class Scene {
 class MultiPartScene extends Scene {
 
     ringSensorName: string
+    hueSensorId?: number
     spookyEvents: Event[]
     unSpookyEvents: Event[]
 
-    constructor(ringSensorName: string, spookyEvents: Event[], unSpookyEvents: Event[]) {
+    constructor(ringSensorName: string, spookyEvents: Event[], unSpookyEvents: Event[], hueSensorId?: number) {
         super()
         this.ringSensorName = ringSensorName
         this.spookyEvents = spookyEvents
         this.unSpookyEvents = unSpookyEvents
+        this.hueSensorId = hueSensorId;
     }
 
     async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
@@ -81,6 +83,22 @@ class MultiPartScene extends Scene {
                 });
             }
         }];
+
+        if (this.hueSensorId != null) {
+            this.hueCallback = [this.hueSensorId, (data: HueSensorUpdate) => {
+                log.info(`callback called on ${this.hueSensorId} => ${data.getPresence()}`)
+
+                if (data.getPresence()) {
+                    this.spookyEvents.forEach(event => {
+                        spookyHueBulbPlayer.playPattern(event);
+                    })
+                } else {
+                    this.unSpookyEvents.forEach(event => {
+                        spookyHueBulbPlayer.playPattern(event);
+                    })
+                }
+            }]
+        }
     }
 }
 
@@ -215,21 +233,25 @@ class ChromecastScene extends Scene {
     }
 }
 
-class HallwayScene extends Scene {
-    async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
-        const spookyHueBulbPlayer = new SpookyHueBulbPlayer(await hueFunction());
-        const hallwayPattern = new Event("hallway_2",
-            new FlickerPattern(30),
+class HallwayScene extends MultiPartScene {
+    constructor() {
+        const spookyHallwayTop = new Event(
+            "upstairs_2", new SoundPattern("resources/electric_sparks_1.mp3", new FlickerPattern(26), 0, 0.2), new OnPattern(40, 1)
+        );
+        const spookyHallwayMid = new Event(
+            "hallway_1", new OffPattern(8), new SoundPattern("resources/electric_drone.mp3", new FlickerPattern(18), 0, 0.5), new OnPattern(40, 1)
+        );
+        const spookyHallwayBack = new Event(
+            "hallway_2", new OffPattern(14), new SoundPattern("resources/creepy_child.mp3", new FlickerPattern(12), 0, 0.5), new OnPattern(40, 1)
+        );
+        const spookyHallwayRoofStart = new Event(
+            "roofstairs_1", new OffPattern(16), new FlickerPattern(10), new OnPattern(40, 1)
+        );
+        const spookyHallwayRoofEnd = new Event(
+            "roofstairs_2", new OffPattern(23), new FlickerPattern(5), new OnPattern(40, 1)
         );
 
-        this.hueCallback = [
-            1,
-            (update: HueSensorUpdate) => {
-                if (update.getPresence()) {
-                    spookyHueBulbPlayer.playPattern(hallwayPattern);
-                }
-            }
-        ]
+        super("Trippy Hallway", [spookyHallwayTop, spookyHallwayMid, spookyHallwayBack, spookyHallwayRoofStart, spookyHallwayRoofEnd], [], 2)
     }
 }
 

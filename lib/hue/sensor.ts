@@ -54,24 +54,28 @@ export class HueSensor {
     }
 
     private async checkForUpdate() {
+        log.debug(`checking for update on sensor ${this.sensorId}`)
         const sensor = await this.sensorApi.getSensor(this.sensorId);
 
-        // log.info(`sensor update: ${sensor.toStringDetailed()}`)
+        log.debug(`sensor details: ${sensor.toStringDetailed()}`)
         const sensorUpdate = new HueSensorUpdate(sensor.getStateAttributeValue("presence"), sensor.lastupdated);
-        // log.info(`sensor update: ${JSON.stringify(sensorUpdate, null, 4)}`)
+        log.debug(`sensor update: ${JSON.stringify(sensorUpdate, null, 4)}`)
 
         // if no update has occurred in the past (initial setup) store the current state and return
         if (this.lastSensorUpdate === null) {
+            log.info(`first update on ${this.sensorId}. Returning`)
             this.lastSensorUpdate = sensorUpdate;
             return;
         }
 
         // if the sensor state is the same, then do nothing
         if (sensorUpdate.isEqual(this.lastSensorUpdate)) {
+            log.info(`no change on sensor state on ${this.sensorId}. Returning`)
             return;
         }
 
         this.lastSensorUpdate = sensorUpdate;
+        log.info(`change detected! Invoking callbacks`)
         for (let i = 0; i < this.callbacks.length; i++) {
             const callback = this.callbacks[i];
             callback(sensorUpdate);
