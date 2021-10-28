@@ -16,7 +16,7 @@ class ElectricLadyMainEvent extends Event {
     constructor(lightName: string) {
         super(lightName,
             new StableColourPattern(white, 40, 5, 0),
-            new SoundPattern('resources/sparks.mp3', new FlickerPattern(5.5), 3),
+            new SoundPattern('resources/sparks.mp3', new FlickerPattern(5.5), 0),
             new OffPattern(1),
             new OffPattern(12),
             new StableColourPattern(white, 60, 10, 10))
@@ -29,7 +29,7 @@ class ElectricLadySubEvent extends Event {
             new OffPattern(5),
             new OffPattern(5.5),
             new OffPattern(1),
-            new SoundPattern('resources/woman_screaming.mp3', new StableColourPattern(red, 60, 12, 0), 500),
+            new SoundPattern('resources/woman_screaming.mp3', new StableColourPattern(red, 60, 12, 0), 0.5),
             new OffPattern(10))
     }
 }
