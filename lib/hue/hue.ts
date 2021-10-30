@@ -74,6 +74,15 @@ export class SpookyHueApi {
         }
 
         let sensors = await this.hueApi.sensors.getAll();
-        return sensors.map((s: any) => { new HueSensor(this.hueApi.sensors, s.id) });
+
+        return sensors.filter((sensor: any) => {
+            log.info(`Checking sensor ${sensor.name} -> ${sensor.type} -> ${sensor.id}}`);
+            // currently we are only returing presence sensors, but we can also update this
+            // to get temperature, ambient light, and other spooky sensors
+            return String(sensor.type) == "ZLLPresence";
+        }).map((sensor: any) => {
+            log.info(`Adding sensor ${sensor.name} -> ${sensor.type} -> ${sensor.id}}`);
+            return new HueSensor(this.hueApi.sensors, sensor.id)
+        });
     }
 }
