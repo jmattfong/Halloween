@@ -215,7 +215,7 @@ class HallwayScene extends MultiPartScene {
             "roofstairs_2", new OffPattern(23), new FlickerPattern(5), new OnPattern(40, 1)
         );
 
-        super("Trippy Hallway", [spookyHallwayTop, spookyHallwayMid, spookyHallwayBack, spookyHallwayRoofStart, spookyHallwayRoofEnd], [], 2)
+        super("Trippy Hallway", [spookyHallwayTop, spookyHallwayMid, spookyHallwayBack, spookyHallwayRoofStart, spookyHallwayRoofEnd], [], 9)
     }
 }
 
