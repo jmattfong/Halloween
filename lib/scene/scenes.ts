@@ -1,5 +1,5 @@
 import { RingDeviceData } from 'ring-client-api'
-import { HueSensorUpdate } from '../hue/sensor';
+import { HueSensorUpdate, HueSensor } from '../hue/sensor';
 import { Chromecaster } from '../chromecast';
 import { getLogger } from '../logging'
 import { CategoryLogger } from 'typescript-logging';
@@ -285,6 +285,37 @@ class TestScene extends MultiPartScene {
     }
 }
 
+class SensorTestScene extends Scene {
+
+    async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
+        const hue: SpookyHueApi = await hueFunction()
+        const all_sensors: HueSensor[] = await hue.getSensors();
+
+        log.info(`sensor count ${all_sensors.length} -> ${all_sensors}`);
+
+
+        all_sensors.forEach((s: HueSensor) => {
+            log.info(`sensor: ${JSON.stringify(s.getId())}`)
+            // log.info(`Adding callback for ${s.getId()}`)
+            s.addCallback((update: HueSensorUpdate) => {
+                log.info(`Update received on sensor ${s.getId()} -> ${update.getPresence()}`)
+            });
+
+            s.start();
+        });
+
+        while (true) {
+            log.info("Waiting on sensor updates");
+            await sleep(10000);
+        }
+    }
+}
+
+async function sleep(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+
 export const SCENES: { [key: string]: Scene } = {
     "front_door": new ChromecastScene(),
     "hallway": new HallwayScene(),
@@ -293,5 +324,6 @@ export const SCENES: { [key: string]: Scene } = {
     "half_bath": new HalfBathroomScene(),
     "down_bath": new DownstairsBathroomScene(),
     "living_room": new LivingRoomScene(),
-    "test": new TestScene()
+    "test": new TestScene(),
+    "sensor_test": new SensorTestScene()
 }
