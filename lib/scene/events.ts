@@ -65,3 +65,52 @@ export function getChillEvents(subLightName: string, ...mainLightNames: string[]
     })
     return result
 }
+
+
+class AlienMainEvent extends Event {
+    constructor(lightName: string) {
+        super(lightName, new StableColourPattern(white, 40, 10, 10))
+    }
+}
+
+class AlienSubEvent extends Event {
+    constructor(lightName: string) {
+        super(lightName, new OffPattern(1))
+    }
+}
+
+export function getAlienEvents(subLightName: string, ...mainLightNames: string[]): Event[] {
+    let result: Event[] = new Array(1 + mainLightNames.length)
+    result[0] = new AlienSubEvent(subLightName)
+    let i = 1
+    mainLightNames.forEach(name => {
+        result[i++] = new AlienMainEvent(name)
+    })
+    return result
+}
+
+class PulsingRedEvent extends Event {
+    constructor(lightName: string) {
+        super(lightName,
+            new StableColourPattern(red, 60, 2, 2),
+            new StableColourPattern(red, 0, 3, 3),
+            new StableColourPattern(red, 60, 2, 2),
+            new StableColourPattern(red, 0, 3, 3),
+            new StableColourPattern(red, 60, 2, 2),
+            new StableColourPattern(red, 0, 3, 3),
+            new StableColourPattern(red, 60, 2, 2),
+            new StableColourPattern(red, 0, 3, 3),
+            new StableColourPattern(red, 60, 2, 2),
+            new StableColourPattern(red, 0, 3, 3)
+            )
+    }
+}
+
+export function getPulsingRedEvent(...mainLightNames: string[]): Event[] {
+    let result: Event[] = new Array(mainLightNames.length)
+    let i = 0
+    mainLightNames.forEach(name => {
+        result[i++] = new PulsingRedEvent(name)
+    })
+    return result
+}
