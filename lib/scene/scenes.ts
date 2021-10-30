@@ -8,7 +8,7 @@ import { SpookyHueApi } from '../hue/hue';
 import { SpookyHueBulbPlayer } from '../hue/spooky_bulb_player';
 import { SoundPattern, FlickerPattern, OffPattern, StableColourPattern, SleepPattern, OnPattern, Pattern, PulsePattern } from './patterns';
 import { red, white, blueish_white } from '../hue/colour';
-import { Event, getElectricLadyEvent, getChillEvents, getPulsingRedEvent } from "./events"
+import { Event, getElectricLadyEvent, getChillEvents, getPulsingRedEvent, getSpookyCockroachScene, getSpookyGhostScene, getAlienEvents } from "./events"
 
 const log: CategoryLogger = getLogger("scene")
 
@@ -148,7 +148,10 @@ class RandomSpookyScene extends RandomMultiScene {
         super(ringSensor,
             [
                 getElectricLadyEvent(subLightName, ...mainLightNames),
-                getPulsingRedEvent(subLightName, ...mainLightNames)
+                getPulsingRedEvent(subLightName, ...mainLightNames),
+                getSpookyCockroachScene(...mainLightNames),
+                getSpookyGhostScene(...mainLightNames),
+                // TODO getAlienEvents(...mainLightNames),
             ],
             getChillEvents(subLightName, ...mainLightNames))
     }
@@ -161,39 +164,17 @@ class HalfBathroomScene extends RandomSpookyScene {
     }
 }
 
-class DownstairsBathroomScene extends MultiPartScene {
+class DownstairsBathroomScene extends RandomSpookyScene {
 
     constructor() {
+        super("Waffles' Room", "down_bath_3", "down_bath_2", "down_bath_1")
+    }
+}
 
-        let spookyScreaminElectricScene = new Event("down_bath_1",
-            new StableColourPattern(white, 40, 5, 0),
-            new SoundPattern('resources/sparks.mp3', new FlickerPattern(5.5), 3),
-            new OffPattern(1),
-            new SoundPattern('resources/woman_screaming.mp3', new StableColourPattern(red, 60, 12, 0), 0.5),
-            new StableColourPattern(white, 60, 10, 10)
-        );
+class LivingRoomScene extends RandomSpookyScene {
 
-        let spookyCockroachScene = new Event("down_bath_2",
-            new StableColourPattern(white, 5, 5, 0),
-            new SoundPattern("resources/cockroach_walk.mp3", new StableColourPattern(white, 5, 2, 0), 1, 0.1),
-            new SoundPattern("resources/cockroach_scurry_1.mp3", new StableColourPattern(blueish_white, 40, 1, 1), 0.01, 1),
-            new SoundPattern("resources/cockroach_fight_1.mp3", new StableColourPattern(blueish_white, 50, 1, 1), 0.01, 0.5),
-            new StableColourPattern(white, 60, 10, 10)
-        );
-
-        let spookyGhostScene = new Event("down_bath_3",
-            new StableColourPattern(white, 40, 5, 0),
-            new SoundPattern("resources/ghost_movement.mp3", new StableColourPattern(white, 70, 8, 7), 1, 0.2),
-            new SoundPattern("resources/ghost_cry.mp3", new FlickerPattern(1), 0.01, 0.75),
-            new StableColourPattern(white, 60, 10, 10)
-        );
-
-        let unspookyScene = new Event("down_bath_2",
-            new StableColourPattern(white, 40, 10, 10),
-            new StableColourPattern(white, 10, 10, 30)
-        );
-
-        super("Waffles' Room", [spookyGhostScene, spookyCockroachScene, spookyScreaminElectricScene], [unspookyScene])
+    constructor() {
+        super("Living Room", "living_room_4", "living_room_3", "living_room_2", "living_room_1")
     }
 }
 
@@ -213,6 +194,9 @@ class ChromecastScene extends Scene {
     }
 }
 
+/**
+ * Spooky ass hallway scene
+ */
 class HallwayScene extends MultiPartScene {
     constructor() {
         const spookyHallwayTop = new Event(
@@ -235,6 +219,9 @@ class HallwayScene extends MultiPartScene {
     }
 }
 
+/**
+ *
+ */
 class PulseAllLightsScene extends Scene {
     async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
         const hue: SpookyHueApi = await hueFunction()
@@ -246,7 +233,8 @@ class PulseAllLightsScene extends Scene {
             new OnPattern(100, 1, 1),
             new OffPattern(1, 1),
             new OnPattern(100, 1, 1),
-            new OffPattern(1, 1)
+            new OffPattern(1, 1),
+            new OnPattern(100, 1, 1),
         );
 
         while (true) {
@@ -258,14 +246,33 @@ class PulseAllLightsScene extends Scene {
     }
 }
 
-class PulsingRedScene extends Scene {
+/**
+ * Scene that repeats forever
+ */
+abstract class RepeatingScene extends Scene {
+
+    private mainLightNames: string[]
+
+    constructor(...mainLightNames: string[]) {
+        super()
+        this.mainLightNames = mainLightNames
+    }
 
     async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
         const spookyHueBulbPlayer = new SpookyHueBulbPlayer(await hueFunction());
         // Setup infinitely repeating light patterns
-        getPulsingRedEvent("living_room_1").forEach(event => {
+        this.getRepeatingEvents(...this.mainLightNames).forEach(event => {
             spookyHueBulbPlayer.playRepeatingEvent(event);
         })
+    }
+
+    abstract getRepeatingEvents(...lightNames: string[]): Event[];
+}
+
+class PulsingRedScene extends RepeatingScene {
+
+    getRepeatingEvents(...lightNames: string[]): Event[] {
+        return getPulsingRedEvent(...lightNames)
     }
 }
 
@@ -285,5 +292,6 @@ export const SCENES: { [key: string]: Scene } = {
     "pulse_red": new PulsingRedScene(),
     "half_bath": new HalfBathroomScene(),
     "down_bath": new DownstairsBathroomScene(),
+    "living_room": new LivingRoomScene(),
     "test": new TestScene()
 }
