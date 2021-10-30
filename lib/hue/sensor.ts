@@ -87,6 +87,10 @@ export class HueSensor {
         this.callbacks.push(callback);
     }
 
+    public getId(): number {
+        return this.sensorId;
+    }
+
     public toString(): string {
         let lastUpdate = this.lastSensorUpdate === null ? "No Updates" : this.lastSensorUpdate.toString()
         return `SensorId: ${this.sensorId} Last Update: ${lastUpdate} # callbacks registered: ${this.callbacks.length}`;
