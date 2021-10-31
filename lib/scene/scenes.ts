@@ -8,7 +8,7 @@ import { SpookyHueApi } from '../hue/hue';
 import { SpookyHueBulbPlayer } from '../hue/spooky_bulb_player';
 import { SoundPattern, FlickerPattern, OffPattern, StableColourPattern, SleepPattern, OnPattern, Pattern, PulsePattern } from './patterns';
 import { red, white, blueish_white } from '../hue/colour';
-import { Event, getElectricLadyEvent, getChillEvents, getPulsingRedEvent, getSpookyCockroachScene, getSpookyGhostScene, getAlienEvents } from "./events"
+import { Event, getElectricLadyEvent, getChillEvents, getPulsingRedEvent, getSpookyCockroachScene, getSpookyGhostScene, getAlienEvents, getCandymanScene, getChildRedEvent, getMichaelMyersScene, getSawScene, getFreddyScene } from "./events"
 
 const log: CategoryLogger = getLogger("scene")
 
@@ -148,10 +148,14 @@ class RandomSpookyScene extends RandomMultiScene {
         super(ringSensor,
             [
                 getElectricLadyEvent(subLightName, ...mainLightNames),
-                getPulsingRedEvent(subLightName, ...mainLightNames),
+                getCandymanScene(subLightName, ...mainLightNames),
+                getMichaelMyersScene(subLightName, ...mainLightNames),
+                getSawScene(...mainLightNames),
+                getFreddyScene(...mainLightNames),
+                getChildRedEvent(subLightName, ...mainLightNames),
                 getSpookyCockroachScene(...mainLightNames),
                 getSpookyGhostScene(...mainLightNames),
-                // TODO getAlienEvents(...mainLightNames),
+                getAlienEvents(subLightName, ...mainLightNames),
             ],
             getChillEvents(subLightName, ...mainLightNames))
     }
@@ -279,9 +283,9 @@ class PulsingRedScene extends RepeatingScene {
 class TestScene extends MultiPartScene {
 
     constructor() {
-        super("Front Gate",
-            getElectricLadyEvent("living_room_2", "living_room_1"),
-            getChillEvents("living_room_2", "living_room_1"))
+        super("Half Bathroom",
+            getFreddyScene("half_bath_3", "half_bath_2", "half_bath_1"),
+            getChillEvents("half_bath_3", "half_bath_2", "half_bath_1"))
     }
 }
 
