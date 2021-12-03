@@ -47,12 +47,12 @@ export function getElectricLadyEvent(subLightName: string, ...mainLightNames: st
             new OffPattern(5),
             new OffPattern(4.5),
             new OffPattern(1),
-            new SoundPattern('resources/woman_screaming.mp3', new StableColourPattern(red, 60, 12, 0), 0.5),
+            new SoundPattern('resources/woman_screaming.mp3', new StableColourPattern(red, 60, 12, 0), 0.7),
             new OffPattern(10)
         ], subLightName,
         [
             new StableColourPattern(white, 40, 5, 0),
-            new SoundPattern('resources/sparks.mp3', new FlickerPattern(4.5), 0.01),
+            new SoundPattern('resources/sparks.mp3', new FlickerPattern(4.5), 0.01, .7),
             new OffPattern(1),
             new OffPattern(12),
             new StableColourPattern(white, 60, 10, 10)
@@ -75,13 +75,13 @@ export function getAlienEvents(subLightName: string, ...mainLightNames: string[]
         ], subLightName,
         [
             new StableColourPattern(white, 60, 5, 0),
-            new SoundPattern('resources/alien_snarl_creature.mp3', new StableColourPattern(blueish_white, 60, 2, 0), 1),
+            new SoundPattern('resources/alien_snarl_creature.mp3', new StableColourPattern(blueish_white, 60, 2, 0), 1, 0.7),
             new StableColourPattern(blueish_white, 60, 5, 0),
-            new SoundPattern('resources/scifi_alien.mp3', new StableColourPattern(blueish_white, 60, 2, 0), 1),
+            new SoundPattern('resources/scifi_alien.mp3', new StableColourPattern(blueish_white, 60, 2, 0), 1, 0.7),
             new StableColourPattern(blueish_white, 60, 7, 0),
-            new SoundPattern('resources/alien_creature_2.mp3', new StableColourPattern(green, 60, 1, 0), 1),
+            new SoundPattern('resources/alien_creature_2.mp3', new StableColourPattern(green, 60, 1, 0), 1, 0.7),
             new StableColourPattern(green, 60, 4, 0),
-            new SoundPattern('resources/alien_creature.mp3', new StableColourPattern(green, 60, 4, 0), 1),
+            new SoundPattern('resources/alien_creature.mp3', new StableColourPattern(green, 60, 4, 0), 1, 0.7),
             new StableColourPattern(green, 60, 10, 10)
         ], mainLightNames)
 }
@@ -90,7 +90,7 @@ export function getChildRedEvent(subLightName: string, ...mainLightNames: string
     return buildEventsWithSubroutine(
         [
             new OffPattern(16),
-            new SoundPattern('resources/creepy_child.mp3', new OffPattern(13), 0.5),
+            new SoundPattern('resources/creepy_child.mp3', new OffPattern(13), 0.7),
             new OffPattern(1),
             new StableColourPattern(red, 60, 2, 2),
             new StableColourPattern(red, 0, 3, 3),
@@ -147,11 +147,11 @@ export function getSpookyCockroachScene(...mainLightNames: string[]): Event[] {
     return buildEventsForLights(
         [
             new StableColourPattern(white, 40, 5, 0),
-            new SoundPattern("resources/cockroach_walk.mp3", new StableColourPattern(white, 40, 2, 0), 0.01, 0.5),
+            new SoundPattern("resources/cockroach_walk.mp3", new StableColourPattern(white, 40, 2, 0), 0.01, 0.8),
             new StableColourPattern(white, 40, 5, 0),
             new SoundPattern("resources/cockroach_scurry_3.mp3", new StableColourPattern(blueish_white, 40, 1, 1), 0.01, 1),
             new StableColourPattern(blueish_white, 40, 3, 0),
-            new SoundPattern("resources/cockroach_walk.mp3", new StableColourPattern(blueish_white, 50, 2, 1), 0.01, 0.5),
+            new SoundPattern("resources/cockroach_walk.mp3", new StableColourPattern(blueish_white, 50, 2, 1), 0.01, 0.8),
             new StableColourPattern(blueish_white, 60, 10, 10)
         ], mainLightNames)
 }
@@ -160,7 +160,7 @@ export function getSpookyGhostScene(...mainLightNames: string[]): Event[] {
     return buildEventsForLights(
         [
             new StableColourPattern(white, 40, 5, 0),
-            new SoundPattern("resources/ghost_movement.mp3", new StableColourPattern(white, 70, 8, 7), 1, 0.5),
+            new SoundPattern("resources/ghost_movement.mp3", new StableColourPattern(white, 70, 8, 7), 1, 0.8),
             new SoundPattern("resources/ghost_cry.mp3", new FlickerPattern(1), 0.01, 0.9),
             new StableColourPattern(white, 60, 10, 10)
         ], mainLightNames)
