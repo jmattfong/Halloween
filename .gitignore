@@ -1,6 +1,7 @@
 *.zip
 *.tar.gz
 *.pyc
+*.code-workspace
 
 lib/__pycache__/
 
