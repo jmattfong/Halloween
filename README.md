@@ -43,3 +43,10 @@ Create a file located at ```secrets/secrets.json``` with a refreshToken generate
 ```
 ts-node main.ts --sceneToRun="living_room"
 ```
+
+### Find the IP of a Hue bridge
+
+This can be necessary if you are rate limited by the discovery API
+
+See https://developers.meethue.com/develop/application-design-guidance/hue-bridge-discovery/
+See https://developers.meethue.com/develop/get-started-2/

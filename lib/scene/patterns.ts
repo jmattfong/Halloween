@@ -190,10 +190,13 @@ export class OffPattern extends Pattern {
 export class OnPattern extends Pattern {
     private transitionSeconds: number
     private brightness: number
-    constructor(brightness: number, durationSeconds: number, transitionSeconds: number = 0) {
+    private ct: number
+
+    constructor(brightness: number, durationSeconds: number, transitionSeconds: number = 0, ct: number = 200) {
         super(durationSeconds);
         this.brightness = brightness;
         this.transitionSeconds = transitionSeconds;
+        this.ct = ct;
     }
 
     isCancelled = false;
@@ -204,7 +207,7 @@ export class OnPattern extends Pattern {
     public async run(lightName: string, lightApi: SpookyHueApi): Promise<boolean> {
         const state = new LightState()
             .on()
-            .ct(200)
+            .ct(this.ct)
             .brightness(this.brightness)
             // Weird, but this is in increments of 100ms
             .transitiontime(this.transitionSeconds * 10);

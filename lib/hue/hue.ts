@@ -25,13 +25,23 @@ export class SpookyHueApi {
         const secrets: HueSecrets = JSON.parse(fileContents);
         this.username = secrets.hueUsername;
         this.lights = config["lights"]
-        log.info("got lights " + this.lights)
+        log.info("got lights " + JSON.stringify(this.lights))
     }
 
     public async connect() {
+        if (this.isConnected) {
+            return
+        }
         let searchResults = await v3.discovery.nupnpSearch();
         log.info(`found ${searchResults.length} hubs. Connecting to the first one cuz #yolo`);
         const host = searchResults[0].ipaddress;
+        this.connectUsingIP(host)
+    }
+
+    public async connectUsingIP(host: string) {
+        if (this.isConnected) {
+            return
+        }
         log.info(`connecting to ${host}`)
         this.hueApi = await v3.api.createLocal(host).connect(this.username);
         log.info('connected!')

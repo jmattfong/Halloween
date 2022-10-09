@@ -52,7 +52,7 @@ export abstract class Scene {
     }
 }
 
-class MultiPartScene extends Scene {
+export class MultiPartScene extends Scene {
 
     ringSensorName: string
     hueSensorId?: number

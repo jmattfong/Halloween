@@ -5,9 +5,10 @@ import { SpookyHueApi } from './lib/hue/hue';
 import { parse } from 'ts-command-line-args';
 import { getLogger, setLogLevel } from './lib/logging'
 import { CategoryLogger, LogLevel } from 'typescript-logging';
-import { SCENES } from './lib/scene/scenes';
+import { SCENES_2022 } from './lib/scene/scenes_2022';
 
 const log: CategoryLogger = getLogger("main")
+const SCENES = SCENES_2022
 
 // For details about adding new args, see https://www.npmjs.com/package/ts-command-line-args
 interface IHalloweenServerArgs {
@@ -54,7 +55,7 @@ async function main() {
         if (spookHue == null) {
             log.info('Setting up Hue')
             spookHue = new SpookyHueApi(config.secretPath, config)
-            await spookHue.connect();
+            await spookHue.connectUsingIP(config.hue_bridge_ip);
             log.debug(`get all lights: ${(await spookHue.getLights()).map((l: any) => l.toStringDetailed())}`);
         }
         return spookHue
