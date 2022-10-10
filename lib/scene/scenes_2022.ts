@@ -9,6 +9,7 @@ import { SoundPattern, RandomSoundPattern, FlickerPattern, OffPattern, StableCol
 import { red, white, blueish_white } from '../hue/colour';
 import { Event, getElectricLadyEvent, getChillEvents, getPulsingRedEvent, getSpookyCockroachScene, getSpookyGhostScene, getAlienEvents, getCandymanScene, getChildRedEvent, getMichaelMyersScene, getSawScene, getFreddyScene } from "./events"
 import {Scene, MultiPartScene} from './scenes'
+import {INTRO_VIDEO_2022} from '../videos'
 
 const log: CategoryLogger = getLogger("scene_2022")
 
@@ -99,6 +100,18 @@ class JigglingSkeletonScene extends Scene {
 
 class FrontDoorVideoScene extends Scene {
     async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
+        const chromecaster = new Chromecaster()
+        await chromecaster.start();
+        this.hueCallback = [
+            2,
+            (update: HueSensorUpdate) => {
+                log.info(`received status update: ${update}`);
+                if (update.getPresence()) {
+                    // TODO this video needs to be updated
+                    chromecaster.playVideo(INTRO_VIDEO_2022);
+                }
+            }
+        ]
     }
 }
 

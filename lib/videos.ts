@@ -52,4 +52,6 @@ export let SPOOKY_VIDEOS = [
     new Video('test-long-startle-wraith.mp4', 'Startle wraith', 22)
 ];
 
+export let INTRO_VIDEO_2022 = new Video('GA_Beauty_Roamer1_Win_V.mp4', 'Beckoning Beauty 1', 32)
+
 export let ALL_VIDEOS = SPOOKY_VIDEOS.concat(BLANK_VIDEO);
