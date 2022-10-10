@@ -3,6 +3,8 @@
 *.pyc
 *.code-workspace
 
+out/
+
 lib/__pycache__/
 
 # secrets, shhhh

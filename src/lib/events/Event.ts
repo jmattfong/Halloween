@@ -1,3 +1,8 @@
+import { CategoryLogger } from "typescript-logging";
+import { getLogger } from "../logging";
+
+const log: CategoryLogger = getLogger("event");
+
 export class NewEvent {
   readonly source: Event.Source;
   readonly name: string;
