@@ -87,23 +87,40 @@ class ThunderScene extends MultiPartScene {
     }
 }
 
-class FrontLightFlickerScene extends ThunderScene {
-    constructor(ringSensorName: string, lights: string[]) {
-        super(ringSensorName, lights)
+class FrontLightFlickerScene extends MultiPartScene {
+    constructor(hueSensorId: number, lights: string[]) {
+        let defaultLighting: Pattern = new OnPattern(55, 1, 0, 447)
+        let events: Event[] = lights.map(light => {
+            return new Event(light,
+                new FlickerPattern(7),
+                defaultLighting)
+        });
+        let unSpookyEvents: Event[] = lights.map(light => {
+            return new Event(light, defaultLighting)
+        });
+        super("", events, unSpookyEvents, hueSensorId)
     }
 }
 
+// TODO
 class JigglingSkeletonScene extends Scene {
     async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
     }
 }
 
 class FrontDoorVideoScene extends Scene {
+
+    hueSensor: number
+    constructor(hueSensor: number) {
+        super()
+        this.hueSensor = hueSensor
+    }
+
     async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
         const chromecaster = new Chromecaster()
         await chromecaster.start();
         this.hueCallback = [
-            2,
+            this.hueSensor,
             (update: HueSensorUpdate) => {
                 log.info(`received status update: ${update}`);
                 if (update.getPresence()) {
@@ -127,31 +144,37 @@ class PhotoboothThunderScene extends ThunderScene {
     }
 }
 
+// TODO
 class DownstairsBathCreepyClownShowerScene extends Scene {
     async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
     }
 }
 
+// TODO
 class WerewolfDoorJiggleScene extends Scene {
     async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
     }
 }
 
+// TODO
 class LookItsWafflesScene extends Scene {
     async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
     }
 }
 
+// TODO
 class WerewolfShowerScene extends Scene {
     async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
     }
 }
 
+// TODO
 class GuestBedClownScene extends Scene {
     async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
     }
 }
 
+// TODO
 class PortalToHellScene extends Scene {
     async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
     }
@@ -161,9 +184,9 @@ export const SCENES_2022: { [key: string]: Scene } = {
     "list": new ListOnLightsScene(),
     "get_light": new GetLight(),
     "test_ring": new TestRingScene(),
-    "front_light_flicker": new FrontLightFlickerScene("Front Gate", ["living_room_1", "living_room_2"]),
+    "front_light_flicker": new FrontLightFlickerScene(2, ["living_room_1", "living_room_2"]),
     "jiggling_skeleton": new JigglingSkeletonScene(),
-    "front_door_video": new FrontDoorVideoScene(),
+    "front_door_video": new FrontDoorVideoScene(2),
     "welcome_inside": new WelcomeInsideScene("Front Gate", ["living_room_1", "living_room_2"]),
     "photobooth_thunder": new PhotoboothThunderScene("Front Gate", ["living_room_1", "living_room_2"]),
     "creepy_clown_shower": new DownstairsBathCreepyClownShowerScene(),
