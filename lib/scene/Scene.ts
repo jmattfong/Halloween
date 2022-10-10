@@ -1,4 +1,4 @@
-import Effect from "./effects/EffectAbstract";
+import Effect from "./effects/Effect";
 
 export default class Scene {
   readonly name: string;
