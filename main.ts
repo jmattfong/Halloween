@@ -1,11 +1,11 @@
 import 'dotenv/config'
-import { readFileSync } from 'fs';
 import { RingEnhancedSpookinatorV2 } from './lib/ring';
 import { SpookyHueApi } from './lib/hue/hue';
 import { parse } from 'ts-command-line-args';
 import { getLogger, setLogLevel } from './lib/logging'
 import { CategoryLogger, LogLevel } from 'typescript-logging';
 import { SCENES_2022 } from './lib/scene/scenes_2022';
+import { CONFIG } from './lib/config';
 
 const log: CategoryLogger = getLogger("main")
 const SCENES = SCENES_2022
@@ -37,14 +37,11 @@ async function main() {
 
     log.info(`input args: ${JSON.stringify(args)}\n`)
 
-    const configContents = readFileSync('./config/config.json', { encoding: 'utf-8' });
-    let config = JSON.parse(configContents);
-
     var ringSpook: RingEnhancedSpookinatorV2
     const getRing = async () => {
         if (ringSpook == null) {
             log.info('Setting up Ring')
-            ringSpook = new RingEnhancedSpookinatorV2(config.secretPath, true)
+            ringSpook = new RingEnhancedSpookinatorV2(CONFIG.secretPath, true)
             log.debug(`all my sensors: ${await ringSpook.getSensors()}`);
         }
         return ringSpook
@@ -54,8 +51,8 @@ async function main() {
     const getHue = async () => {
         if (spookHue == null) {
             log.info('Setting up Hue')
-            spookHue = new SpookyHueApi(config.secretPath, config)
-            await spookHue.connectUsingIP(config.hue_bridge_ip);
+            spookHue = new SpookyHueApi(CONFIG.secretPath, CONFIG)
+            await spookHue.connectUsingIP(CONFIG.hue_bridge_ip);
             log.debug(`get all lights: ${(await spookHue.getLights()).map((l: any) => l.toStringDetailed())}`);
         }
         return spookHue

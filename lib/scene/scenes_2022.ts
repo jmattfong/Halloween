@@ -6,10 +6,10 @@ import { RingEnhancedSpookinatorV2 } from '../ring';
 import { SpookyHueApi } from '../hue/hue';
 import { SpookyHueBulbPlayer } from '../hue/spooky_bulb_player';
 import { SoundPattern, RandomSoundPattern, FlickerPattern, OffPattern, StableColourPattern, SleepPattern, OnPattern, Pattern, PulsePattern } from './patterns';
-import { red, white, blueish_white } from '../hue/colour';
-import { Event, getElectricLadyEvent, getChillEvents, getPulsingRedEvent, getSpookyCockroachScene, getSpookyGhostScene, getAlienEvents, getCandymanScene, getChildRedEvent, getMichaelMyersScene, getSawScene, getFreddyScene } from "./events"
+import { Event } from "./events"
 import {Scene, MultiPartScene} from './scenes'
 import {INTRO_VIDEO_2022} from '../videos'
+import {RED, RELAX, CONCENTRATE, ENERGIZE, DIMMED,  NIGHTLIGHT} from '../config'
 
 const log: CategoryLogger = getLogger("scene_2022")
 
@@ -45,9 +45,11 @@ const log: CategoryLogger = getLogger("scene_2022")
 }
 
 class GetLight extends Scene {
-
-    // Change this to get the state of different lights
-    lightIdToGet: number = 26
+    lightIdToGet: number
+    constructor(lightIdToGet: number) {
+        super()
+        this.lightIdToGet = lightIdToGet
+    }
 
     async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
         const hue: SpookyHueApi = await hueFunction()
@@ -65,19 +67,30 @@ class GetLight extends Scene {
     }
 }
 
-class TestRingScene extends Scene {
-    async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
-        const ring: RingEnhancedSpookinatorV2 = await _ringFunction()
-        ring.getSensors();
-    }
-}
-
-class ThunderScene extends MultiPartScene {
+class FindBulb extends MultiPartScene {
     constructor(ringSensorName: string, lights: string[]) {
-        let defaultLighting: Pattern = new OnPattern(55, 1, 0, 447)
+        let defaultLighting: Pattern = new OnPattern(RELAX, 3)
         let events: Event[] = lights.map(light => {
             return new Event(light,
-                new RandomSoundPattern(["resources/lightning_bolt.mp3", "resources/lightning_bolt_2.mp3"], new FlickerPattern(3), 0, 1),
+                new OnPattern(RED, 10),
+                defaultLighting,
+                new OnPattern(RED, 10),
+                defaultLighting,
+                new OnPattern(RED, 10),
+                defaultLighting,
+                new OnPattern(RED, 10),
+                defaultLighting,
+                new OnPattern(RED, 10),
+                defaultLighting,
+                new OnPattern(RED, 10),
+                defaultLighting,
+                new OnPattern(RED, 10),
+                defaultLighting,
+                new OnPattern(RED, 10),
+                defaultLighting,
+                new OnPattern(RED, 10),
+                defaultLighting,
+                new OnPattern(RED, 10),
                 defaultLighting)
         });
         let unSpookyEvents: Event[] = lights.map(light => {
@@ -87,9 +100,32 @@ class ThunderScene extends MultiPartScene {
     }
 }
 
+class TestRingScene extends Scene {
+    async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
+        const ring: RingEnhancedSpookinatorV2 = await _ringFunction()
+        ring.getSensors();
+    }
+}
+
+class ThunderScene extends MultiPartScene {
+    constructor(ringSensorName: string, lights: string[]) {
+        let defaultLighting: Pattern = new OnPattern(RELAX, 1)
+        let events: Event[] = lights.map(light => {
+            return new Event(light,
+                new RandomSoundPattern(["resources/lightning_bolt.mp3", "resources/lightning_bolt_2.mp3"], new FlickerPattern(3), 0, 1),
+                defaultLighting)
+        });
+        let unSpookyEvents: Event[] = lights.map(light => {
+            return new Event(light, defaultLighting)
+        });
+        unSpookyEvents = []
+        super(ringSensorName, events, unSpookyEvents)
+    }
+}
+
 class FrontLightFlickerScene extends MultiPartScene {
     constructor(hueSensorId: number, lights: string[]) {
-        let defaultLighting: Pattern = new OnPattern(55, 1, 0, 447)
+        let defaultLighting: Pattern = new OnPattern(RELAX, 1)
         let events: Event[] = lights.map(light => {
             return new Event(light,
                 new FlickerPattern(7),
@@ -157,8 +193,19 @@ class WerewolfDoorJiggleScene extends Scene {
 }
 
 // TODO
-class LookItsWafflesScene extends Scene {
-    async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
+class LookItsWafflesScene extends MultiPartScene {
+    constructor(ringSensorName: string, lights: string[]) {
+        let defaultLighting: Pattern = new OffPattern(1, 0)
+        let events: Event[] = lights.map(light => {
+            return new Event(light,
+                new SleepPattern(5),
+                new RandomSoundPattern(["resources/alien_creature.mp3"], new OnPattern(RED, 15), 0, 1),
+                defaultLighting)
+        });
+        let unSpookyEvents: Event[] = lights.map(light => {
+            return new Event(light, defaultLighting)
+        });
+        super(ringSensorName, events, unSpookyEvents, undefined, true)
     }
 }
 
@@ -181,9 +228,12 @@ class PortalToHellScene extends Scene {
 }
 
 export const SCENES_2022: { [key: string]: Scene } = {
+    // Test and Utility scenes
     "list": new ListOnLightsScene(),
-    "get_light": new GetLight(),
+    "get_light": new GetLight(18), // Change this to get the state of different lights by ID
     "test_ring": new TestRingScene(),
+    "find_bulb": new FindBulb("Front Gate", ["living_room_3"]),
+    // Scenes for the party
     "front_light_flicker": new FrontLightFlickerScene(2, ["living_room_1", "living_room_2"]),
     "jiggling_skeleton": new JigglingSkeletonScene(),
     "front_door_video": new FrontDoorVideoScene(2),
@@ -191,7 +241,7 @@ export const SCENES_2022: { [key: string]: Scene } = {
     "photobooth_thunder": new PhotoboothThunderScene("Front Gate", ["living_room_1", "living_room_2"]),
     "creepy_clown_shower": new DownstairsBathCreepyClownShowerScene(),
     "werewolf_door_jiggle": new WerewolfDoorJiggleScene(),
-    "look_its_waffles": new LookItsWafflesScene(),
+    "look_its_waffles": new LookItsWafflesScene("Front Gate", ["living_room_3"]),
     "werewolf_shower": new WerewolfShowerScene(),
     "guest_bed_clown": new GuestBedClownScene(),
     "portal_to_hell": new PortalToHellScene(),
