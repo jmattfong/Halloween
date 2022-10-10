@@ -5,7 +5,7 @@ import { CategoryLogger } from 'typescript-logging';
 import { RingEnhancedSpookinatorV2 } from '../ring';
 import { SpookyHueApi } from '../hue/hue';
 import { SpookyHueBulbPlayer } from '../hue/spooky_bulb_player';
-import { SoundPattern, FlickerPattern, OffPattern, StableColourPattern, SleepPattern, OnPattern, Pattern, PulsePattern } from './patterns';
+import { SoundPattern, RandomSoundPattern, FlickerPattern, OffPattern, StableColourPattern, SleepPattern, OnPattern, Pattern, PulsePattern } from './patterns';
 import { red, white, blueish_white } from '../hue/colour';
 import { Event, getElectricLadyEvent, getChillEvents, getPulsingRedEvent, getSpookyCockroachScene, getSpookyGhostScene, getAlienEvents, getCandymanScene, getChildRedEvent, getMichaelMyersScene, getSawScene, getFreddyScene } from "./events"
 import {Scene, MultiPartScene} from './scenes'
@@ -71,8 +71,24 @@ class TestRingScene extends Scene {
     }
 }
 
-class FrontLightFlickerScene extends Scene {
-    async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
+class ThunderScene extends MultiPartScene {
+    constructor(ringSensorName: string, lights: string[]) {
+        let defaultLighting: Pattern = new OnPattern(55, 1, 0, 447)
+        let events: Event[] = lights.map(light => {
+            return new Event(light,
+                new RandomSoundPattern(["resources/lightning_bolt.mp3", "resources/lightning_bolt_2.mp3"], new FlickerPattern(3), 0, 1),
+                defaultLighting)
+        });
+        let unSpookyEvents: Event[] = lights.map(light => {
+            return new Event(light, defaultLighting)
+        });
+        super(ringSensorName, events, unSpookyEvents)
+    }
+}
+
+class FrontLightFlickerScene extends ThunderScene {
+    constructor(ringSensorName: string, lights: string[]) {
+        super(ringSensorName, lights)
     }
 }
 
@@ -86,24 +102,15 @@ class FrontDoorVideoScene extends Scene {
     }
 }
 
-class WelcomeInsideScene extends MultiPartScene {
-
+class WelcomeInsideScene extends ThunderScene {
     constructor(ringSensorName: string, lights: string[]) {
-        let defaultLighting: Pattern = new OnPattern(55, 1, 0, 447)
-        let events: Event[] = lights.map(light => {
-            return new Event(light,
-                new SoundPattern("resources/lightning_bolt_2.mp3", new FlickerPattern(3), 0, 1),
-                defaultLighting)
-        });
-        let unSpookyEvents: Event[] = lights.map(light => {
-            return new Event(light, defaultLighting)
-        });
-        super(ringSensorName, events, unSpookyEvents)
+        super(ringSensorName, lights)
     }
 }
 
-class PhotoboothThunderScene extends Scene {
-    async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
+class PhotoboothThunderScene extends ThunderScene {
+    constructor(ringSensorName: string, lights: string[]) {
+        super(ringSensorName, lights)
     }
 }
 
@@ -141,11 +148,11 @@ export const SCENES_2022: { [key: string]: Scene } = {
     "list": new ListOnLightsScene(),
     "get_light": new GetLight(),
     "test_ring": new TestRingScene(),
-    "front_light_flicker": new FrontLightFlickerScene(),
+    "front_light_flicker": new FrontLightFlickerScene("Front Gate", ["living_room_1", "living_room_2"]),
     "jiggling_skeleton": new JigglingSkeletonScene(),
     "front_door_video": new FrontDoorVideoScene(),
     "welcome_inside": new WelcomeInsideScene("Front Gate", ["living_room_1", "living_room_2"]),
-    "photobooth_thunder": new PhotoboothThunderScene(),
+    "photobooth_thunder": new PhotoboothThunderScene("Front Gate", ["living_room_1", "living_room_2"]),
     "creepy_clown_shower": new DownstairsBathCreepyClownShowerScene(),
     "werewolf_door_jiggle": new WerewolfDoorJiggleScene(),
     "look_its_waffles": new LookItsWafflesScene(),

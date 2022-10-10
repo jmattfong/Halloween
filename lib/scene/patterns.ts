@@ -56,16 +56,33 @@ export class SoundPattern extends Pattern {
         this.lightPattern.cancel();
     }
 
+    getSoundFile(): string {
+        return this.soundFile;
+    }
+
     public async run(lightName: string, lightApi: SpookyHueApi): Promise<boolean> {
-        player.play(this.soundFile, this.volume).then((error: any) => {
+        let soundFile = this.getSoundFile()
+        player.play(soundFile, this.volume).then((error: any) => {
             if (error) {
-                log.error(`something went wrong playing ${this.soundFile}`, error);
+                log.error(`something went wrong playing ${soundFile}`, error);
             } else {
-                log.info(`playing ${this.soundFile} is complete`)
+                log.info(`playing ${soundFile} is complete`)
             }
         });
         await sleep(this.soundToPatternDelayMs);
         return this.lightPattern.run(lightName, lightApi);
+    }
+}
+
+export class RandomSoundPattern extends SoundPattern {
+    soundFiles: string[]
+    constructor(soundFiles: string[], lightPattern: Pattern, soundToPatternDelaySeconds: number, volume: number = 0.5) {
+        super("", lightPattern, soundToPatternDelaySeconds, volume)
+        this.soundFiles = soundFiles
+    }
+
+    getSoundFile(): string {
+        return this.soundFiles[Math.floor(Math.random() * this.soundFiles.length)];
     }
 }
 
