@@ -19,7 +19,9 @@ export default class RingSensor extends Sensor {
 
   private async trigger(data: RingDeviceData): Promise<void> {
     if (data.faulted) {
-      super.generateAndPostEvent("faulted");
+      super.generateAndPostEvent("opened");
+    } else {
+      super.generateAndPostEvent("closed");
     }
   }
 }
