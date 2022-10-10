@@ -82,14 +82,21 @@ export class FlickerPattern extends Pattern {
     public async run(lightName: string, lightApi: SpookyHueApi): Promise<boolean> {
         const startTime = new Date();
 
-        let lightOn = 1;
+        let lightOn = true;
         while (!this.isCancelled) {
-            const state = new LightState()
-                .on() // call this once
-                .ct(200)
-                .on(lightOn * 100) // call this again
-                .brightness(getRandomInt(100))
-                .transitiontime(0);
+            let state = new LightState()
+            if (lightOn) {
+                // TODO use energize color from config
+                state = new LightState()
+                    .on(lightOn)
+                    .ct(156)
+                    .brightness(getRandomInt(100))
+                    .transitiontime(0);
+            } else {
+                state = new LightState()
+                    .on(lightOn)
+                    .transitiontime(0);
+            }
 
             await lightApi.setLightState(lightName, state);
             const currTime = new Date();
@@ -98,9 +105,9 @@ export class FlickerPattern extends Pattern {
                 return false;
             }
 
-            lightOn = (lightOn + 1) % 2
+            lightOn = !lightOn
             const linearInterp = 1 - ((currTime.getTime() - startTime.getTime()) / this.durationMs);
-            await sleep((getRandomInt(200) * linearInterp) + 30);
+            await sleep((getRandomInt(50) * linearInterp) + 30);
         }
 
         this.isCancelled = false;

@@ -64,7 +64,7 @@ export class MultiPartScene extends Scene {
         this.ringSensorName = ringSensorName
         this.spookyEvents = spookyEvents
         this.unSpookyEvents = unSpookyEvents
-        this.hueSensorId = hueSensorId;
+        this.hueSensorId = hueSensorId
     }
 
     async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {

@@ -25,6 +25,10 @@ npm install
 
 Also see https://github.com/dgreif/ring/wiki/Refresh-Tokens
 
+```bash
+npm i -g --unsafe-perm homebridge-ring
+```
+
 - Run the ring-auth-cli command to be prompted for your Ring username and password. You will then receive a text message or email from Ring with the two-factor-auth (2fa) code. Enter it into the prompt to generate a refreshToken.
 
 ```bash

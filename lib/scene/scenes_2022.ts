@@ -64,25 +64,10 @@ class GetLight extends Scene {
     }
 }
 
-class BlinkLight extends Scene {
+class TestRingScene extends Scene {
     async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
-        const hue: SpookyHueApi = await hueFunction()
-        const spookyHueBulbPlayer = new SpookyHueBulbPlayer(hue);
-        const allLights = await hue.getLights();
-        const pattern = new Event("hallway_2",
-            new OnPattern(100, 1, 1),
-            new OffPattern(1, 1),
-            new OnPattern(100, 1, 1),
-            new OffPattern(1, 1),
-            new OnPattern(100, 1, 1),
-            new OffPattern(1, 1),
-            new OnPattern(100, 1, 1),
-        );
-
-        for (let i = 0; i < allLights.length; i++) {
-            log.info(`Pulsing light #${allLights[i].id}`)
-            await spookyHueBulbPlayer.playPattern(pattern);
-        }
+        const ring: RingEnhancedSpookinatorV2 = await _ringFunction()
+        ring.getSensors();
     }
 }
 
@@ -101,8 +86,19 @@ class FrontDoorVideoScene extends Scene {
     }
 }
 
-class WelcomeInsideScene extends Scene {
-    async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
+class WelcomeInsideScene extends MultiPartScene {
+
+    constructor(ringSensorName: string, lights: string[]) {
+        let defaultLighting: Pattern = new OnPattern(55, 1, 0, 447)
+        let events: Event[] = lights.map(light => {
+            return new Event(light,
+                new SoundPattern("resources/lightning_bolt_2.mp3", new FlickerPattern(3), 0, 1),
+                defaultLighting)
+        });
+        let unSpookyEvents: Event[] = lights.map(light => {
+            return new Event(light, defaultLighting)
+        });
+        super(ringSensorName, events, unSpookyEvents)
     }
 }
 
@@ -144,11 +140,11 @@ class PortalToHellScene extends Scene {
 export const SCENES_2022: { [key: string]: Scene } = {
     "list": new ListOnLightsScene(),
     "get_light": new GetLight(),
-    "blink": new BlinkLight(),
+    "test_ring": new TestRingScene(),
     "front_light_flicker": new FrontLightFlickerScene(),
     "jiggling_skeleton": new JigglingSkeletonScene(),
     "front_door_video": new FrontDoorVideoScene(),
-    "welcome_inside": new WelcomeInsideScene(),
+    "welcome_inside": new WelcomeInsideScene("Front Gate", ["living_room_1", "living_room_2"]),
     "photobooth_thunder": new PhotoboothThunderScene(),
     "creepy_clown_shower": new DownstairsBathCreepyClownShowerScene(),
     "werewolf_door_jiggle": new WerewolfDoorJiggleScene(),
