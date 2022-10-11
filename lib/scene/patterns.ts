@@ -59,7 +59,7 @@ export class SoundPattern extends Pattern {
     private lightPattern: Pattern
     private soundToPatternDelayMs: number
 
-    constructor(soundFile: string, lightPattern: Pattern, soundToPatternDelaySeconds: number, volume: number = 0.5) {
+    constructor(soundFile: string, lightPattern: Pattern, soundToPatternDelaySeconds: number, volume: number = 1) {
         super(lightPattern.getDurationMs());
         this.soundFile = soundFile;
 
@@ -96,7 +96,7 @@ export class SoundPattern extends Pattern {
 
 export class RandomSoundPattern extends SoundPattern {
     soundFiles: string[]
-    constructor(soundFiles: string[], lightPattern: Pattern, soundToPatternDelaySeconds: number, volume: number = 0.5) {
+    constructor(soundFiles: string[], lightPattern: Pattern, soundToPatternDelaySeconds: number = 0, volume: number = 1) {
         super("", lightPattern, soundToPatternDelaySeconds, volume)
         this.soundFiles = soundFiles
     }

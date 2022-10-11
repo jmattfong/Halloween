@@ -49,6 +49,41 @@ export abstract class Scene {
     }
 }
 
+/**
+ * This is a scene that is triggered by a ring event, and does not need
+ * unspooky patterns b/c the spooky events reset them at the end.
+ *
+ * For this type of scene, the spooky scenes will always finish playing.
+ */
+export class AutoResetRingScene extends Scene {
+
+    ringSensorName: string
+    spookyEvents: Event[]
+    spookOnFaulted: boolean
+
+    constructor(ringSensorName: string, spookyEvents: Event[], spookOnFaulted: boolean = false) {
+        super()
+        this.ringSensorName = ringSensorName
+        this.spookyEvents = spookyEvents
+        this.spookOnFaulted = spookOnFaulted
+    }
+
+    async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
+        const spookyHueBulbPlayer = new SpookyHueBulbPlayer(await hueFunction());
+
+        this.ringCallback = [this.ringSensorName, (data: RingDeviceData) => {
+            log.info(`callback called on ${data.name}`);
+
+            // if the data.faulted is true, that means that the door is open
+            if ((data.faulted && this.spookOnFaulted) || (!data.faulted && !this.spookOnFaulted)) {
+                this.spookyEvents.forEach(event => {
+                    spookyHueBulbPlayer.playPattern(event)
+                });
+            }
+        }];
+    }
+}
+
 export class MultiPartScene extends Scene {
 
     ringSensorName: string

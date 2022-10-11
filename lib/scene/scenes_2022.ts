@@ -7,7 +7,7 @@ import { SpookyHueApi } from '../hue/hue';
 import { SpookyHueBulbPlayer } from '../hue/spooky_bulb_player';
 import { SoundPattern, RandomSoundPattern, FlickerPattern, OffPattern, StableColourPattern, SleepPattern, OnPattern, Pattern, PulsePattern } from './patterns';
 import { Event } from "./events"
-import {Scene, MultiPartScene} from './scenes'
+import {Scene, MultiPartScene, AutoResetRingScene} from './scenes'
 import {INTRO_VIDEO_2022} from '../videos'
 import {RED, RELAX, CONCENTRATE, ENERGIZE, DIMMED,  NIGHTLIGHT} from '../config'
 
@@ -112,7 +112,7 @@ class ThunderScene extends MultiPartScene {
         let defaultLighting: Pattern = new OnPattern(RELAX, 1)
         let events: Event[] = lights.map(light => {
             return new Event(light,
-                new RandomSoundPattern(["resources/lightning_bolt.mp3", "resources/lightning_bolt_2.mp3"], new FlickerPattern(3), 0, 1),
+                new RandomSoundPattern(["resources/lightning_bolt.mp3", "resources/lightning_bolt_2.mp3"], new FlickerPattern(3)),
                 defaultLighting)
         });
         let unSpookyEvents: Event[] = lights.map(light => {
@@ -160,7 +160,6 @@ class FrontDoorVideoScene extends Scene {
             (update: HueSensorUpdate) => {
                 log.info(`received status update: ${update}`);
                 if (update.getPresence()) {
-                    // TODO this video needs to be updated
                     chromecaster.playVideo(INTRO_VIDEO_2022);
                 }
             }
@@ -192,20 +191,15 @@ class WerewolfDoorJiggleScene extends Scene {
     }
 }
 
-// TODO
-class LookItsWafflesScene extends MultiPartScene {
+class LookItsWafflesScene extends AutoResetRingScene {
     constructor(ringSensorName: string, lights: string[]) {
-        let defaultLighting: Pattern = new OffPattern(1, 0)
         let events: Event[] = lights.map(light => {
             return new Event(light,
                 new SleepPattern(5),
-                new RandomSoundPattern(["resources/alien_creature.mp3"], new OnPattern(RED, 15), 0, 1),
-                defaultLighting)
+                new RandomSoundPattern(["resources/alien_creature.mp3"], new OnPattern(RED, 15)),
+                new OffPattern(1, 1))
         });
-        let unSpookyEvents: Event[] = lights.map(light => {
-            return new Event(light, defaultLighting)
-        });
-        super(ringSensorName, events, unSpookyEvents, undefined, true)
+        super(ringSensorName, events, true)
     }
 }
 
@@ -215,9 +209,17 @@ class WerewolfShowerScene extends Scene {
     }
 }
 
-// TODO
-class GuestBedClownScene extends Scene {
-    async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
+class GuestBedClownScene extends AutoResetRingScene {
+    constructor(ringSensorName: string, lights: string[]) {
+        let events: Event[] = lights.map(light => {
+            return new Event(light,
+                new SleepPattern(7),
+                // Oops, if we use multiple SoundPatterns it plays them all at once. Kinda works though?
+                new RandomSoundPattern(["resources/saw_laugh.mp3", "resources/creepy_child.mp3"], new OffPattern(14)),
+                new OnPattern(RELAX, 1, 1))
+        });
+
+        super(ringSensorName, events, true)
     }
 }
 
@@ -243,7 +245,7 @@ export const SCENES_2022: { [key: string]: Scene } = {
     "werewolf_door_jiggle": new WerewolfDoorJiggleScene(),
     "look_its_waffles": new LookItsWafflesScene("Front Gate", ["living_room_3"]),
     "werewolf_shower": new WerewolfShowerScene(),
-    "guest_bed_clown": new GuestBedClownScene(),
+    "guest_bed_clown": new GuestBedClownScene("Front Gate", ["master_1", "master_2", "master_3", "master_4"]),
     "portal_to_hell": new PortalToHellScene(),
 }
 
