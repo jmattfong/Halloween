@@ -2,18 +2,18 @@ import RPi.GPIO as GPIO
 import time
 
 
-ENABLE_PIN = 18
-COIL_A_1_PIN = 4
-COIL_A_2_PIN = 17
-COIL_B_1_PIN = 23
-COIL_B_2_PIN = 24
+ENABLE_PIN = 11
+COIL_A_1_PIN = 15
+COIL_A_2_PIN = 8
+COIL_B_1_PIN = 17
+COIL_B_2_PIN = 12
 
 
 def setup(channels):
 
     print("Starting up")
     print("setting gpio to board mode")
-    GPIO.setmode(GPIO.BCM)
+    GPIO.setmode(GPIO.BOARD)
     for x in range(1, 41):
         try:
             result = GPIO.gpio_function(x)
@@ -40,14 +40,13 @@ def cleanup():
 def main(channels):
 
     while True:
-        forward(channels, 1, 100)
+        forward(channels, 0.2, 100)
 
         print("DONE AGAIN. Starting again")
 
 
 def forward(channels, delay_sec: float, steps: int):
-    i = 0
-    while i in range(0, steps):
+    for i in range(1, steps + 1):
         set_step(channels, GPIO.HIGH, GPIO.LOW, GPIO.HIGH, GPIO.LOW)
         time.sleep(delay_sec)
         set_step(channels, GPIO.LOW, GPIO.HIGH, GPIO.HIGH, GPIO.LOW)
@@ -56,7 +55,7 @@ def forward(channels, delay_sec: float, steps: int):
         time.sleep(delay_sec)
         set_step(channels, GPIO.HIGH, GPIO.LOW, GPIO.LOW, GPIO.HIGH)
         time.sleep(delay_sec)
-        i += 1
+        print(f"step #{i}")
 
 
 if __name__ == "__main__":
