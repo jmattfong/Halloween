@@ -69,7 +69,19 @@ if __name__ == "__main__":
     try:
         setup(channels)
 
-        main(channels[1:])
+        while True:
+
+            print(f"{COIL_A_1_PIN}: going high")
+            GPIO.output(COIL_A_1_PIN, GPIO.HIGH)
+
+            time.sleep(4)
+
+            print(f"{COIL_A_1_PIN}: going LOW")
+            GPIO.output(COIL_A_1_PIN, GPIO.LOW)
+
+            time.sleep(4)
+
+        # main(channels[1:])
 
     finally:
         cleanup()
