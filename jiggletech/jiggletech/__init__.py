@@ -9,8 +9,8 @@ COIL_B_1_PIN = 23
 COIL_B_2_PIN = 24
 
 
-def setup(channels: list[int]):
-    print(f"Starting up")
+def setup(channels):
+    print("Starting up")
     print("setting gpio to board mode")
     GPIO.setmode(GPIO.BOARD)
     GPIO.output(ENABLE_PIN, GPIO.HIGH)
