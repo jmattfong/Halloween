@@ -17,7 +17,7 @@ def setup(channels):
     GPIO.setup(channels, GPIO.OUT)
 
 
-def set_step(channels: list[int], a1_value, a2_value, b1_value, b2_value):
+def set_step(channels, a1_value, a2_value, b1_value, b2_value):
     GPIO.output(channels, [a1_value, a2_value, b1_value, b2_value])
 
 
