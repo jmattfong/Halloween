@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@types/node": "12.11.1",
+    "@types/node-hue-api": "^2.3.2",
     "castv2-client": "1.2.0",
     "dotenv": "8.2.0",
     "mdns": "2.5.1",

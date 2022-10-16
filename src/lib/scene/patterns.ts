@@ -1,14 +1,14 @@
-import { CIEColour } from "../hue/colour";
 import { SpookyHueApi } from "../hue/hue";
 import { getLogger } from '../logging'
 import { CategoryLogger } from 'typescript-logging';
 import { SpookyHueBulbPlayer } from "../hue/spooky_bulb_player";
-import {Event} from "./events"
+import { Event} from "./events"
+import { Color, ENERGIZE } from "../config"
+import LightState from "node-hue-api/lib/model/lightstate/LightState";
 
 const log: CategoryLogger = getLogger("hue-pattern")
 
 const v3 = require('node-hue-api').v3;
-const LightState = v3.lightStates.LightState;
 const player = require("sound-play");
 
 export abstract class Pattern {
@@ -30,6 +30,26 @@ export abstract class Pattern {
     }
 }
 
+function createLightState(color: Color, transitionSeconds: number, brightness?: number): LightState {
+    if (brightness == null) {
+        brightness = color.bri
+    }
+    if (brightness > 254) {
+        brightness = 254
+    } else if (brightness < 1) {
+        brightness = 1
+    }
+    return new LightState()
+            .on(true)
+            .bri(brightness)
+            .xy(color.xy[0], color.xy[1])
+            .hue(color.hue)
+            .sat(color.sat)
+            .ct(color.ct)
+            // Weird, but this is in increments of 100ms
+            .transitiontime(transitionSeconds * 10);
+}
+
 // Lol this is highly functional code
 export class SoundPattern extends Pattern {
 
@@ -39,7 +59,7 @@ export class SoundPattern extends Pattern {
     private lightPattern: Pattern
     private soundToPatternDelayMs: number
 
-    constructor(soundFile: string, lightPattern: Pattern, soundToPatternDelaySeconds: number, volume: number = 0.5) {
+    constructor(soundFile: string, lightPattern: Pattern, soundToPatternDelaySeconds: number, volume: number = 1) {
         super(lightPattern.getDurationMs());
         this.soundFile = soundFile;
 
@@ -56,12 +76,17 @@ export class SoundPattern extends Pattern {
         this.lightPattern.cancel();
     }
 
+    getSoundFile(): string {
+        return this.soundFile;
+    }
+
     public async run(lightName: string, lightApi: SpookyHueApi): Promise<boolean> {
-        player.play(this.soundFile, this.volume).then((error: any) => {
+        let soundFile = this.getSoundFile()
+        player.play(soundFile, this.volume).then((error: any) => {
             if (error) {
-                log.error(`something went wrong playing ${this.soundFile}`, error);
+                log.error(`something went wrong playing ${soundFile}`, error);
             } else {
-                log.info(`playing ${this.soundFile} is complete`)
+                log.info(`playing ${soundFile} is complete`)
             }
         });
         await sleep(this.soundToPatternDelayMs);
@@ -69,9 +94,23 @@ export class SoundPattern extends Pattern {
     }
 }
 
+export class RandomSoundPattern extends SoundPattern {
+    soundFiles: string[]
+    constructor(soundFiles: string[], lightPattern: Pattern, soundToPatternDelaySeconds: number = 0, volume: number = 1) {
+        super("", lightPattern, soundToPatternDelaySeconds, volume)
+        this.soundFiles = soundFiles
+    }
+
+    getSoundFile(): string {
+        return this.soundFiles[Math.floor(Math.random() * this.soundFiles.length)];
+    }
+}
+
 export class FlickerPattern extends Pattern {
-    constructor(durationSeconds: number) {
+    color: Color
+    constructor(durationSeconds: number, color: Color = ENERGIZE) {
         super(durationSeconds);
+        this.color = color
     }
 
     isCancelled = false;
@@ -82,14 +121,17 @@ export class FlickerPattern extends Pattern {
     public async run(lightName: string, lightApi: SpookyHueApi): Promise<boolean> {
         const startTime = new Date();
 
-        let lightOn = 1;
+        let lightOn = true;
         while (!this.isCancelled) {
-            const state = new LightState()
-                .on() // call this once
-                .ct(200)
-                .on(lightOn * 100) // call this again
-                .brightness(getRandomInt(100))
-                .transitiontime(0);
+            let state = new LightState()
+            if (lightOn) {
+                let brightness = getRandomInt(154) + 101
+                state = createLightState(this.color, 0, brightness)
+            } else {
+                state = new LightState()
+                    .on(false)
+                    .transitiontime(0);
+            }
 
             await lightApi.setLightState(lightName, state);
             const currTime = new Date();
@@ -98,9 +140,8 @@ export class FlickerPattern extends Pattern {
                 return false;
             }
 
-            lightOn = (lightOn + 1) % 2
-            const linearInterp = 1 - ((currTime.getTime() - startTime.getTime()) / this.durationMs);
-            await sleep((getRandomInt(200) * linearInterp) + 30);
+            lightOn = !lightOn
+            await sleep(getRandomInt(50) + 10);
         }
 
         this.isCancelled = false;
@@ -124,11 +165,11 @@ export class SleepPattern extends Pattern {
 }
 
 export class PulsePattern extends Pattern {
-    private colour: CIEColour
+    private color: Color
 
-    constructor(colour: CIEColour, durationSeconds: number) {
+    constructor(color: Color, durationSeconds: number) {
         super(durationSeconds)
-        this.colour = colour;
+        this.color = color;
     }
     isCancelled = false;
     public cancel() {
@@ -137,8 +178,8 @@ export class PulsePattern extends Pattern {
 
     public async run(lightName: string, lightApi: SpookyHueApi): Promise<boolean> {
         this.isCancelled = false;
-        const patternA = new StableColourPattern(this.colour, 60, 2, 2);
-        const patternB = new StableColourPattern(this.colour, 0, 3, 3)
+        const patternA = new StableColourPattern(this.color, 60, 2, 2);
+        const patternB = new StableColourPattern(this.color, 0, 3, 3)
 
         const spookyBulbApi = new SpookyHueBulbPlayer(lightApi);
 
@@ -189,14 +230,12 @@ export class OffPattern extends Pattern {
 
 export class OnPattern extends Pattern {
     private transitionSeconds: number
-    private brightness: number
-    private ct: number
+    private color: Color
 
-    constructor(brightness: number, durationSeconds: number, transitionSeconds: number = 0, ct: number = 200) {
+    constructor(color: Color, durationSeconds: number, transitionSeconds: number = 0) {
         super(durationSeconds);
-        this.brightness = brightness;
+        this.color = color
         this.transitionSeconds = transitionSeconds;
-        this.ct = ct;
     }
 
     isCancelled = false;
@@ -205,12 +244,7 @@ export class OnPattern extends Pattern {
     }
 
     public async run(lightName: string, lightApi: SpookyHueApi): Promise<boolean> {
-        const state = new LightState()
-            .on()
-            .ct(this.ct)
-            .brightness(this.brightness)
-            // Weird, but this is in increments of 100ms
-            .transitiontime(this.transitionSeconds * 10);
+        const state = createLightState(this.color,this.transitionSeconds)
         await lightApi.setLightState(lightName, state);
         await sleep(this.durationMs);
         const wasCancelled = this.isCancelled;
@@ -220,12 +254,12 @@ export class OnPattern extends Pattern {
 }
 
 export class StableColourPattern extends Pattern {
-    private colour: CIEColour
+    private color: Color
     private brightness: number
     private transitionTimeSeconds: number
-    constructor(colour: CIEColour, brightness: number, durationSeconds: number, transitionTimeSeconds: number) {
+    constructor(color: Color, brightness: number, durationSeconds: number, transitionTimeSeconds: number) {
         super(durationSeconds)
-        this.colour = colour;
+        this.color = color;
         this.brightness = brightness;
         this.transitionTimeSeconds = transitionTimeSeconds;
     }
@@ -236,13 +270,7 @@ export class StableColourPattern extends Pattern {
     }
 
     public async run(lightName: string, lightApi: SpookyHueApi): Promise<boolean> {
-        const state = new LightState()
-            .on()
-            .ct(200)
-            .xy(this.colour.getX(), this.colour.getY())
-            .brightness(this.brightness)
-            // Weird, but this is in increments of 100ms
-            .transitiontime(this.transitionTimeSeconds * 10);
+        const state = createLightState(this.color, this.transitionTimeSeconds)
         await lightApi.setLightState(lightName, state);
         await sleep(this.durationMs);
         const wasCancelled = this.isCancelled;
