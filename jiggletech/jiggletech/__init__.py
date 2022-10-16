@@ -13,8 +13,8 @@ def setup(channels):
     print("Starting up")
     print("setting gpio to board mode")
     GPIO.setmode(GPIO.BOARD)
-    GPIO.output(ENABLE_PIN, GPIO.HIGH)
     GPIO.setup(channels, GPIO.OUT)
+    GPIO.output(ENABLE_PIN, GPIO.HIGH)
 
 
 def set_step(channels, a1_value, a2_value, b1_value, b2_value):
