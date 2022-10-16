@@ -2,11 +2,11 @@ import RPi.GPIO as GPIO
 import time
 
 
-ENABLE_PIN = 11
-COIL_A_1_PIN = 15
-COIL_A_2_PIN = 8
-COIL_B_1_PIN = 17
-COIL_B_2_PIN = 12
+ENABLE_PIN = 12
+COIL_A_1_PIN = 16
+COIL_A_2_PIN = 7
+COIL_B_1_PIN = 18
+COIL_B_2_PIN = 11
 
 
 def setup(channels):
