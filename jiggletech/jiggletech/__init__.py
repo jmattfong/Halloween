@@ -13,6 +13,9 @@ def setup(channels):
     print("Starting up")
     print("setting gpio to board mode")
     GPIO.setmode(GPIO.BOARD)
+    for p in channels:
+        result = GPIO.gpio_function(p)
+        print(f"found available for pin {p}: {result}")
     GPIO.setup(channels, GPIO.OUT)
     GPIO.output(ENABLE_PIN, GPIO.HIGH)
 
