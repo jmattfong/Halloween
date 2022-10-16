@@ -10,9 +10,18 @@ COIL_B_2_PIN = 24
 
 
 def setup(channels):
+
     print("Starting up")
     print("setting gpio to board mode")
     GPIO.setmode(GPIO.BOARD)
+    for x in range(1, 41):
+        try:
+            result = GPIO.gpio_function(x)
+            print(f"found available for pin {p}: {result}")
+
+        except Exception as e:
+            print(f"error: {e}")
+
     for p in channels:
         result = GPIO.gpio_function(p)
         print(f"found available for pin {p}: {result}")
