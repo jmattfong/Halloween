@@ -29,8 +29,14 @@ def setup(channels):
     GPIO.output(ENABLE_PIN, GPIO.HIGH)
 
 
-def set_step(channels, a1_value, a2_value, b1_value, b2_value):
-    GPIO.output(channels, [a1_value, a2_value, b1_value, b2_value])
+def set_step(channels, *values):
+    print("Setting the channels")
+    print("------------------------")
+    i = 0
+    for c in channels:
+        print(f"{c} | {values[i]}")
+        i += 1
+    GPIO.output(channels, values)
 
 
 def cleanup():
@@ -40,7 +46,7 @@ def cleanup():
 def main(channels):
 
     while True:
-        forward(channels, 0.05, 100)
+        forward(channels, 2, 100)
 
         print("DONE AGAIN. Starting again")
 
