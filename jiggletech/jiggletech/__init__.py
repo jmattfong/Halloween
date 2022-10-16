@@ -46,7 +46,8 @@ def cleanup():
 def main(channels):
 
     while True:
-        forward(channels, 2, 100)
+        forward(channels, 0.02, 100)
+        backward(channels, 0.0035, 100)
 
         print("DONE AGAIN. Starting again")
 
@@ -60,6 +61,19 @@ def forward(channels, delay_sec: float, steps: int):
         set_step(channels, GPIO.LOW, GPIO.HIGH, GPIO.LOW, GPIO.HIGH)
         time.sleep(delay_sec)
         set_step(channels, GPIO.HIGH, GPIO.LOW, GPIO.LOW, GPIO.HIGH)
+        time.sleep(delay_sec)
+        print(f"step #{i}")
+
+
+def backward(channels, delay_sec: float, steps: int):
+    for i in range(1, steps + 1):
+        set_step(channels, GPIO.HIGH, GPIO.LOW, GPIO.LOW, GPIO.HIGH)
+        time.sleep(delay_sec)
+        set_step(channels, GPIO.LOW, GPIO.HIGH, GPIO.LOW, GPIO.HIGH)
+        time.sleep(delay_sec)
+        set_step(channels, GPIO.LOW, GPIO.HIGH, GPIO.HIGH, GPIO.LOW)
+        time.sleep(delay_sec)
+        set_step(channels, GPIO.HIGH, GPIO.LOW, GPIO.HIGH, GPIO.LOW)
         time.sleep(delay_sec)
         print(f"step #{i}")
 
