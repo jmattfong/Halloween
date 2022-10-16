@@ -40,7 +40,7 @@ def cleanup():
 def main(channels):
 
     while True:
-        forward(channels, 0.2, 100)
+        forward(channels, 0.05, 100)
 
         print("DONE AGAIN. Starting again")
 
