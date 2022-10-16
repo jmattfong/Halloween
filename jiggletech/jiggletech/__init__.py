@@ -17,7 +17,7 @@ def setup(channels):
     for x in range(1, 41):
         try:
             result = GPIO.gpio_function(x)
-            print(f"found available for pin {p}: {result}")
+            print(f"found available for pin {x}: {result}")
 
         except Exception as e:
             print(f"error: {e}")
