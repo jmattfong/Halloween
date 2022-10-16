@@ -5,15 +5,25 @@ import { getLogger } from "../../logging";
 
 const log: CategoryLogger = getLogger("effect");
 
-export default abstract class Effect extends Event.Source {
+export namespace Effect {
+  export type Params = {
+    type: string;
+    name: string;
+    delayInSeconds?: number;
+  };
+}
+export abstract class Effect extends Event.Source {
   private readonly delayInSeconds: number;
 
-  constructor(type: string, name: string, delayInSeconds: number) {
+  constructor({ type, name, delayInSeconds = 0 }: Effect.Params) {
     super("Effect", type, name);
     this.delayInSeconds = delayInSeconds;
+
+    this.perform = this.perform.bind(this);
+    this.trigger = this.trigger.bind(this);
   }
 
-  abstract perform(): void;
+  abstract perform(): Promise<void>;
 
   async trigger(): Promise<void> {
     log.debug(

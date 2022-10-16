@@ -7,6 +7,7 @@ import { getLogger, setLogLevel } from "./lib/logging";
 import { CategoryLogger, LogLevel } from "typescript-logging";
 import { SCENES_2022 } from "./lib/scene/scenes_2022";
 import RingSensor, { ringApi } from "./lib/sensors/RingSensor";
+import { scenes2022 } from "./2022";
 
 const log: CategoryLogger = getLogger("main");
 const SCENES = SCENES_2022;
@@ -142,6 +143,8 @@ async function altMain() {
   (await ringApi.getSensors()).forEach((device) => {
     devices.push(new RingSensor(device));
   });
+
+  scenes2022;
 }
 
 altMain();
