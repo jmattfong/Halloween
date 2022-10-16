@@ -13,7 +13,7 @@ def setup(channels):
 
     print("Starting up")
     print("setting gpio to board mode")
-    GPIO.setmode(GPIO.BOARD)
+    GPIO.setmode(GPIO.BCM)
     for x in range(1, 41):
         try:
             result = GPIO.gpio_function(x)
