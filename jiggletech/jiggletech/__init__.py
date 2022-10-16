@@ -64,7 +64,7 @@ if __name__ == "__main__":
     try:
         setup(channels)
 
-        main(channels)
+        main(channels[1:])
 
     finally:
         cleanup()
