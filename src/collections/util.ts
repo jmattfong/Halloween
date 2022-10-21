@@ -1,6 +1,6 @@
 import { CategoryLogger } from "typescript-logging";
 import { getLogger } from "../lib/logging";
-import { CLIEffect } from "../lib/scene/effects/CLIEffect";
+import { CLIEffect } from "../effects/CLIEffect";
 import Scene from "../lib/scene/Scene";
 import { hueApi } from "../main";
 

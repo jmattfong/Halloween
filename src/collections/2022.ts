@@ -1,8 +1,10 @@
+import { ChromecastPlaybackEffect } from "../effects/ChromecastPlaybackEffect";
 import { FlickerLightEffect } from "../effects/FlickerLightEffect";
 import { RandomSoundEffect } from "../effects/RandomSoundEffect";
 import { Sensors } from "../events";
 import { ENERGIZE } from "../lib/config";
 import Scene from "../lib/scene/Scene";
+import { INTRO_VIDEO_2022 } from "../lib/videos";
 import { SceneCollection } from "./util";
 
 export const scenes2022: SceneCollection = {
@@ -41,6 +43,15 @@ export const scenes2022: SceneCollection = {
         lightName: "living_room_2",
         color: ENERGIZE,
         durationInSeconds: 7,
+      }),
+    ],
+  }),
+  front_door_video: new Scene({
+    name: "front_door_video",
+    trigger: Sensors.HUE.TWO.DETECTED,
+    effects: [
+      new ChromecastPlaybackEffect({
+        video: INTRO_VIDEO_2022,
       }),
     ],
   }),

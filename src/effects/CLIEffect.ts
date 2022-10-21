@@ -1,4 +1,4 @@
-import { Effect } from "./Effect";
+import { Effect } from "../lib/scene/effects/Effect";
 
 export class CLIEffect extends Effect {
   private readonly txtGen: () => Promise<void>;
