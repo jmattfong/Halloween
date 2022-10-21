@@ -1,8 +1,9 @@
 import { ChromecastPlaybackEffect } from "../effects/ChromecastPlaybackEffect";
 import { FlickerLightEffect } from "../effects/FlickerLightEffect";
 import { RandomSoundEffect } from "../effects/RandomSoundEffect";
+import { StableLightEffect } from "../effects/StableLightEffect";
 import { Sensors } from "../events";
-import { ENERGIZE } from "../lib/config";
+import { ENERGIZE, RED } from "../lib/config";
 import Scene from "../lib/scene/Scene";
 import { INTRO_VIDEO_2022 } from "../lib/videos";
 import { SceneCollection } from "./util";
@@ -74,6 +75,30 @@ export const scenes2022: SceneCollection = {
         lightName: "living_room_2",
         color: ENERGIZE,
         durationInSeconds: 3,
+      }),
+    ],
+  }),
+  look_its_waffles: new Scene({
+    name: "look_its_waffles",
+    trigger: Sensors.RING.FRONT_GATE.OPENED,
+    effects: [
+      new RandomSoundEffect({
+        soundFiles: ["resources/alien_creature.mp3"],
+        delayInSeconds: 5,
+      }),
+      new StableLightEffect({
+        lightName: "living_room_3",
+        color: RED,
+        on: true,
+        delayInSeconds: 5,
+        durationInSeconds: 15,
+      }),
+      new StableLightEffect({
+        lightName: "living_room_3",
+        color: RED,
+        on: false,
+        delayInSeconds: 20,
+        transitionInSeconds: 1,
       }),
     ],
   }),
