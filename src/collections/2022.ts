@@ -55,4 +55,26 @@ export const scenes2022: SceneCollection = {
       }),
     ],
   }),
+  photobooth_thunder: new Scene({
+    name: "photobooth_thunder",
+    trigger: Sensors.RING.FRONT_GATE.OPENED,
+    effects: [
+      new RandomSoundEffect({
+        soundFiles: [
+          "resources/lightning_bolt.mp3",
+          "resources/lightning_bolt_2.mp3",
+        ],
+      }),
+      new FlickerLightEffect({
+        lightName: "living_room_1",
+        color: ENERGIZE,
+        durationInSeconds: 3,
+      }),
+      new FlickerLightEffect({
+        lightName: "living_room_2",
+        color: ENERGIZE,
+        durationInSeconds: 3,
+      }),
+    ],
+  }),
 };
