@@ -20,18 +20,22 @@ export abstract class PatternLightEffect extends LightEffect {
     const startTime = new Date();
     const durationMs = this.durationInSeconds * 1000;
 
-    while (true) {
-      const currTime = new Date();
-      if (currTime.getTime() - startTime.getTime() > durationMs) {
-        return;
-      }
+    await Promise.all(
+      this.lightNames.map(async (lightName) => {
+        while (true) {
+          const currTime = new Date();
+          if (currTime.getTime() - startTime.getTime() > durationMs) {
+            return;
+          }
 
-      await this.lightApi.setLightState(
-        this.lightName,
-        this.getNextLightState()
-      );
+          await this.lightApi.setLightState(
+            lightName,
+            this.getNextLightState()
+          );
 
-      await sleep(this.getTimeToNextTransition());
-    }
+          await sleep(this.getTimeToNextTransition());
+        }
+      })
+    );
   }
 }

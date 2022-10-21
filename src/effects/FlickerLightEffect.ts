@@ -5,7 +5,7 @@ import { createLightState, getRandomInt } from "../lib/scene/patterns";
 
 export namespace FlickerLightEffect {
   export type Params = {
-    lightName: string;
+    lightNames: string[];
     color: Color;
     delayInSeconds?: number;
     durationInSeconds: number;
@@ -15,13 +15,13 @@ export class FlickerLightEffect extends PatternLightEffect {
   private readonly lightOn = true;
 
   constructor({
-    lightName,
+    lightNames,
     color,
     delayInSeconds,
     durationInSeconds,
   }: FlickerLightEffect.Params) {
     super({
-      lightName,
+      lightNames,
       name: "FlickerLightEffect",
       color,
       delayInSeconds,

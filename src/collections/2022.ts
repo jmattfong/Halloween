@@ -20,12 +20,7 @@ export const scenes2022: SceneCollection = {
         ],
       }),
       new FlickerLightEffect({
-        lightName: "living_room_1",
-        color: ENERGIZE,
-        durationInSeconds: 3,
-      }),
-      new FlickerLightEffect({
-        lightName: "living_room_2",
+        lightNames: ["living_room_1", "living_room_2"],
         color: ENERGIZE,
         durationInSeconds: 3,
       }),
@@ -36,12 +31,7 @@ export const scenes2022: SceneCollection = {
     trigger: Sensors.HUE.TWO.DETECTED,
     effects: [
       new FlickerLightEffect({
-        lightName: "living_room_1",
-        color: ENERGIZE,
-        durationInSeconds: 7,
-      }),
-      new FlickerLightEffect({
-        lightName: "living_room_2",
+        lightNames: ["living_room_1", "living_room_2"],
         color: ENERGIZE,
         durationInSeconds: 7,
       }),
@@ -67,12 +57,7 @@ export const scenes2022: SceneCollection = {
         ],
       }),
       new FlickerLightEffect({
-        lightName: "living_room_1",
-        color: ENERGIZE,
-        durationInSeconds: 3,
-      }),
-      new FlickerLightEffect({
-        lightName: "living_room_2",
+        lightNames: ["living_room_1", "living_room_2"],
         color: ENERGIZE,
         durationInSeconds: 3,
       }),
@@ -87,14 +72,14 @@ export const scenes2022: SceneCollection = {
         delayInSeconds: 5,
       }),
       new StableLightEffect({
-        lightName: "living_room_3",
+        lightNames: ["living_room_3"],
         color: RED,
         on: true,
         delayInSeconds: 5,
         durationInSeconds: 15,
       }),
       new StableLightEffect({
-        lightName: "living_room_3",
+        lightNames: ["living_room_3"],
         color: RED,
         on: false,
         delayInSeconds: 20,

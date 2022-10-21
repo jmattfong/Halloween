@@ -6,14 +6,14 @@ export namespace LightEffect {
   export type Params = {
     type?: string;
     name: string;
-    lightName: string;
+    lightNames: string[];
     color: Color;
     delayInSeconds?: number;
     durationInSeconds: number;
   };
 }
 export abstract class LightEffect extends Effect {
-  readonly lightName: string;
+  readonly lightNames: string[];
   readonly color: Color;
   readonly durationInSeconds: number;
   protected readonly lightApi = hueApi;
@@ -21,13 +21,13 @@ export abstract class LightEffect extends Effect {
   constructor({
     type = "LightEffect",
     name,
-    lightName,
+    lightNames,
     color,
     delayInSeconds,
     durationInSeconds,
   }: LightEffect.Params) {
     super({ type, name, delayInSeconds });
-    this.lightName = lightName;
+    this.lightNames = lightNames;
     this.color = color;
     this.durationInSeconds = durationInSeconds;
   }
