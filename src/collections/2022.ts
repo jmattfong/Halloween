@@ -3,7 +3,7 @@ import { FlickerLightEffect } from "../effects/FlickerLightEffect";
 import { RandomSoundEffect } from "../effects/RandomSoundEffect";
 import { StableLightEffect } from "../effects/StableLightEffect";
 import { Sensors } from "../events";
-import { ENERGIZE, RED } from "../lib/config";
+import { ENERGIZE, RED, RELAX } from "../lib/config";
 import Scene from "../lib/scene/Scene";
 import { INTRO_VIDEO_2022 } from "../lib/videos";
 import { SceneCollection } from "./util";
@@ -84,6 +84,29 @@ export const scenes2022: SceneCollection = {
         on: false,
         delayInSeconds: 20,
         transitionInSeconds: 1,
+      }),
+    ],
+  }),
+  guest_bed_clown: new Scene({
+    name: "guest_bed_clown",
+    trigger: Sensors.RING.FRONT_GATE.OPENED,
+    effects: [
+      new RandomSoundEffect({
+        soundFiles: ["resources/saw_laugh.mp3", "resources/creepy_child.mp3"],
+        delayInSeconds: 7,
+      }),
+      new StableLightEffect({
+        lightNames: ["master_1", "master_2", "master_3", "master_4"],
+        color: ENERGIZE,
+        on: false,
+        delayInSeconds: 7,
+        durationInSeconds: 14,
+      }),
+      new StableLightEffect({
+        lightNames: ["master_1", "master_2", "master_3", "master_4"],
+        color: RELAX,
+        on: true,
+        delayInSeconds: 21,
       }),
     ],
   }),
