@@ -1,8 +1,8 @@
 import { CategoryLogger } from "typescript-logging";
 import { getLogger } from "../lib/logging";
 import { CLIEffect } from "../lib/scene/effects/CLIEffect";
-import { lightApi } from "../lib/scene/effects/LightEffect";
 import Scene from "../lib/scene/Scene";
+import { lightApi } from "../main";
 
 const log: CategoryLogger = getLogger("util_scenes");
 

@@ -10,6 +10,7 @@ import RingSensor, { ringApi } from "./lib/triggers/sensors/RingSensor";
 import { scenes2022 } from "./collections/2022";
 import { InputTrigger } from "./lib/triggers/InputTrigger";
 import { util_scenes } from "./collections/util";
+import { CONFIG } from "./lib/config";
 
 const log: CategoryLogger = getLogger("main");
 const SCENES = SCENES_2022;
@@ -106,6 +107,9 @@ interface IAltHalloweenServerArgs {
 
 const devices: RingSensor[] = [];
 
+export const lightApi = new SpookyHueApi(CONFIG.secretPath, CONFIG);
+(async () => {})();
+
 async function altMain() {
   const args = parse<IAltHalloweenServerArgs>(
     {
@@ -145,6 +149,13 @@ async function altMain() {
   (await ringApi.getSensors()).forEach((device) => {
     devices.push(new RingSensor(device));
   });
+
+  await lightApi.connectUsingIP(CONFIG.hue_bridge_ip);
+  log.debug(
+    `get all lights: ${(await lightApi.getLights()).map((l: any) =>
+      l.toStringDetailed()
+    )}`
+  );
 
   InputTrigger;
   scenes2022;

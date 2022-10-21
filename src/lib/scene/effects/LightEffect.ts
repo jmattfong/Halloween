@@ -1,25 +1,6 @@
-import { readFileSync } from "fs";
-import { CategoryLogger } from "typescript-logging";
+import { lightApi } from "../../../main";
 import { Color } from "../../config";
-import { SpookyHueApi } from "../../hue/hue";
-import { getLogger } from "../../logging";
 import { Effect } from "./Effect";
-
-const log: CategoryLogger = getLogger("light-effect");
-
-const configContents = readFileSync("./config/config.json", {
-  encoding: "utf-8",
-});
-const config = JSON.parse(configContents);
-export const lightApi = new SpookyHueApi(config.secretPath, config);
-(async () => {
-  await lightApi.connectUsingIP(config.hue_bridge_ip);
-  log.debug(
-    `get all lights: ${(await lightApi.getLights()).map((l: any) =>
-      l.toStringDetailed()
-    )}`
-  );
-})();
 
 export namespace LightEffect {
   export type Params = {
