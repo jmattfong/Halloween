@@ -2,7 +2,7 @@ import { CategoryLogger } from "typescript-logging";
 import { getLogger } from "../lib/logging";
 import { CLIEffect } from "../lib/scene/effects/CLIEffect";
 import Scene from "../lib/scene/Scene";
-import { lightApi } from "../main";
+import { hueApi } from "../main";
 
 const log: CategoryLogger = getLogger("util_scenes");
 
@@ -17,7 +17,7 @@ export const util_scenes: SceneCollection = {
       new CLIEffect({
         name: "list_lights",
         txtGen: async () => {
-          const allLights = await lightApi.getLights();
+          const allLights = await hueApi.getLights();
 
           let lights: Object[] = [];
 

@@ -6,11 +6,12 @@ import { parse } from "ts-command-line-args";
 import { getLogger, setLogLevel } from "./lib/logging";
 import { CategoryLogger, LogLevel } from "typescript-logging";
 import { SCENES_2022 } from "./lib/scene/scenes_2022";
-import RingSensor, { ringApi } from "./lib/triggers/sensors/RingSensor";
+import RingSensor from "./lib/triggers/sensors/RingSensor";
 import { scenes2022 } from "./collections/2022";
 import { InputTrigger } from "./lib/triggers/InputTrigger";
 import { util_scenes } from "./collections/util";
 import { CONFIG } from "./lib/config";
+import { HueSensor } from "./lib/triggers/sensors/HueSensor";
 
 const log: CategoryLogger = getLogger("main");
 const SCENES = SCENES_2022;
@@ -105,10 +106,11 @@ interface IAltHalloweenServerArgs {
   help?: boolean;
 }
 
-const devices: RingSensor[] = [];
+const ringDevices: RingSensor[] = [];
+const hueDevices: HueSensor[] = [];
 
-export const lightApi = new SpookyHueApi(CONFIG.secretPath, CONFIG);
-(async () => {})();
+export const hueApi = new SpookyHueApi(CONFIG.secretPath, CONFIG);
+export const ringApi = new RingEnhancedSpookinatorV2(CONFIG.secretPath, true);
 
 async function altMain() {
   const args = parse<IAltHalloweenServerArgs>(
@@ -147,15 +149,18 @@ async function altMain() {
   const logLevel = args.debug ? LogLevel.Debug : LogLevel.Info;
   setLogLevel(logLevel);
   (await ringApi.getSensors()).forEach((device) => {
-    devices.push(new RingSensor(device));
+    ringDevices.push(new RingSensor(device));
   });
 
-  await lightApi.connectUsingIP(CONFIG.hue_bridge_ip);
+  await hueApi.connectUsingIP(CONFIG.hue_bridge_ip);
   log.debug(
-    `get all lights: ${(await lightApi.getLights()).map((l: any) =>
+    `get all lights: ${(await hueApi.getLights()).map((l: any) =>
       l.toStringDetailed()
     )}`
   );
+  (await hueApi.getSensors()).forEach((device) => {
+    hueDevices.push(new HueSensor(device));
+  });
 
   InputTrigger;
   scenes2022;

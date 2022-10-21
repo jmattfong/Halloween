@@ -1,8 +1,15 @@
 export const Sensors = {
-  FRONT_GATE: {
-    OPENED: "Sensor-Front Gate-Ring-opened",
+  RING: {
+    FRONT_GATE: {
+      OPENED: "Sensor-Front Gate-Ring-opened",
+    },
+    FRONT_DOOR: {
+      OPENED: "Sensor-Front Door-Ring-opened",
+    },
   },
-  FRONT_DOOR: {
-    OPENED: "Sensor-Front Door-Ring-opened",
+  HUE: {
+    TWO: {
+      DETECTED: "Sensor-2-Hue-detected",
+    },
   },
 };

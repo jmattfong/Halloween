@@ -1,13 +1,6 @@
-import { readFileSync } from "fs";
 import { RingDevice, RingDeviceData } from "ring-client-api";
-import { RingEnhancedSpookinatorV2 } from "../../ring";
+import { ringApi } from "../../../main";
 import { Sensor } from "./Sensor";
-
-const configContents = readFileSync("./config/config.json", {
-  encoding: "utf-8",
-});
-const config = JSON.parse(configContents);
-export const ringApi = new RingEnhancedSpookinatorV2(config.secretPath, true);
 
 export default class RingSensor extends Sensor {
   constructor(ringDevice: RingDevice) {
