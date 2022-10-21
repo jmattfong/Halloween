@@ -11,7 +11,7 @@ const configContents = readFileSync("./config/config.json", {
   encoding: "utf-8",
 });
 const config = JSON.parse(configContents);
-const lightApi = new SpookyHueApi(config.secretPath, config);
+export const lightApi = new SpookyHueApi(config.secretPath, config);
 (async () => {
   await lightApi.connectUsingIP(config.hue_bridge_ip);
   log.debug(

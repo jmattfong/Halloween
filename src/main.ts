@@ -6,8 +6,10 @@ import { parse } from "ts-command-line-args";
 import { getLogger, setLogLevel } from "./lib/logging";
 import { CategoryLogger, LogLevel } from "typescript-logging";
 import { SCENES_2022 } from "./lib/scene/scenes_2022";
-import RingSensor, { ringApi } from "./lib/sensors/RingSensor";
-import { scenes2022 } from "./2022";
+import RingSensor, { ringApi } from "./lib/triggers/sensors/RingSensor";
+import { scenes2022 } from "./collections/2022";
+import { InputTrigger } from "./lib/triggers/InputTrigger";
+import { util_scenes } from "./collections/util";
 
 const log: CategoryLogger = getLogger("main");
 const SCENES = SCENES_2022;
@@ -144,7 +146,9 @@ async function altMain() {
     devices.push(new RingSensor(device));
   });
 
+  InputTrigger;
   scenes2022;
+  util_scenes;
 }
 
 altMain();

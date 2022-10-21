@@ -1,8 +1,8 @@
-import { FlickerLightEffect } from "./effects/FlickerLightEffect";
-import { RandomSoundEffect } from "./effects/RandomSoundEffect";
-import { Sensors } from "./events";
-import { ENERGIZE } from "./lib/config";
-import Scene from "./lib/scene/Scene";
+import { FlickerLightEffect } from "../effects/FlickerLightEffect";
+import { RandomSoundEffect } from "../effects/RandomSoundEffect";
+import { Sensors } from "../events";
+import { ENERGIZE } from "../lib/config";
+import Scene from "../lib/scene/Scene";
 
 export const scenes2022 = [
   new Scene({
