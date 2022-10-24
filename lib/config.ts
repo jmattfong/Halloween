@@ -9,6 +9,7 @@ export const CONCENTRATE: Color = CONFIG.colors.concentrate
 export const ENERGIZE: Color = CONFIG.colors.energize
 export const DIMMED: Color = CONFIG.colors.dimmed
 export const NIGHTLIGHT: Color = CONFIG.colors.nightlight
+export const ORANGE: Color = CONFIG.colors.orange
 
 export type Color = {
     bri: number
@@ -16,4 +17,11 @@ export type Color = {
     sat: number,
     xy: number[],
     ct: number
+}
+
+export type Light = {
+    id: number,
+    type: string,
+    name: string,
+    productname: string
 }

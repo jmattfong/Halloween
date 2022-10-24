@@ -41,11 +41,11 @@ function createLightState(color: Color, transitionSeconds: number, brightness?: 
     }
     return new LightState()
             .on(true)
-            .bri(brightness)
             .xy(color.xy[0], color.xy[1])
             .hue(color.hue)
             .sat(color.sat)
-            .ct(color.ct)
+            //.ct(color.ct)
+            .bri(brightness)
             // Weird, but this is in increments of 100ms
             .transitiontime(transitionSeconds * 10);
 }
