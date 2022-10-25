@@ -7,16 +7,16 @@ import { SpookyHueApi } from '../hue/hue';
 import { SpookyHueBulbPlayer } from '../hue/spooky_bulb_player';
 import { SoundPattern, RandomSoundPattern, FlickerPattern, OffPattern, StableColourPattern, SleepPattern, OnPattern, Pattern, PulsePattern } from './patterns';
 import { Event } from "./events"
-import {Scene, MultiPartScene, AutoResetRingScene, RepeatingScene} from './scenes'
-import {INTRO_VIDEO_2022} from '../videos'
-import {CONFIG, RED, RELAX, CONCENTRATE, ENERGIZE, DIMMED,  NIGHTLIGHT, ORANGE} from '../config'
+import { Scene, MultiPartScene, AutoResetRingScene, RepeatingScene } from './scenes'
+import { INTRO_VIDEO_2022 } from '../videos'
+import { CONFIG, RED, SOFT_RED, RELAX, CONCENTRATE, ENERGIZE, DIMMED, NIGHTLIGHT, ORANGE } from '../config'
 
 const log: CategoryLogger = getLogger("scene_2022")
 
 /**
  * List all lights that are on
  */
- class ListOnLightsScene extends Scene {
+class ListOnLightsScene extends Scene {
     async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
         const hue: SpookyHueApi = await hueFunction()
         const allLights = await hue.getLights();
@@ -188,9 +188,26 @@ class WerewolfDoorJiggleScene extends Scene {
 class LookItsWafflesScene extends AutoResetRingScene {
     constructor(ringSensorName: string, lights: string[]) {
         let events: Event[] = lights.map(light => {
+            // 0-4 - growl
+            // 5-10 growl
+            // 12-14 LOUD
+            // 15-17 LOUD
+            // 17-19 growl
+            // 21-24 growl
+            // 25-28 growl
+            // 29-31 LOUD
+            // -32 LOUD
             return new Event(light,
-                new SleepPattern(5),
-                new RandomSoundPattern(["resources/alien_creature.mp3"], new OnPattern(RED, 15)),
+                new SoundPattern("resources/David_2022/the_beast.mp3", new OnPattern(SOFT_RED, 4), 0),
+                new OffPattern(1),
+                new OnPattern(SOFT_RED, 5),
+                new OffPattern(2),
+                new OnPattern(RED, 5),
+                new OnPattern(SOFT_RED, 2),
+                new OffPattern(1),
+                new OnPattern(SOFT_RED, 8),
+                new OffPattern(1),
+                new OnPattern(RED, 9),
                 new OffPattern(1, 1))
         });
         super(ringSensorName, events, true)
