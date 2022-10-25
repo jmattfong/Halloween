@@ -219,7 +219,8 @@ class GuestBedClownScene extends AutoResetRingScene {
 
 class HalloweenHallway extends RepeatingScene {
     getRepeatingEvents(...lightNames: string[]): Event[] {
-        let eventLights: string[][] = [[], [], []]
+        lightNames
+        let eventLights: string[][] = [[], [], [], [], []]
         let i = 0
         lightNames.forEach(light => {
             eventLights[i].push(light)
@@ -229,13 +230,19 @@ class HalloweenHallway extends RepeatingScene {
         log.info(`eventLights: ${JSON.stringify(eventLights)}`)
 
         let result = eventLights[0].map(light => {
-            return new Event(light, new OnPattern(ORANGE, 2, 1), new OffPattern(1), new OffPattern(1))
+            return new Event(light, new OnPattern(ORANGE, 1.5, 1), new OffPattern(1), new OffPattern(1), new OffPattern(1), new OffPattern(1))
         })
         result = result.concat(eventLights[1].map(light => {
-            return new Event(light, new OffPattern(1), new OnPattern(ORANGE, 1, 1), new OffPattern(1))
+            return new Event(light, new OffPattern(1), new OnPattern(ORANGE, 1.5, 1), new OffPattern(1), new OffPattern(1), new OffPattern(1))
         }))
         result = result.concat(eventLights[2].map(light => {
-            return new Event(light, new OffPattern(1), new OffPattern(1), new OnPattern(ORANGE, 1, 1))
+            return new Event(light, new OffPattern(1), new OffPattern(1), new OnPattern(ORANGE, 1.5, 1), new OffPattern(1), new OffPattern(1))
+        }))
+        result = result.concat(eventLights[3].map(light => {
+            return new Event(light, new OffPattern(1), new OffPattern(1), new OffPattern(1), new OnPattern(ORANGE, 1.5, 1), new OffPattern(1))
+        }))
+        result = result.concat(eventLights[4].map(light => {
+            return new Event(light, new OffPattern(1), new OffPattern(1), new OffPattern(1), new OffPattern(1), new OnPattern(ORANGE, 1.5, 1))
         }))
         log.info(`result: ${JSON.stringify(result)}`)
         return result
@@ -267,4 +274,3 @@ export const SCENES_2022: { [key: string]: Scene } = {
     "guest_bed_clown": new GuestBedClownScene("Front Gate", ["master_1", "master_2", "master_3", "master_4"]),
     "portal_to_hell": new PortalToHellScene(),
 }
-
