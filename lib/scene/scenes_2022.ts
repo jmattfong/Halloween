@@ -173,9 +173,23 @@ class PhotoboothThunderScene extends ThunderScene {
     }
 }
 
-// TODO
-class DownstairsBathCreepyClownShowerScene extends Scene {
-    async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
+class DownstairsBathCreepyClownShowerScene extends AutoResetRingScene {
+    constructor(ringSensorName: string, mirrorLights: string[], showerLight: string) {
+        let spookyEvents: Event[] = mirrorLights.map(light => {
+            return new Event(light,
+                new FlickerPattern(5),
+                new OnPattern(RELAX, 5, 5),
+                new OffPattern(1, 5),
+                new SleepPattern(13),
+                new FlickerPattern(3),
+                new OnPattern(RELAX, 1, 10));
+        });
+
+        spookyEvents.push(new Event(showerLight,
+            new SoundPattern("resources/David_2022/downstairs_bathroom.mp3", new OnPattern(RED, 10, 5), 10),
+            new OffPattern(1)))
+
+        super(ringSensorName, spookyEvents, true)
     }
 }
 
@@ -283,7 +297,7 @@ export const SCENES_2022: { [key: string]: Scene } = {
     "front_door_video": new FrontDoorVideoScene(2),
     "welcome_inside": new WelcomeInsideScene("Front Gate", ["living_room_1", "living_room_2"]),
     "photobooth_thunder": new PhotoboothThunderScene("Front Gate", ["living_room_1", "living_room_2"]),
-    "creepy_clown_shower": new DownstairsBathCreepyClownShowerScene(),
+    "creepy_clown_shower": new DownstairsBathCreepyClownShowerScene("Front Gate", ["upstairs_1", "living_room_2"], "living_room_3"),
     "halloween_hallway": new HalloweenHallway("halloween_hallway_1", "halloween_hallway_2", "halloween_hallway_3", "halloween_hallway_4", "halloween_hallway_5"),
     "werewolf_door_jiggle": new WerewolfDoorJiggleScene(),
     "look_its_waffles": new LookItsWafflesScene("Front Gate", ["living_room_3"]),
