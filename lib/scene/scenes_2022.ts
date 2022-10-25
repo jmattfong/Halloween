@@ -7,9 +7,9 @@ import { SpookyHueApi } from '../hue/hue';
 import { SpookyHueBulbPlayer } from '../hue/spooky_bulb_player';
 import { SoundPattern, RandomSoundPattern, FlickerPattern, OffPattern, StableColourPattern, SleepPattern, OnPattern, Pattern, PulsePattern } from './patterns';
 import { Event } from "./events"
-import {Scene, MultiPartScene, AutoResetRingScene} from './scenes'
+import {Scene, MultiPartScene, AutoResetRingScene, RepeatingScene} from './scenes'
 import {INTRO_VIDEO_2022} from '../videos'
-import {RED, RELAX, CONCENTRATE, ENERGIZE, DIMMED,  NIGHTLIGHT} from '../config'
+import {CONFIG, RED, RELAX, CONCENTRATE, ENERGIZE, DIMMED,  NIGHTLIGHT, ORANGE} from '../config'
 
 const log: CategoryLogger = getLogger("scene_2022")
 
@@ -138,12 +138,6 @@ class FrontLightFlickerScene extends MultiPartScene {
     }
 }
 
-// TODO
-class JigglingSkeletonScene extends Scene {
-    async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
-    }
-}
-
 class FrontDoorVideoScene extends Scene {
 
     hueSensor: number
@@ -223,6 +217,31 @@ class GuestBedClownScene extends AutoResetRingScene {
     }
 }
 
+class HalloweenHallway extends RepeatingScene {
+    getRepeatingEvents(...lightNames: string[]): Event[] {
+        let eventLights: string[][] = [[], [], []]
+        let i = 0
+        lightNames.forEach(light => {
+            eventLights[i].push(light)
+            i = (++i) % eventLights.length
+        })
+
+        log.info(`eventLights: ${JSON.stringify(eventLights)}`)
+
+        let result = eventLights[0].map(light => {
+            return new Event(light, new OnPattern(ORANGE, 2, 1), new OffPattern(1), new OffPattern(1))
+        })
+        result = result.concat(eventLights[1].map(light => {
+            return new Event(light, new OffPattern(1), new OnPattern(ORANGE, 1, 1), new OffPattern(1))
+        }))
+        result = result.concat(eventLights[2].map(light => {
+            return new Event(light, new OffPattern(1), new OffPattern(1), new OnPattern(ORANGE, 1, 1))
+        }))
+        log.info(`result: ${JSON.stringify(result)}`)
+        return result
+    }
+}
+
 // TODO
 class PortalToHellScene extends Scene {
     async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
@@ -232,16 +251,16 @@ class PortalToHellScene extends Scene {
 export const SCENES_2022: { [key: string]: Scene } = {
     // Test and Utility scenes
     "list": new ListOnLightsScene(),
-    "get_light": new GetLight(18), // Change this to get the state of different lights by ID
+    "get_light": new GetLight(21), // Change this to get the state of different lights by ID
     "test_ring": new TestRingScene(),
     "find_bulb": new FindBulb("Front Gate", ["living_room_3"]),
     // Scenes for the party
     "front_light_flicker": new FrontLightFlickerScene(2, ["living_room_1", "living_room_2"]),
-    "jiggling_skeleton": new JigglingSkeletonScene(),
     "front_door_video": new FrontDoorVideoScene(2),
     "welcome_inside": new WelcomeInsideScene("Front Gate", ["living_room_1", "living_room_2"]),
     "photobooth_thunder": new PhotoboothThunderScene("Front Gate", ["living_room_1", "living_room_2"]),
     "creepy_clown_shower": new DownstairsBathCreepyClownShowerScene(),
+    "halloween_hallway": new HalloweenHallway("halloween_hallway_1", "halloween_hallway_2", "halloween_hallway_3", "halloween_hallway_4", "halloween_hallway_5"),
     "werewolf_door_jiggle": new WerewolfDoorJiggleScene(),
     "look_its_waffles": new LookItsWafflesScene("Front Gate", ["living_room_3"]),
     "werewolf_shower": new WerewolfShowerScene(),

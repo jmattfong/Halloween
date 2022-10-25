@@ -190,7 +190,7 @@ class RandomMultiScene extends Scene {
 /**
  * Scene that repeats forever
  */
-abstract class RepeatingScene extends Scene {
+export abstract class RepeatingScene extends Scene {
 
     private mainLightNames: string[]
 
