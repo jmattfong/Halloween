@@ -4,6 +4,8 @@ const configContents = readFileSync('./config/config.json', { encoding: 'utf-8' 
 export const CONFIG = JSON.parse(configContents);
 
 export const RED: Color = CONFIG.colors.red
+const SOFT = { bri: 25 }
+export const SOFT_RED: Color = { ...RED, ...SOFT }
 export const RELAX: Color = CONFIG.colors.relax
 export const CONCENTRATE: Color = CONFIG.colors.concentrate
 export const ENERGIZE: Color = CONFIG.colors.energize
