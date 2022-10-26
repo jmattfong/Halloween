@@ -19,7 +19,7 @@ export class WebServer {
     private server: Server
     private eventCallbackMap: Map<string, Array<(event: EventMessage) => void>>
 
-    constructor(port: number = 4343) {
+    constructor(port: number) {
         this.port = port;
         this.eventCallbackMap = new Map();
 
