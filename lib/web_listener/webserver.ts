@@ -5,9 +5,11 @@ const log: CategoryLogger = getLogger("webserver")
 
 export class EventMessage {
     name: string
+    state: string
 
-    constructor(name: string) {
+    constructor(name: string, state: string) {
         this.name = name;
+        this.state = state;
     }
 
 }
@@ -15,20 +17,20 @@ export class EventMessage {
 export class WebServer {
     private port: number
     private server: Server
-    private callback: (event: EventMessage) => void
+    private eventCallbackMap: Map<string, Array<(event: EventMessage) => void>>
 
-    constructor(port: number, callback: (event: EventMessage) => void) {
+    constructor(port: number = 4343) {
         this.port = port;
-        this.callback = callback;
+        this.eventCallbackMap = new Map();
 
         let handler = async (req: IncomingMessage, res: ServerResponse) => {
 
             log.debug(`received ${req.method} @ ${req.url}`);
 
             if (req.method == "POST" && req.url == "/event") {
-                let result;
+                let event: EventMessage;
                 try {
-                    result = await this.getJSONDataFromRequestStream<EventMessage>(req);
+                    event = await this.getJSONDataFromRequestStream<EventMessage>(req);
                 } catch (e) {
                     log.info(`error processing the input: ${e}`);
                     res.statusCode = 400;
@@ -36,9 +38,22 @@ export class WebServer {
                     return;
                 }
 
-                this.callback(result);
+                if (!event.name) {
+                    res.statusCode = 400;
+                    res.end("error with request");
+                    return;
+                }
 
-                log.info(`received message: ${req.method} -> ${JSON.stringify(result)}`);
+                let callbacks: Array<(event: EventMessage) => void> | undefined = this.eventCallbackMap.get(event.name);
+
+                if (callbacks == undefined) {
+                    log.info(`no callbacks for ${event.name}`);
+                    return;
+                }
+
+                callbacks.forEach(callback => callback(event));
+
+                log.info(`received message: ${req.method} -> ${JSON.stringify(event)}`);
                 res.statusCode = 200;
                 res.end("OK");
             } else {
@@ -50,7 +65,21 @@ export class WebServer {
         this.server = createServer(handler);
     }
 
-    getJSONDataFromRequestStream<T>(request: IncomingMessage): Promise<T> {
+    addCallback(name: string, callback: (event: EventMessage) => void) {
+
+        let callbacksForName = this.eventCallbackMap.get(name);
+
+        if (!callbacksForName) {
+            callbacksForName = [callback];
+        } else {
+            callbacksForName.push(callback);
+        }
+
+        this.eventCallbackMap.set(name, callbacksForName);
+    }
+
+
+    private getJSONDataFromRequestStream<T>(request: IncomingMessage): Promise<T> {
         return new Promise((resolve, reject) => {
             let chunks: Array<Buffer> = [];
             request.on("data", (chunk: Buffer) => {
