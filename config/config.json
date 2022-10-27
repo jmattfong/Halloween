@@ -1,508 +1,564 @@
 {
-    "secretPath": "./secrets/secrets.json",
-    "contactSensors": [
-        "Front Gate",
-        "Front Door",
-        "Garage Door",
-        "Waffles' Room",
-        "Half Bathroom",
-        "Back Door",
-        "TODO this one isn't working"
-    ],
-    "motionSensors": [
-        "Entry Motion Sensor"
-    ],
-    "lights": {
-        "down_bath_1": 22,
-        "down_bath_2": 20,
-        "down_bath_3": 3,
+  "secretPath": "./secrets/secrets.json",
+  "contactSensors": [
+    "Front Gate",
+    "Front Door",
+    "Garage Door",
+    "Waffles' Room",
+    "Half Bathroom",
+    "Back Door",
+    "TODO this one isn't working"
+  ],
+  "motionSensors": ["Entry Motion Sensor"],
+  "lights": {
+    "down_bath_1": 22,
+    "down_bath_2": 20,
+    "down_bath_3": 3,
 
-        "waffles_room_1": 26,
-        "waffles_room_2": 30,
-        "waffles_room_3": 29,
+    "waffles_room_1": 26,
+    "waffles_room_2": 30,
+    "waffles_room_3": 29,
 
-        "garage_1": 1,
-        "garage_2": 6,
-        "garage_3": 2,
+    "garage_1": 1,
+    "garage_2": 6,
+    "garage_3": 2,
 
-        "half_bath_1": 21,
-        "half_bath_2": 16,
-        "half_bath_3": 9,
+    "half_bath_1": 21,
+    "half_bath_2": 16,
+    "half_bath_3": 9,
 
-        "living_room_1": 7,
-        "living_room_2": 8,
-        "living_room_3": 18,
-        "living_room_4": 19,
+    "living_room_1": 7,
+    "living_room_2": 8,
+    "living_room_3": 18,
+    "living_room_4": 19,
 
-        "entry_1": 0,
-        "entry_2": 25,
+    "entry_1": 0,
+    "entry_2": 25,
 
-        "downstairs_1": 17,
-        "downstairs_2": 24,
+    "downstairs_1": 17,
+    "downstairs_2": 24,
 
-        "upstairs_1": 14,
-        "upstairs_2": 15,
+    "upstairs_1": 14,
+    "upstairs_2": 15,
 
-        "roofstairs_1": 27,
-        "roofstairs_2": 28,
+    "roofstairs_1": 27,
+    "roofstairs_2": 28,
 
-        "hallway_1": 5,
-        "hallway_2": 4,
+    "hallway_1": 5,
+    "hallway_2": 4,
 
-        "guest_bed_1": 23,
-        "guest_bed_2": 31,
+    "guest_bed_1": 23,
+    "guest_bed_2": 31,
 
-        "master_1": 12,
-        "master_2": 13,
-        "master_3": 10,
-        "master_4": 11,
+    "master_1": 12,
+    "master_2": 13,
+    "master_3": 10,
+    "master_4": 11,
 
-        "halloween_hallway_1": 21,
-        "halloween_hallway_2": 1,
-        "halloween_hallway_3": 2,
-        "halloween_hallway_4": 19,
-        "halloween_hallway_5": 16
+    "halloween_hallway_1": 21,
+    "halloween_hallway_2": 1,
+    "halloween_hallway_3": 2,
+    "halloween_hallway_4": 19,
+    "halloween_hallway_5": 16
+  },
+  "hue_bridge_ip": "192.168.86.44",
+  "web_server_port": 8080,
+  "colors": {
+    "red": {
+      "on": true,
+      "bri": 254,
+      "hue": 65472,
+      "sat": 254,
+      "xy": [0.6896, 0.3074],
+      "ct": 500
     },
-    "hue_bridge_ip": "192.168.86.44",
-    "colors": {
-        "red": {
-			"on": true,
-			"bri": 254,
-			"hue": 65472,
-			"sat": 254,
-			"xy": [0.6896, 0.3074],
-			"ct": 500
-		},
-        "orange": {
-			"on": true,
-			"bri": 52,
-			"hue": 21838,
-			"sat": 254,
-			"xy": [0.6539, 0.3365],
-			"ct": 500
-		},
-        "relax": {
-			"on": true,
-			"bri": 144,
-			"hue": 65472,
-			"sat": 254,
-			"xy": [0.5019, 0.4152],
-			"ct": 447
-		},
-        "concentrate": {
-			"on": true,
-			"bri": 254,
-			"hue": 41442,
-			"sat": 75,
-			"xy": [0.3691, 0.3719],
-			"ct": 233
-		},
-        "energize": {
-			"on": true,
-			"bri": 254,
-			"hue": 41442,
-			"sat": 75,
-			"xy": [0.3143, 0.3301],
-			"ct": 156
-		},
-        "dimmed": {
-			"on": true,
-			"bri": 77,
-			"hue": 8402,
-			"sat": 140,
-			"xy": [0.4575, 0.4099],
-			"ct": 366
-		},
-        "nightlight": {
-			"on": true,
-			"bri": 1,
-			"hue": 6291,
-			"sat": 251,
-			"xy": [0.5612, 0.4042],
-			"ct": 500
-		}
+    "orange": {
+      "on": true,
+      "bri": 52,
+      "hue": 21838,
+      "sat": 254,
+      "xy": [0.6539, 0.3365],
+      "ct": 500
     },
-    "house": {
-        "entry": {
-            "floor": 0,
-            "lights": [{
-                "id": 25,
-                "type": "Dimmable light",
-                "name": "Hue filament bulb 5",
-                "productname": "Hue filament bulb"
-            }]
-        },
-        "waffles_room": {
-            "floor": 0,
-            "lights":  [{
-                "id": 26,
-                "type": "Extended color light",
-                "name": "Hue color Lamp 8",
-                "productname": "Hue color Lamp"
-            }, {
-                "id": 29,
-                "type": "Dimmable light",
-                "name": "Hue filament bulb 8",
-                "productname": "Hue filament bulb"
-            }, {
-                "id": 30,
-                "type": "Dimmable light",
-                "name": "Hue filament bulb 9",
-                "productname": "Hue filament bulb"
-            }]
-        },
-        "down_bath": {
-            "floor": 0,
-            "lights": [
-            ]
-        },
-        "garage": {
-            "floor": 0,
-            "lights": [
-            ]
-        },
-        "down_stairs": {
-            "floor": 0.5,
-            "lights":  [{
-                "id": 17,
-                "type": "Dimmable light",
-                "name": "Hue filament bulb 3",
-                "productname": "Hue filament bulb"
-            }, {
-                "id": 24,
-                "type": "Dimmable light",
-                "name": "Hue filament bulb 4",
-                "productname": "Hue filament bulb"
-            }]
-        },
-        "living_room": {
-            "floor": 1,
-            "lights":   [{
-                "id": 1,
-                "type": "Extended color light",
-                "name": "Hue color lamp 1",
-                "productname": "Hue color lamp"
-            }, {
-                "id": 2,
-                "type": "Extended color light",
-                "name": "Hue color lamp 2",
-                "productname": "Hue color lamp"
-            }, {
-                "id": 3,
-                "type": "Extended color light",
-                "name": "Hue color lamp 3",
-                "productname": "Hue color lamp"
-            }, {
-                "id": 6,
-                "type": "Extended color light",
-                "name": "Hue color lamp 4",
-                "productname": "Hue color lamp"
-            }, {
-                "id": 7,
-                "type": "Extended color light",
-                "name": "Hue color lamp 5",
-                "productname": "Hue color lamp"
-            }, {
-                "id": 8,
-                "type": "Extended color light",
-                "name": "Hue color lamp 6",
-                "productname": "Hue color lamp"
-            }, {
-                "id": 9,
-                "type": "Extended color light",
-                "name": "Hue color lamp 7",
-                "productname": "Hue color lamp"
-            }, {
-                "id": 16,
-                "type": "Extended color light",
-                "name": "Hue color Lamp 1",
-                "productname": "Hue color Lamp"
-            }, {
-                "id": 18,
-                "type": "Extended color light",
-                "name": "Hue color Lamp 2",
-                "productname": "Hue color Lamp"
-            }, {
-                "id": 19,
-                "type": "Extended color light",
-                "name": "Hue color Lamp 3",
-                "productname": "Hue color Lamp"
-            }, {
-                "id": 20,
-                "type": "Extended color light",
-                "name": "Hue color Lamp 4",
-                "productname": "Hue color Lamp"
-            }, {
-                "id": 21,
-                "type": "Extended color light",
-                "name": "Hue color Lamp 5",
-                "productname": "Hue color Lamp"
-            }, {
-                "id": 22,
-                "type": "Extended color light",
-                "name": "Hue color Lamp 6",
-                "productname": "Hue color Lamp"
-            }]
-        },
-        "half_bath": {
-            "floor": 1,
-            "lights": [
-            ]
-        },
-        "mid_stairs": {
-            "floor": 1.5,
-            "lights":  [{
-                "id": 4,
-                "type": "Dimmable light",
-                "name": "Hue white lamp 1",
-                "productname": "Hue white lamp"
-            }, {
-                "id": 5,
-                "type": "Dimmable light",
-                "name": "Hue white lamp 2",
-                "productname": "Hue white lamp"
-            }]
-        },
-        "upstairs_hall": {
-            "floor": 2,
-            "lights":  [{
-                "id": 14,
-                "type": "Dimmable light",
-                "name": "Hue filament bulb 1",
-                "productname": "Hue filament bulb"
-            }, {
-                "id": 15,
-                "type": "Dimmable light",
-                "name": "Hue filament bulb 2",
-                "productname": "Hue filament bulb"
-            }]
-        },
-        "main_bedroom": {
-            "floor": 2,
-            "lights":  [{
-                "id": 10,
-                "type": "Dimmable light",
-                "name": "Anna bedside lamp",
-                "productname": "Hue filament bulb"
-            }, {
-                "id": 11,
-                "type": "Dimmable light",
-                "name": "Matt bedside lamp",
-                "productname": "Hue filament bulb"
-            }, {
-                "id": 12,
-                "type": "Extended color light",
-                "name": "Hue color Lamp  Master 1",
-                "productname": "Hue color Lamp"
-            }, {
-                "id": 13,
-                "type": "Extended color light",
-                "name": "Hue color Lamp master 2",
-                "productname": "Hue color Lamp"
-            }]
-        },
-        "main_bathroom": {
-            "floor": 2,
-            "lights": [
-            ]
-        },
-        "guest_bedroom": {
-            "floor": 2,
-            "lights":  [{
-                "id": 23,
-                "type": "Extended color light",
-                "name": "Hue color Lamp 7",
-                "productname": "Hue color Lamp"
-            }, {
-                "id": 31,
-                "type": "Dimmable light",
-                "name": "Hue filament bulb 10",
-                "productname": "Hue filament bulb"
-            }]
-        },
-        "guest_bathroom": {
-            "floor": 2,
-            "lights": [
-            ]
-        },
-        "up_stairs": {
-            "floor": 2.5,
-            "lights":  [{
-                "id": 27,
-                "type": "Dimmable light",
-                "name": "Hue filament bulb 6",
-                "productname": "Hue filament bulb"
-            }, {
-                "id": 28,
-                "type": "Dimmable light",
-                "name": "Hue filament bulb 7",
-                "productname": "Hue filament bulb"
-            }]
-        },
-        "rooftop": {
-            "floor": 3,
-            "lights": [
-            ]
-        }
+    "relax": {
+      "on": true,
+      "bri": 144,
+      "hue": 65472,
+      "sat": 254,
+      "xy": [0.5019, 0.4152],
+      "ct": 447
     },
-    "spooky_house": {
-        "sidewalk": {
-            "floor": 0,
-            "lights":  [{
-                "id": 27,
-                "type": "Dimmable light",
-                "name": "Hue filament bulb 6",
-                "productname": "Hue filament bulb"
-            }, {
-                "id": 28,
-                "type": "Dimmable light",
-                "name": "Hue filament bulb 7",
-                "productname": "Hue filament bulb"
-            }]
-        },
-        "entry": {
-            "floor": 0,
-            "lights": [{
-                "id": 25,
-                "type": "Dimmable light",
-                "name": "Hue filament bulb 5",
-                "productname": "Hue filament bulb"
-            }]
-        },
-        "waffles_room": {
-            "floor": 0,
-            "lights":  [{
-                "id": 26,
-                "type": "Extended color light",
-                "name": "Hue color Lamp 8",
-                "productname": "Hue color Lamp"
-            }, {
-                "id": 29,
-                "type": "Dimmable light",
-                "name": "Hue filament bulb 8",
-                "productname": "Hue filament bulb"
-            }, {
-                "id": 30,
-                "type": "Dimmable light",
-                "name": "Hue filament bulb 9",
-                "productname": "Hue filament bulb"
-            }]
-        },
-        "down_bath": {
-            "floor": 0,
-            "lights": [{
-                "id": 7,
-                "type": "Extended color light",
-                "name": "Hue color lamp 5",
-                "productname": "Hue color lamp"
-            }, {
-                "id": 8,
-                "type": "Extended color light",
-                "name": "Hue color lamp 6",
-                "productname": "Hue color lamp"
-            }, {
-                "id": 9,
-                "type": "Extended color light",
-                "name": "Hue color lamp 7",
-                "productname": "Hue color lamp"
-            }]
-        },
-        "down_stairs": {
-            "floor": 0.5,
-            "lights":  [{
-                "id": 17,
-                "type": "Dimmable light",
-                "name": "Hue filament bulb 3",
-                "productname": "Hue filament bulb"
-            }, {
-                "id": 24,
-                "type": "Dimmable light",
-                "name": "Hue filament bulb 4",
-                "productname": "Hue filament bulb"
-            }]
-        },
-        "halloween_hallway": {
-            "floor": 1.5,
-            "lights":  [
-            {
-                "id": 21,
-                "type": "Extended color light",
-                "name": "Hue color Lamp 5",
-                "productname": "Hue color Lamp"
-            },
-            {
-                "id": 1,
-                "type": "Extended color light",
-                "name": "Hue color lamp 1",
-                "productname": "Hue color lamp"
-            },
-            {
-                "id": 2,
-                "type": "Extended color light",
-                "name": "Hue color lamp 2",
-                "productname": "Hue color lamp"
-            },
-            {
-                "id": 19,
-                "type": "Extended color light",
-                "name": "Hue color Lamp 3",
-                "productname": "Hue color Lamp"
-            },
-            {
-                "id": 16,
-                "type": "Extended color light",
-                "name": "Hue color Lamp 1",
-                "productname": "Hue color Lamp"
-            }]
-        },
-        "waffles_the_werewolf": {
-            "floor": 2,
-            "lights":  [{
-                "id": 18,
-                "type": "Extended color light",
-                "name": "Hue color Lamp 2",
-                "productname": "Hue color Lamp"
-            }]
-        },
-        "guest_bedroom": {
-            "floor": 2,
-            "lights":  [{
-                "id": 23,
-                "type": "Extended color light",
-                "name": "Hue color Lamp 7",
-                "productname": "Hue color Lamp"
-            }, {
-                "id": 31,
-                "type": "Dimmable light",
-                "name": "Hue filament bulb 10",
-                "productname": "Hue filament bulb"
-            }]
-        },
-        "guest_bathroom": {
-            "floor": 2,
-            "lights": [
-                {
-                    "id": 20,
-                    "type": "Extended color light",
-                    "name": "Hue color Lamp 4",
-                    "productname": "Hue color Lamp"
-                }, {
-                    "id": 22,
-                    "type": "Extended color light",
-                    "name": "Hue color Lamp 6",
-                    "productname": "Hue color Lamp"
-                }, {
-                    "id": 3,
-                    "type": "Extended color light",
-                    "name": "Hue color lamp 3",
-                    "productname": "Hue color lamp"
-                }
-            ]
-        },
-        "rooftop": {
-            "floor": 3,
-            "lights": [
-            ]
-        }
+    "concentrate": {
+      "on": true,
+      "bri": 254,
+      "hue": 41442,
+      "sat": 75,
+      "xy": [0.3691, 0.3719],
+      "ct": 233
+    },
+    "energize": {
+      "on": true,
+      "bri": 254,
+      "hue": 41442,
+      "sat": 75,
+      "xy": [0.3143, 0.3301],
+      "ct": 156
+    },
+    "dimmed": {
+      "on": true,
+      "bri": 77,
+      "hue": 8402,
+      "sat": 140,
+      "xy": [0.4575, 0.4099],
+      "ct": 366
+    },
+    "nightlight": {
+      "on": true,
+      "bri": 1,
+      "hue": 6291,
+      "sat": 251,
+      "xy": [0.5612, 0.4042],
+      "ct": 500
     }
+  },
+  "house": {
+    "entry": {
+      "floor": 0,
+      "lights": [
+        {
+          "id": 25,
+          "type": "Dimmable light",
+          "name": "Hue filament bulb 5",
+          "productname": "Hue filament bulb"
+        }
+      ]
+    },
+    "waffles_room": {
+      "floor": 0,
+      "lights": [
+        {
+          "id": 26,
+          "type": "Extended color light",
+          "name": "Hue color Lamp 8",
+          "productname": "Hue color Lamp"
+        },
+        {
+          "id": 29,
+          "type": "Dimmable light",
+          "name": "Hue filament bulb 8",
+          "productname": "Hue filament bulb"
+        },
+        {
+          "id": 30,
+          "type": "Dimmable light",
+          "name": "Hue filament bulb 9",
+          "productname": "Hue filament bulb"
+        }
+      ]
+    },
+    "down_bath": {
+      "floor": 0,
+      "lights": []
+    },
+    "garage": {
+      "floor": 0,
+      "lights": []
+    },
+    "down_stairs": {
+      "floor": 0.5,
+      "lights": [
+        {
+          "id": 17,
+          "type": "Dimmable light",
+          "name": "Hue filament bulb 3",
+          "productname": "Hue filament bulb"
+        },
+        {
+          "id": 24,
+          "type": "Dimmable light",
+          "name": "Hue filament bulb 4",
+          "productname": "Hue filament bulb"
+        }
+      ]
+    },
+    "living_room": {
+      "floor": 1,
+      "lights": [
+        {
+          "id": 1,
+          "type": "Extended color light",
+          "name": "Hue color lamp 1",
+          "productname": "Hue color lamp"
+        },
+        {
+          "id": 2,
+          "type": "Extended color light",
+          "name": "Hue color lamp 2",
+          "productname": "Hue color lamp"
+        },
+        {
+          "id": 3,
+          "type": "Extended color light",
+          "name": "Hue color lamp 3",
+          "productname": "Hue color lamp"
+        },
+        {
+          "id": 6,
+          "type": "Extended color light",
+          "name": "Hue color lamp 4",
+          "productname": "Hue color lamp"
+        },
+        {
+          "id": 7,
+          "type": "Extended color light",
+          "name": "Hue color lamp 5",
+          "productname": "Hue color lamp"
+        },
+        {
+          "id": 8,
+          "type": "Extended color light",
+          "name": "Hue color lamp 6",
+          "productname": "Hue color lamp"
+        },
+        {
+          "id": 9,
+          "type": "Extended color light",
+          "name": "Hue color lamp 7",
+          "productname": "Hue color lamp"
+        },
+        {
+          "id": 16,
+          "type": "Extended color light",
+          "name": "Hue color Lamp 1",
+          "productname": "Hue color Lamp"
+        },
+        {
+          "id": 18,
+          "type": "Extended color light",
+          "name": "Hue color Lamp 2",
+          "productname": "Hue color Lamp"
+        },
+        {
+          "id": 19,
+          "type": "Extended color light",
+          "name": "Hue color Lamp 3",
+          "productname": "Hue color Lamp"
+        },
+        {
+          "id": 20,
+          "type": "Extended color light",
+          "name": "Hue color Lamp 4",
+          "productname": "Hue color Lamp"
+        },
+        {
+          "id": 21,
+          "type": "Extended color light",
+          "name": "Hue color Lamp 5",
+          "productname": "Hue color Lamp"
+        },
+        {
+          "id": 22,
+          "type": "Extended color light",
+          "name": "Hue color Lamp 6",
+          "productname": "Hue color Lamp"
+        }
+      ]
+    },
+    "half_bath": {
+      "floor": 1,
+      "lights": []
+    },
+    "mid_stairs": {
+      "floor": 1.5,
+      "lights": [
+        {
+          "id": 4,
+          "type": "Dimmable light",
+          "name": "Hue white lamp 1",
+          "productname": "Hue white lamp"
+        },
+        {
+          "id": 5,
+          "type": "Dimmable light",
+          "name": "Hue white lamp 2",
+          "productname": "Hue white lamp"
+        }
+      ]
+    },
+    "upstairs_hall": {
+      "floor": 2,
+      "lights": [
+        {
+          "id": 14,
+          "type": "Dimmable light",
+          "name": "Hue filament bulb 1",
+          "productname": "Hue filament bulb"
+        },
+        {
+          "id": 15,
+          "type": "Dimmable light",
+          "name": "Hue filament bulb 2",
+          "productname": "Hue filament bulb"
+        }
+      ]
+    },
+    "main_bedroom": {
+      "floor": 2,
+      "lights": [
+        {
+          "id": 10,
+          "type": "Dimmable light",
+          "name": "Anna bedside lamp",
+          "productname": "Hue filament bulb"
+        },
+        {
+          "id": 11,
+          "type": "Dimmable light",
+          "name": "Matt bedside lamp",
+          "productname": "Hue filament bulb"
+        },
+        {
+          "id": 12,
+          "type": "Extended color light",
+          "name": "Hue color Lamp  Master 1",
+          "productname": "Hue color Lamp"
+        },
+        {
+          "id": 13,
+          "type": "Extended color light",
+          "name": "Hue color Lamp master 2",
+          "productname": "Hue color Lamp"
+        }
+      ]
+    },
+    "main_bathroom": {
+      "floor": 2,
+      "lights": []
+    },
+    "guest_bedroom": {
+      "floor": 2,
+      "lights": [
+        {
+          "id": 23,
+          "type": "Extended color light",
+          "name": "Hue color Lamp 7",
+          "productname": "Hue color Lamp"
+        },
+        {
+          "id": 31,
+          "type": "Dimmable light",
+          "name": "Hue filament bulb 10",
+          "productname": "Hue filament bulb"
+        }
+      ]
+    },
+    "guest_bathroom": {
+      "floor": 2,
+      "lights": []
+    },
+    "up_stairs": {
+      "floor": 2.5,
+      "lights": [
+        {
+          "id": 27,
+          "type": "Dimmable light",
+          "name": "Hue filament bulb 6",
+          "productname": "Hue filament bulb"
+        },
+        {
+          "id": 28,
+          "type": "Dimmable light",
+          "name": "Hue filament bulb 7",
+          "productname": "Hue filament bulb"
+        }
+      ]
+    },
+    "rooftop": {
+      "floor": 3,
+      "lights": []
+    }
+  },
+  "spooky_house": {
+    "sidewalk": {
+      "floor": 0,
+      "lights": [
+        {
+          "id": 27,
+          "type": "Dimmable light",
+          "name": "Hue filament bulb 6",
+          "productname": "Hue filament bulb"
+        },
+        {
+          "id": 28,
+          "type": "Dimmable light",
+          "name": "Hue filament bulb 7",
+          "productname": "Hue filament bulb"
+        }
+      ]
+    },
+    "entry": {
+      "floor": 0,
+      "lights": [
+        {
+          "id": 25,
+          "type": "Dimmable light",
+          "name": "Hue filament bulb 5",
+          "productname": "Hue filament bulb"
+        }
+      ]
+    },
+    "waffles_room": {
+      "floor": 0,
+      "lights": [
+        {
+          "id": 26,
+          "type": "Extended color light",
+          "name": "Hue color Lamp 8",
+          "productname": "Hue color Lamp"
+        },
+        {
+          "id": 29,
+          "type": "Dimmable light",
+          "name": "Hue filament bulb 8",
+          "productname": "Hue filament bulb"
+        },
+        {
+          "id": 30,
+          "type": "Dimmable light",
+          "name": "Hue filament bulb 9",
+          "productname": "Hue filament bulb"
+        }
+      ]
+    },
+    "down_bath": {
+      "floor": 0,
+      "lights": [
+        {
+          "id": 7,
+          "type": "Extended color light",
+          "name": "Hue color lamp 5",
+          "productname": "Hue color lamp"
+        },
+        {
+          "id": 8,
+          "type": "Extended color light",
+          "name": "Hue color lamp 6",
+          "productname": "Hue color lamp"
+        },
+        {
+          "id": 9,
+          "type": "Extended color light",
+          "name": "Hue color lamp 7",
+          "productname": "Hue color lamp"
+        }
+      ]
+    },
+    "down_stairs": {
+      "floor": 0.5,
+      "lights": [
+        {
+          "id": 17,
+          "type": "Dimmable light",
+          "name": "Hue filament bulb 3",
+          "productname": "Hue filament bulb"
+        },
+        {
+          "id": 24,
+          "type": "Dimmable light",
+          "name": "Hue filament bulb 4",
+          "productname": "Hue filament bulb"
+        }
+      ]
+    },
+    "halloween_hallway": {
+      "floor": 1.5,
+      "lights": [
+        {
+          "id": 21,
+          "type": "Extended color light",
+          "name": "Hue color Lamp 5",
+          "productname": "Hue color Lamp"
+        },
+        {
+          "id": 1,
+          "type": "Extended color light",
+          "name": "Hue color lamp 1",
+          "productname": "Hue color lamp"
+        },
+        {
+          "id": 2,
+          "type": "Extended color light",
+          "name": "Hue color lamp 2",
+          "productname": "Hue color lamp"
+        },
+        {
+          "id": 19,
+          "type": "Extended color light",
+          "name": "Hue color Lamp 3",
+          "productname": "Hue color Lamp"
+        },
+        {
+          "id": 16,
+          "type": "Extended color light",
+          "name": "Hue color Lamp 1",
+          "productname": "Hue color Lamp"
+        }
+      ]
+    },
+    "waffles_the_werewolf": {
+      "floor": 2,
+      "lights": [
+        {
+          "id": 18,
+          "type": "Extended color light",
+          "name": "Hue color Lamp 2",
+          "productname": "Hue color Lamp"
+        }
+      ]
+    },
+    "guest_bedroom": {
+      "floor": 2,
+      "lights": [
+        {
+          "id": 23,
+          "type": "Extended color light",
+          "name": "Hue color Lamp 7",
+          "productname": "Hue color Lamp"
+        },
+        {
+          "id": 31,
+          "type": "Dimmable light",
+          "name": "Hue filament bulb 10",
+          "productname": "Hue filament bulb"
+        }
+      ]
+    },
+    "guest_bathroom": {
+      "floor": 2,
+      "lights": [
+        {
+          "id": 20,
+          "type": "Extended color light",
+          "name": "Hue color Lamp 4",
+          "productname": "Hue color Lamp"
+        },
+        {
+          "id": 22,
+          "type": "Extended color light",
+          "name": "Hue color Lamp 6",
+          "productname": "Hue color Lamp"
+        },
+        {
+          "id": 3,
+          "type": "Extended color light",
+          "name": "Hue color lamp 3",
+          "productname": "Hue color lamp"
+        }
+      ]
+    },
+    "rooftop": {
+      "floor": 3,
+      "lights": []
+    }
+  }
 }

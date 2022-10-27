@@ -33,7 +33,7 @@ export abstract class Pattern {
   }
 }
 
-function createLightState(
+export function createLightState(
   color: Color,
   transitionSeconds: number,
   brightness?: number

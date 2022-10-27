@@ -1,7 +1,6 @@
 import "dotenv/config";
 import { RingEnhancedSpookinatorV2 } from "./lib/ring";
 import { SpookyHueApi } from "./lib/hue/hue";
-import { WebServer } from "./lib/web_listener/webserver";
 import { parse } from "ts-command-line-args";
 import { getLogger, setLogLevel } from "./lib/logging";
 import { CategoryLogger, LogLevel } from "typescript-logging";
@@ -12,6 +11,7 @@ import { InputTrigger } from "./lib/triggers/InputTrigger";
 import { util_scenes } from "./collections/util";
 import { CONFIG } from "./lib/config";
 import { HueSensor } from "./lib/triggers/sensors/HueSensor";
+import { RemoteTrigger } from "./lib/triggers/RemoteTrigger";
 
 const log: CategoryLogger = getLogger("main");
 const SCENES = SCENES_2022;
@@ -72,9 +72,6 @@ async function main() {
 
   log.info(`input args: ${JSON.stringify(args)}\n`);
 
-  const server = new WebServer(args.webserverPort);
-  server.listen();
-
   var ringSpook: RingEnhancedSpookinatorV2;
   const getRing = async () => {
     if (ringSpook == null) {
@@ -101,7 +98,7 @@ async function main() {
   };
 
   args.scene.forEach((s) => {
-    SCENES[s].start(getRing, getHue, server);
+    SCENES[s].start(getRing, getHue);
   });
 }
 
@@ -169,6 +166,7 @@ async function altMain() {
   });
 
   InputTrigger;
+  RemoteTrigger;
   scenes2022;
   util_scenes;
 }
