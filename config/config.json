@@ -62,7 +62,7 @@
     "halloween_hallway_5": 16
   },
   "hue_bridge_ip": "192.168.86.44",
-  "web_server_port": 8080,
+  "web_server_port": 8008,
   "colors": {
     "red": {
       "on": true,
