@@ -3,6 +3,7 @@ import { HueSensorUpdate } from "../hue/sensor";
 import { getLogger } from "../logging";
 import { CategoryLogger } from "typescript-logging";
 import { RingEnhancedSpookinatorV2 } from "../ring";
+import { EventMessage, WebServer } from "../web_listener/webserver";
 import { SpookyHueApi } from "../hue/hue";
 import { SpookyHueBulbPlayer } from "../hue/spooky_bulb_player";
 import { Event } from "./events";
@@ -15,22 +16,26 @@ const log: CategoryLogger = getLogger("scenes");
 export abstract class Scene {
   ringCallback: [string, (data: RingDeviceData) => void] | null;
   hueCallback: [number, (update: HueSensorUpdate) => void] | null;
+  webServerCallback: [string, (event: EventMessage) => void] | null;
 
   constructor() {
     this.ringCallback = null;
     this.hueCallback = null;
+    this.webServerCallback = null;
   }
 
   abstract setup(
     ringFunction: () => Promise<RingEnhancedSpookinatorV2>,
-    hueFunction: () => Promise<SpookyHueApi>
+    hueFunction: () => Promise<SpookyHueApi>,
+    webServer: WebServer
   ): Promise<void>;
 
   async start(
     ringFunction: () => Promise<RingEnhancedSpookinatorV2>,
-    hueFunction: () => Promise<SpookyHueApi>
+    hueFunction: () => Promise<SpookyHueApi>,
+    webServer: WebServer
   ): Promise<void> {
-    await this.setup(ringFunction, hueFunction);
+    await this.setup(ringFunction, hueFunction, webServer);
 
     if (this.ringCallback != null) {
       var [ringId, ringCallback] = this.ringCallback;
@@ -51,6 +56,11 @@ export abstract class Scene {
 
       hueWalkwaySensor.addCallback(hueCallback);
       hueWalkwaySensor.start();
+    }
+
+    if (this.webServerCallback != null) {
+      var [eventName, callback] = this.webServerCallback;
+      webServer.addCallback(eventName, callback);
     }
   }
 }
@@ -235,7 +245,7 @@ class RandomMultiScene extends Scene {
 /**
  * Scene that repeats forever
  */
-abstract class RepeatingScene extends Scene {
+export abstract class RepeatingScene extends Scene {
   private mainLightNames: string[];
 
   constructor(...mainLightNames: string[]) {

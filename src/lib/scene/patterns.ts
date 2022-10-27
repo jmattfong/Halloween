@@ -33,7 +33,7 @@ export abstract class Pattern {
   }
 }
 
-export function createLightState(
+function createLightState(
   color: Color,
   transitionSeconds: number,
   brightness?: number
@@ -49,12 +49,11 @@ export function createLightState(
   return (
     new LightState()
       .on(true)
-      .bri(brightness)
       .xy(color.xy[0], color.xy[1])
       .hue(color.hue)
       .sat(color.sat)
-      // Returns a 404 from the Hue API??
-      // .ct(color.ct)
+      //.ct(color.ct)
+      .bri(brightness)
       // Weird, but this is in increments of 100ms
       .transitiontime(transitionSeconds * 10)
   );

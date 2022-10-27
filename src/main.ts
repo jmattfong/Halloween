@@ -1,7 +1,7 @@
 import "dotenv/config";
-import { readFileSync } from "fs";
 import { RingEnhancedSpookinatorV2 } from "./lib/ring";
 import { SpookyHueApi } from "./lib/hue/hue";
+import { WebServer } from "./lib/web_listener/webserver";
 import { parse } from "ts-command-line-args";
 import { getLogger, setLogLevel } from "./lib/logging";
 import { CategoryLogger, LogLevel } from "typescript-logging";
@@ -19,6 +19,7 @@ const SCENES = SCENES_2022;
 // For details about adding new args, see https://www.npmjs.com/package/ts-command-line-args
 interface IHalloweenServerArgs {
   scene: string[];
+  webserverPort: number;
   debug: boolean;
   help?: boolean;
 }
@@ -30,15 +31,22 @@ async function main() {
     {
       scene: {
         type: String,
-        optional: true,
         alias: "s",
         multiple: true,
+        optional: true,
         description: `The scene to run. Choose from: ${Object.keys(SCENES)}`,
+      },
+      webserverPort: {
+        type: Number,
+        defaultValue: 4343,
+        alias: "p",
+        optional: true,
+        description: `The port to run the webserver on. Defaults to (4343)`,
       },
       debug: {
         type: Boolean,
-        optional: true,
         alias: "d",
+        optional: true,
         description: "Turn on debug logging",
       },
       help: {
@@ -64,16 +72,14 @@ async function main() {
 
   log.info(`input args: ${JSON.stringify(args)}\n`);
 
-  const configContents = readFileSync("./config/config.json", {
-    encoding: "utf-8",
-  });
-  let config = JSON.parse(configContents);
+  const server = new WebServer(args.webserverPort);
+  server.listen();
 
   var ringSpook: RingEnhancedSpookinatorV2;
   const getRing = async () => {
     if (ringSpook == null) {
       log.info("Setting up Ring");
-      ringSpook = new RingEnhancedSpookinatorV2(config.secretPath, true);
+      ringSpook = new RingEnhancedSpookinatorV2(CONFIG.secretPath, true);
       log.debug(`all my sensors: ${await ringSpook.getSensors()}`);
     }
     return ringSpook;
@@ -83,8 +89,8 @@ async function main() {
   const getHue = async () => {
     if (spookHue == null) {
       log.info("Setting up Hue");
-      spookHue = new SpookyHueApi(config.secretPath, config);
-      await spookHue.connectUsingIP(config.hue_bridge_ip);
+      spookHue = new SpookyHueApi(CONFIG.secretPath, CONFIG);
+      await spookHue.connectUsingIP(CONFIG.hue_bridge_ip);
       log.debug(
         `get all lights: ${(await spookHue.getLights()).map((l: any) =>
           l.toStringDetailed()
@@ -95,7 +101,7 @@ async function main() {
   };
 
   args.scene.forEach((s) => {
-    SCENES[s].start(getRing, getHue);
+    SCENES[s].start(getRing, getHue, server);
   });
 }
 
