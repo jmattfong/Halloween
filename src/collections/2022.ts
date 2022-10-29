@@ -37,15 +37,7 @@ export const scenes2022: SceneCollection = {
       }),
     ],
   }),
-  front_door_video: new Scene({
-    name: "front_door_video",
-    trigger: Sensors.HUE.TWO.DETECTED,
-    effects: [
-      new ChromecastPlaybackEffect({
-        video: INTRO_VIDEO_2022,
-      }),
-    ],
-  }),
+
   photobooth_thunder: new Scene({
     name: "photobooth_thunder",
     trigger: Sensors.RING.FRONT_GATE.OPENED,
