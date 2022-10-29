@@ -9,6 +9,10 @@ export class Event {
         this.lightName = lightName
         this.patterns = patterns;
     }
+
+    public cancel() {
+        this.patterns.forEach((p) => p.cancel());
+    }
 }
 
 function buildEventsForLights(pattern: Pattern[], mainLightNames: string[]): Event[] {

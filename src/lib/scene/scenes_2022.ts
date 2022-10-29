@@ -7,7 +7,7 @@ import { SpookyHueApi } from '../hue/hue';
 import { SpookyHueBulbPlayer } from '../hue/spooky_bulb_player';
 import { SoundPattern, RandomSoundPattern, FlickerPattern, OffPattern, StableColourPattern, SleepPattern, OnPattern, Pattern, PulsePattern } from './patterns';
 import { Event } from "./events"
-import { Scene, MultiPartScene, AutoResetRingScene, RepeatingScene } from './scenes'
+import { Scene, SplitPartScene, MultiPartScene, AutoResetRingScene, RepeatingScene } from './scenes'
 import { INTRO_VIDEO_2022 } from '../videos'
 import { CONFIG, RED, SOFT_RED, RELAX, CONCENTRATE, ENERGIZE, DIMMED, NIGHTLIGHT, ORANGE, BLUE } from '../config'
 
@@ -271,19 +271,32 @@ class GuestBathroomScene extends AutoResetRingScene {
     }
 }
 
-class GuestBedClownScene extends AutoResetRingScene {
-    constructor(ringSensorName: string, lights: string[]) {
-        let events: Event[] = lights.map(light => {
-            return new Event(light,
-                new SleepPattern(7),
-                // Oops, if we use multiple SoundPatterns it plays them all at once. Kinda works though?
-                new RandomSoundPattern(["resources/saw_laugh.mp3", "resources/creepy_child.mp3"], new OffPattern(14)),
-                new OnPattern(RELAX, 1, 1))
-        });
+class GuestBedClownScene extends SplitPartScene {
+    constructor(hueSensorId: number, ringSensorName: string, lights: string[]) {
+        let defaultLighting: Pattern = new OnPattern(RELAX, 1)
+        let hueEvents: Event[] = [new Event(lights[0], new SoundPattern("resources/David_2022/guest_bedroom_candy.wav", new SleepPattern(0), 0, 1, true))]
+        let ringEvents: Event[] = [new Event(lights[0], new SoundPattern("resources/David_2022/guest_bedroom.wav", new SleepPattern(0), 0, 1, true))]
 
-        super(ringSensorName, events, true)
+        let unSpookyEvents: Event[] = lights.map(light => {
+            return new Event(light, defaultLighting)
+        });
+        super(ringSensorName, hueEvents, ringEvents, unSpookyEvents, hueSensorId)
     }
 }
+
+// class GuestBedClownScene extends AutoResetRingScene {
+//     constructor(ringSensorName: string, lights: string[]) {
+//         let events: Event[] = lights.map(light => {
+//             return new Event(light,
+//                 new SleepPattern(7),
+//                 // Oops, if we use multiple SoundPatterns it plays them all at once. Kinda works though?
+//                 new RandomSoundPattern(["resources/saw_laugh.mp3", "resources/creepy_child.mp3"], new OffPattern(14)),
+//                 new OnPattern(RELAX, 1, 1))
+//         });
+
+//         super(ringSensorName, events, true)
+//     }
+// }
 
 class HalloweenHallway extends RepeatingScene {
     getRepeatingEvents(...lightNames: string[]): Event[] {
