@@ -287,7 +287,6 @@ class GuestBedClownScene extends AutoResetRingScene {
 
 class HalloweenHallway extends RepeatingScene {
     getRepeatingEvents(...lightNames: string[]): Event[] {
-        lightNames
         let eventLights: string[][] = [[], [], [], [], []]
         let i = 0
         lightNames.forEach(light => {
@@ -317,9 +316,22 @@ class HalloweenHallway extends RepeatingScene {
     }
 }
 
-// TODO
-class PortalToHellScene extends Scene {
-    async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
+class PortalToHellScene extends RepeatingScene {
+    getRepeatingEvents(...lightNames: string[]): Event[] {
+        let repeatTime = 5
+        let events = [
+            new Event(lightNames[0], new OnPattern(RELAX, 1), new SleepPattern(repeatTime),
+                new RandomSoundPattern(["resources/David_2022/rooftop_costume_contest.wav", "resources/David_2022/rooftop_feeding.wav", "resources/David_2022/rooftop_werewolf.wav"], new OffPattern(60)),
+                new OnPattern(RELAX, 1))
+        ]
+        for(var i=1; i < lightNames.length; i++) {
+            events.push(new Event(lightNames[0], new OnPattern(RELAX, 1), new SleepPattern(repeatTime),
+            new OffPattern(60),
+            new OnPattern(RELAX, 1)))
+        }
+
+        log.info(`PortalToHellScene events: ${JSON.stringify(events)}`)
+        return events
     }
 }
 
@@ -340,5 +352,5 @@ export const SCENES_2022: { [key: string]: Scene } = {
     "look_its_waffles": new LookItsWafflesScene("Front Gate", ["living_room_3"]),
     "guest_bathroom": new GuestBathroomScene("Garage Door", ["guest_bathroom_mirror_1", "guest_bathroom_mirror_2"], "guest_bathroom_shower"),
     "guest_bed_clown": new GuestBedClownScene("Front Gate", ["master_1", "master_2", "master_3", "master_4"]),
-    "portal_to_hell": new PortalToHellScene(),
+    "portal_to_hell": new PortalToHellScene("rooftop_1", "rooftop_2"),
 }

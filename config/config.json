@@ -57,11 +57,15 @@
         "master_3": 10,
         "master_4": 11,
 
+        "rooftop_1": 4,
+        "rooftop_2": 5,
+
         "halloween_hallway_1": 21,
         "halloween_hallway_2": 1,
         "halloween_hallway_3": 2,
         "halloween_hallway_4": 19,
         "halloween_hallway_5": 16,
+
         "guest_bathroom_mirror_1": 20,
         "guest_bathroom_mirror_2": 22,
         "guest_bathroom_shower": 3
