@@ -177,6 +177,7 @@ class DownstairsBathCreepyClownShowerScene extends AutoResetRingScene {
     constructor(ringSensorName: string, mirrorLights: string[], showerLight: string) {
         let spookyEvents: Event[] = mirrorLights.map(light => {
             return new Event(light,
+                new SleepPattern(0.0125),
                 new FlickerPattern(5),
                 new OnPattern(RELAX, 5, 5),
                 new OffPattern(1, 5),
@@ -186,7 +187,7 @@ class DownstairsBathCreepyClownShowerScene extends AutoResetRingScene {
         });
 
         spookyEvents.push(new Event(showerLight,
-            new SoundPattern("resources/David_2022/downstairs_bathroom.mp3", new OnPattern(RED, 10, 5), 10),
+            new SoundPattern("resources/David_2022/downstairs_bathroom.wav", new OnPattern(RED, 10, 5), 10),
             new OffPattern(1)))
 
         super(ringSensorName, spookyEvents)
@@ -212,7 +213,7 @@ class LookItsWafflesScene extends AutoResetRingScene {
             // 29-31 LOUD
             // -32 LOUD
             return new Event(light,
-                new SoundPattern("resources/David_2022/the_beast.mp3", new OnPattern(SOFT_RED, 4), 0),
+                new SoundPattern("resources/David_2022/the_beast.wav", new OnPattern(SOFT_RED, 4), 0),
                 new OffPattern(1),
                 new OnPattern(SOFT_RED, 5),
                 new OffPattern(2),
