@@ -1,6 +1,6 @@
 import LightState = require("node-hue-api/lib/model/lightstate/LightState");
+import { sleep } from "../../../utils";
 import { Color } from "../../config";
-import { sleep } from "../patterns";
 import { LightEffect } from "./LightEffect";
 
 export namespace PatternLightEffect {
