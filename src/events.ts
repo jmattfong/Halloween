@@ -7,6 +7,9 @@ export const TRIGGERS = {
       FRONT_DOOR: {
         OPENED: "Sensor-Front Door-Ring-opened",
       },
+      WAFFLES_ROOM: {
+        OPENED: "Waffles' Room"
+      }
     },
     HUE: {
       TWO: {

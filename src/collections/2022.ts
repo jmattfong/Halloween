@@ -47,6 +47,22 @@ export const scenes2022: SceneCollection = {
       }),
     ],
   }),
+  downstairs_bathroom: new Scene({
+    name: "downstairs_bathroom",
+    trigger: TRIGGERS.SENSORS.RING.WAFFLES_ROOM.OPENED,
+    effects: [
+      new CompoundEffect({
+        childEffects: [
+          new FlickerLightEffect({
+            color: ENERGIZE,
+            durationInSeconds: 5,
+            lightNames: ["downbath_1", "downbath_2"],
+
+          })
+        ]
+      })
+    ]
+  }),
   photobooth_thunder: new Scene({
     name: "photobooth_thunder",
     trigger: TRIGGERS.SENSORS.RING.FRONT_GATE.OPENED,
