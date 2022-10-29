@@ -231,19 +231,21 @@ export class SplitPartScene extends Scene {
 
         // if the data.faulted is true, that means that the door is open
         if (data.faulted) {
+          log.info("door is open");
           if (this.spookOnFaulted) {
+            log.info("canceling spooky hue events");
             this.spookyHueEvents.forEach((event) => {
               event.cancel();
-            })
+            });
             this.spookyRingEvents.forEach((event) => {
               spookyHueBulbPlayer.playPattern(event);
             });
           } else {
+            // log.info("canceling spooky ring events");
+            // this.spookyRingEvents.forEach((event) => {
+            //     event.cancel();
+            // });
             this.unSpookyEvents.forEach((event) => {
-              this.spookyRingEvents.forEach((event) => {
-                event.cancel();
-              })
-
               spookyHueBulbPlayer.playPattern(event);
             });
           }
@@ -253,6 +255,7 @@ export class SplitPartScene extends Scene {
               spookyHueBulbPlayer.playPattern(event);
             });
           } else {
+            log.info("canceling spooky hue events2");
             this.spookyHueEvents.forEach((event) => {
               event.cancel();
             });
@@ -273,9 +276,10 @@ export class SplitPartScene extends Scene {
           );
 
           if (data.getPresence()) {
-            this.spookyRingEvents.forEach((event) => {
-              event.cancel();
-            });
+            // log.info("canceling spooky hue events3");
+            // this.spookyRingEvents.forEach((event) => {
+            //   event.cancel();
+            // });
             this.spookyHueEvents.forEach((event) => {
               spookyHueBulbPlayer.playPattern(event);
             });

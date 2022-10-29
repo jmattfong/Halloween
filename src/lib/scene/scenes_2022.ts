@@ -274,8 +274,8 @@ class GuestBathroomScene extends AutoResetRingScene {
 class GuestBedClownScene extends SplitPartScene {
     constructor(hueSensorId: number, ringSensorName: string, lights: string[]) {
         let defaultLighting: Pattern = new OnPattern(RELAX, 1)
-        let hueEvents: Event[] = [new Event(lights[0], new SoundPattern("resources/David_2022/guest_bedroom_candy.wav", new SleepPattern(0), 0))]
-        let ringEvents: Event[] = [new Event(lights[0], new SoundPattern("resources/David_2022/guest_bedroom.wav", new SleepPattern(0), 0))]
+        let hueEvents: Event[] = [new Event(lights[0], new SoundPattern("resources/David_2022/guest_bedroom_candy.wav", new SleepPattern(0), 0, 1, true))]
+        let ringEvents: Event[] = [new Event(lights[0], new SoundPattern("resources/David_2022/guest_bedroom.wav", new SleepPattern(0), 0, 1, true))]
 
         let unSpookyEvents: Event[] = lights.map(light => {
             return new Event(light, defaultLighting)
@@ -352,6 +352,6 @@ export const SCENES_2022: { [key: string]: Scene } = {
     "werewolf_door_jiggle": new WerewolfDoorJiggleScene(9, "master_1"),
     "look_its_waffles": new LookItsWafflesScene("Front Gate", ["living_room_3"]),
     "guest_bathroom": new GuestBathroomScene("Garage Door", ["guest_bathroom_mirror_1", "guest_bathroom_mirror_2"], "guest_bathroom_shower"),
-    "guest_bed_clown": new GuestBedClownScene(59, "Half Bathroom", ["master_1", "master_2", "master_3", "master_4"]),
+    "guest_bed_clown": new GuestBedClownScene(59, "Half Bathroom", ["guest_bed_1", "guest_bed_2"]),
     "portal_to_hell": new PortalToHellScene(),
 }
