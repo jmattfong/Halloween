@@ -1,8 +1,8 @@
 import { CategoryLogger } from "typescript-logging";
 import { getLogger } from "../../logging";
+import { SoundPlayer } from "../../sound/sound";
 import { Effect } from "./Effect";
 
-const player = require("sound-play");
 const log: CategoryLogger = getLogger("sound-effect");
 
 export namespace SoundEffect {
@@ -15,6 +15,7 @@ export namespace SoundEffect {
 }
 export abstract class SoundEffect extends Effect {
   readonly volume: number;
+  private soundPlayer: SoundPlayer;
 
   constructor({
     type = "SoundEffect",
@@ -28,6 +29,7 @@ export abstract class SoundEffect extends Effect {
       delayInSeconds,
     });
     this.volume = volume;
+    this.soundPlayer = new SoundPlayer();
   }
 
   abstract getSoundFile(): string;
@@ -35,12 +37,7 @@ export abstract class SoundEffect extends Effect {
   async perform(): Promise<void> {
     const soundFile = this.getSoundFile();
 
-    player.play(soundFile, this.volume).then((error: any) => {
-      if (error) {
-        log.error(`Something went wrong playing ${soundFile}`, error);
-      } else {
-        log.info(`Playing ${soundFile} is complete`);
-      }
-    });
+    return this.soundPlayer.play(soundFile, this.volume);
+
   }
 }
