@@ -189,7 +189,7 @@ class DownstairsBathCreepyClownShowerScene extends AutoResetRingScene {
             new SoundPattern("resources/David_2022/downstairs_bathroom.mp3", new OnPattern(RED, 10, 5), 10),
             new OffPattern(1)))
 
-        super(ringSensorName, spookyEvents, true)
+        super(ringSensorName, spookyEvents)
     }
 }
 
@@ -291,13 +291,13 @@ export const SCENES_2022: { [key: string]: Scene } = {
     "list": new ListOnLightsScene(),
     "get_light": new GetLight(21), // Change this to get the state of different lights by ID
     "test_ring": new TestRingScene(),
-    "find_bulb": new FindBulb("Front Gate", ["living_room_3"]),
+    "find_bulb": new FindBulb("Waffles' Room", ["down_bath_1", "down_bath_2", "down_bath_3"]),
     // Scenes for the party
     "front_light_flicker": new FrontLightFlickerScene(2, ["living_room_1", "living_room_2"]),
     "front_door_video": new FrontDoorVideoScene(2),
     "welcome_inside": new WelcomeInsideScene("Front Gate", ["living_room_1", "living_room_2"]),
     "photobooth_thunder": new PhotoboothThunderScene("Front Gate", ["living_room_1", "living_room_2"]),
-    "creepy_clown_shower": new DownstairsBathCreepyClownShowerScene("Front Gate", ["upstairs_1", "living_room_2"], "living_room_3"),
+    "creepy_clown_shower": new DownstairsBathCreepyClownShowerScene("Waffles' Room", ["down_bath_1", "down_bath_2"], "down_bath_3"),
     "halloween_hallway": new HalloweenHallway("halloween_hallway_1", "halloween_hallway_2", "halloween_hallway_3", "halloween_hallway_4", "halloween_hallway_5"),
     "werewolf_door_jiggle": new WerewolfDoorJiggleScene(),
     "look_its_waffles": new LookItsWafflesScene("Front Gate", ["living_room_3"]),
