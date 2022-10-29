@@ -173,4 +173,4 @@ async function altMain() {
   util_scenes;
 }
 
-altMain();
+main();
