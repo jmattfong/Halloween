@@ -9,7 +9,7 @@ import { SoundPattern, RandomSoundPattern, FlickerPattern, OffPattern, StableCol
 import { Event } from "./events"
 import { Scene, MultiPartScene, AutoResetRingScene, RepeatingScene } from './scenes'
 import { INTRO_VIDEO_2022 } from '../videos'
-import { CONFIG, RED, SOFT_RED, RELAX, CONCENTRATE, ENERGIZE, DIMMED, NIGHTLIGHT, ORANGE } from '../config'
+import { CONFIG, RED, SOFT_RED, RELAX, CONCENTRATE, ENERGIZE, DIMMED, NIGHTLIGHT, ORANGE, BLUE } from '../config'
 
 const log: CategoryLogger = getLogger("scene_2022")
 
@@ -249,9 +249,25 @@ class LookItsWafflesScene extends AutoResetRingScene {
     }
 }
 
-// TODO
-class WerewolfShowerScene extends Scene {
-    async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
+class GuestBathroomScene extends AutoResetRingScene {
+    constructor(ringSensorName: string, mirrorLights: string[], showerLight: string) {
+
+        let spookyEvents = mirrorLights.map(light => {
+            return new Event(light,
+                new OnPattern(RELAX, 13, 4),
+                new PulsePattern(RED, 14, 0.5),
+                new OnPattern(RELAX, 10, 5),
+            );
+        });
+
+        spookyEvents.push(new Event(showerLight,
+            new SoundPattern("resources/David_2022/guest_bathroom_psycho.wav", new FlickerPattern(13.5, BLUE, 110), 0),
+            new PulsePattern(RED, 14, 0.5),
+            new OffPattern(6, 6),
+        ));
+
+
+        super(ringSensorName, spookyEvents, true);
     }
 }
 
@@ -322,7 +338,7 @@ export const SCENES_2022: { [key: string]: Scene } = {
     "halloween_hallway": new HalloweenHallway("halloween_hallway_1", "halloween_hallway_2", "halloween_hallway_3", "halloween_hallway_4", "halloween_hallway_5"),
     "werewolf_door_jiggle": new WerewolfDoorJiggleScene(9, "master_1"),
     "look_its_waffles": new LookItsWafflesScene("Front Gate", ["living_room_3"]),
-    "werewolf_shower": new WerewolfShowerScene(),
+    "guest_bathroom": new GuestBathroomScene("Garage Door", ["guest_bathroom_mirror_1", "guest_bathroom_mirror_2"], "guest_bathroom_shower"),
     "guest_bed_clown": new GuestBedClownScene("Front Gate", ["master_1", "master_2", "master_3", "master_4"]),
     "portal_to_hell": new PortalToHellScene(),
 }
