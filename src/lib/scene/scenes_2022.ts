@@ -194,9 +194,28 @@ class DownstairsBathCreepyClownShowerScene extends AutoResetRingScene {
     }
 }
 
-// TODO
 class WerewolfDoorJiggleScene extends Scene {
+
+    hueSensor: number
+    spookyEvent: Event;
+    constructor(hueSensor: number, dummyLight: string) {
+        super()
+        this.hueSensor = hueSensor
+        this.spookyEvent = new Event(dummyLight, new SoundPattern("resources/David_2022/scratching_dog.wav", new SleepPattern(0), 0))
+    }
+
     async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
+        const spookyHueBulbPlayer = new SpookyHueBulbPlayer(await hueFunction());
+
+        this.hueCallback = [
+            this.hueSensor,
+            (update: HueSensorUpdate) => {
+                log.info(`received status update: ${update}`);
+                if (update.getPresence()) {
+                    spookyHueBulbPlayer.playPattern(this.spookyEvent);
+                }
+            }
+        ]
     }
 }
 
@@ -214,6 +233,7 @@ class LookItsWafflesScene extends AutoResetRingScene {
             // -32 LOUD
             return new Event(light,
                 new SoundPattern("resources/David_2022/the_beast.wav", new OnPattern(SOFT_RED, 4), 0),
+                new SleepPattern(0.1),
                 new OffPattern(1),
                 new OnPattern(SOFT_RED, 5),
                 new OffPattern(2),
@@ -300,7 +320,7 @@ export const SCENES_2022: { [key: string]: Scene } = {
     "photobooth_thunder": new PhotoboothThunderScene("Front Gate", ["living_room_1", "living_room_2"]),
     "creepy_clown_shower": new DownstairsBathCreepyClownShowerScene("Waffles' Room", ["down_bath_1", "down_bath_2"], "down_bath_3"),
     "halloween_hallway": new HalloweenHallway("halloween_hallway_1", "halloween_hallway_2", "halloween_hallway_3", "halloween_hallway_4", "halloween_hallway_5"),
-    "werewolf_door_jiggle": new WerewolfDoorJiggleScene(),
+    "werewolf_door_jiggle": new WerewolfDoorJiggleScene(9, "master_1"),
     "look_its_waffles": new LookItsWafflesScene("Front Gate", ["living_room_3"]),
     "werewolf_shower": new WerewolfShowerScene(),
     "guest_bed_clown": new GuestBedClownScene("Front Gate", ["master_1", "master_2", "master_3", "master_4"]),
