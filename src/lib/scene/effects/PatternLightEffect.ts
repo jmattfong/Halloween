@@ -1,6 +1,5 @@
 import LightState = require("node-hue-api/lib/model/lightstate/LightState");
 import { Color } from "../../config";
-import { sleep } from "../patterns";
 import { LightEffect } from "./LightEffect";
 
 export namespace PatternLightEffect {
@@ -38,4 +37,8 @@ export abstract class PatternLightEffect extends LightEffect {
       })
     );
   }
+}
+
+async function sleep(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }

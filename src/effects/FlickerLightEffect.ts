@@ -1,7 +1,9 @@
 import LightState = require("node-hue-api/lib/model/lightstate/LightState");
 import { Color } from "../lib/config";
 import { PatternLightEffect } from "../lib/scene/effects/PatternLightEffect";
-import { createLightState, getRandomInt } from "../lib/scene/patterns";
+import { createLightState } from "../lib/hue/light";
+import { getRandomInt } from "../lib/random";
+
 
 export namespace FlickerLightEffect {
   export type Params = {

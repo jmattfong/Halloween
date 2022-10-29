@@ -2,7 +2,7 @@ import LightState = require("node-hue-api/lib/model/lightstate/LightState");
 import { Color } from "../lib/config";
 import { Effect } from "../lib/scene/effects/Effect";
 import { LightEffect } from "../lib/scene/effects/LightEffect";
-import { createLightState } from "../lib/scene/patterns";
+import { createLightState } from "../lib/hue/light";
 
 export class StableLightEffect extends LightEffect {
   private readonly on: boolean;
