@@ -24,7 +24,7 @@
     "node-hue-api": "^4.0.8",
     "package.json": "^2.0.1",
     "readline": "^1.3.0",
-    "ring-client-api": "^9.21.2",
+    "ring-client-api": "^11.3.1",
     "rxjs-operators": "1.1.3",
     "ts-command-line-args": "^2.1.0",
     "ts-node": "8.4.1",
