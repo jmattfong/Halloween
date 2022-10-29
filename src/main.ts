@@ -11,6 +11,7 @@ import { util_scenes } from "./collections/util";
 import { CONFIG } from "./lib/config";
 import { HueSensor } from "./lib/triggers/sensors/HueSensor";
 import { RemoteTrigger } from "./lib/triggers/RemoteTrigger";
+import { eventBridge } from "./lib/events/EventBridge";
 
 const log: CategoryLogger = getLogger("main");
 
@@ -81,8 +82,12 @@ async function main() {
 
   InputTrigger;
   RemoteTrigger;
-  scenes2022;
-  util_scenes;
+  Object.values(scenes2022).forEach((scene) =>
+    eventBridge.register(scene.trigger, scene)
+  );
+  Object.values(util_scenes).forEach((scene) =>
+    eventBridge.register(scene.trigger, scene)
+  );
 }
 
 main();

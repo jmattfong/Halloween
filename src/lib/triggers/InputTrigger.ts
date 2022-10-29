@@ -32,8 +32,10 @@ process.stdin.on("keypress", (_, key) => {
   );
 });
 
-process.stdin.setRawMode(true);
-process.stdin.resume();
+if (process.stdin.isTTY) {
+  process.stdin.setRawMode(true);
+  process.stdin.resume();
+}
 
 export class InputTrigger extends Trigger {
   readonly key: string;

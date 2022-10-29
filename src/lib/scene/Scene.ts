@@ -25,12 +25,6 @@ export default class Scene extends Event.Source {
     this.name = name;
     this.trigger = trigger;
     this.effects = effects;
-
-    this.setup();
-  }
-
-  setup(): void {
-    eventBridge.register(this.trigger, this);
   }
 
   async execute(): Promise<void> {

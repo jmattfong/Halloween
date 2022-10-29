@@ -34,11 +34,13 @@ export abstract class Effect extends Event.Source {
   protected abstract perform(): Promise<void>;
 
   async trigger(): Promise<void> {
-    log.debug(
-      `Performing effect: ${this.fullName()} in ${
-        this.delayInSeconds
-      } seconds...`
-    );
+    if (this.delayInSeconds) {
+      log.debug(
+        `Performing effect: ${this.fullName()} in ${
+          this.delayInSeconds
+        } seconds...`
+      );
+    }
     eventBridge.post(new NewEvent(this, "triggered"));
 
     return new Promise((resolve) => {
