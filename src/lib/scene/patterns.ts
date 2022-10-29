@@ -5,11 +5,11 @@ import { SpookyHueBulbPlayer } from "../hue/spooky_bulb_player";
 import { Event } from "./events";
 import { Color, ENERGIZE } from "../config";
 import LightState = require("node-hue-api/lib/model/lightstate/LightState");
+import { SoundPlayer } from "../sound/sound";
 
 const log: CategoryLogger = getLogger("hue-pattern");
 
 const v3 = require("node-hue-api").v3;
-const player = require("sound-play");
 
 export abstract class Pattern {
   protected durationMs: number;
@@ -62,16 +62,19 @@ function createLightState(
 // Lol this is highly functional code
 export class SoundPattern extends Pattern {
   private soundFile: string;
+  private soundPlayer: SoundPlayer;
   // The volume you want to play the audio at! Should be between 0 and 1
   private volume: number;
   private lightPattern: Pattern;
   private soundToPatternDelayMs: number;
+  private stopSoundOnCancel: boolean;
 
   constructor(
     soundFile: string,
     lightPattern: Pattern,
     soundToPatternDelaySeconds: number,
-    volume: number = 1
+    volume: number = 1,
+    stopSoundOnCancel: boolean = false
   ) {
     super(lightPattern.getDurationMs());
     this.soundFile = soundFile;
@@ -83,10 +86,15 @@ export class SoundPattern extends Pattern {
     this.volume = volume;
     this.lightPattern = lightPattern;
     this.soundToPatternDelayMs = soundToPatternDelaySeconds * 1000;
+    this.soundPlayer = new SoundPlayer();
+    this.stopSoundOnCancel = stopSoundOnCancel;
   }
 
   public cancel() {
     this.lightPattern.cancel();
+    if (this.stopSoundOnCancel) {
+      this.soundPlayer.stop();
+    }
   }
 
   getSoundFile(): string {
@@ -98,13 +106,7 @@ export class SoundPattern extends Pattern {
     lightApi: SpookyHueApi
   ): Promise<boolean> {
     let soundFile = this.getSoundFile();
-    player.play(soundFile, this.volume).then((error: any) => {
-      if (error) {
-        log.error(`something went wrong playing ${soundFile}`, error);
-      } else {
-        log.info(`playing ${soundFile} is complete`);
-      }
-    });
+    await this.soundPlayer.play(soundFile, this.volume);
     await sleep(this.soundToPatternDelayMs);
     return this.lightPattern.run(lightName, lightApi);
   }
