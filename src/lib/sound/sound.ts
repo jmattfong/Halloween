@@ -7,10 +7,11 @@ const log: CategoryLogger = getLogger("sound-player");
 export class SoundPlayer {
     private controller: AbortController;
     constructor() {
-        this.controller = new AbortController();
     }
 
     public async play(soundFile: string, volume: number) {
+        this.controller = new AbortController();
+        log.info(`attempting to play ${soundFile}`);
         const { signal } = this.controller;
         exec(`afplay ${soundFile} -v ${volume}`, { signal }, (_error) => {
             log.info(`Canceled ${soundFile} playback`);
@@ -18,7 +19,9 @@ export class SoundPlayer {
     }
 
     public stop() {
-        this.controller.abort();
+        if (this.controller != undefined) {
+            this.controller.abort();
+        }
     }
 
 }

@@ -198,14 +198,13 @@ export class SplitPartScene extends Scene {
   hueSensorId?: number;
   spookyHueEvents: Event[];
   spookyRingEvents: Event[];
-  unSpookyEvents: Event[];
   spookOnFaulted: boolean;
+  private isRingRunning: boolean;
 
   constructor(
     ringSensorName: string,
     spookyHueEvents: Event[],
     spookyRingEvents: Event[],
-    unSpookyEvents: Event[],
     hueSensorId?: number,
     spookOnFaulted: boolean = false
   ) {
@@ -213,9 +212,9 @@ export class SplitPartScene extends Scene {
     this.ringSensorName = ringSensorName;
     this.spookyHueEvents = spookyHueEvents;
     this.spookyRingEvents = spookyRingEvents;
-    this.unSpookyEvents = unSpookyEvents;
     this.hueSensorId = hueSensorId;
     this.spookOnFaulted = spookOnFaulted;
+    this.isRingRunning = false;
   }
 
   async setup(
@@ -224,9 +223,10 @@ export class SplitPartScene extends Scene {
   ): Promise<void> {
     const spookyHueBulbPlayer = new SpookyHueBulbPlayer(await hueFunction());
 
+
     this.ringCallback = [
       this.ringSensorName,
-      (data: RingDeviceData) => {
+      async (data: RingDeviceData) => {
         log.info(`callback called on ${data.name}`);
 
         // if the data.faulted is true, that means that the door is open
@@ -240,31 +240,27 @@ export class SplitPartScene extends Scene {
             this.spookyRingEvents.forEach((event) => {
               spookyHueBulbPlayer.playPattern(event);
             });
-          } else {
             // log.info("canceling spooky ring events");
             // this.spookyRingEvents.forEach((event) => {
             //     event.cancel();
             // });
-            this.unSpookyEvents.forEach((event) => {
-              spookyHueBulbPlayer.playPattern(event);
-            });
           }
         } else {
-          if (this.spookOnFaulted) {
-            this.unSpookyEvents.forEach((event) => {
-              spookyHueBulbPlayer.playPattern(event);
-            });
-          } else {
+          if (!this.spookOnFaulted) {
             log.info("canceling spooky hue events2");
             this.spookyHueEvents.forEach((event) => {
               event.cancel();
             });
-            this.spookyRingEvents.forEach((event) => {
-              spookyHueBulbPlayer.playPattern(event);
+            this.isRingRunning = true;
+            spookyHueBulbPlayer.playPattern(this.spookyRingEvents[0]).then(() => {
+              this.isRingRunning = false;
             });
+            // this.spookyRingEvents.forEach(async event => {
+            //   await spookyHueBulbPlayer.playPattern(event);
+            // });
           }
         }
-      },
+      }
     ];
 
     if (this.hueSensorId) {
@@ -280,11 +276,12 @@ export class SplitPartScene extends Scene {
             // this.spookyRingEvents.forEach((event) => {
             //   event.cancel();
             // });
+
+            if (this.isRingRunning) {
+              return;
+            }
+
             this.spookyHueEvents.forEach((event) => {
-              spookyHueBulbPlayer.playPattern(event);
-            });
-          } else {
-            this.unSpookyEvents.forEach((event) => {
               spookyHueBulbPlayer.playPattern(event);
             });
           }

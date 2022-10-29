@@ -91,6 +91,7 @@ export class SoundPattern extends Pattern {
   }
 
   public cancel() {
+    log.info(`cancelling sound pattern. Stop sound: ${this.stopSoundOnCancel}`);
     this.lightPattern.cancel();
     if (this.stopSoundOnCancel) {
       this.soundPlayer.stop();
@@ -200,7 +201,7 @@ export class PulsePattern extends Pattern {
   constructor(color: Color, durationSeconds: number, transitionTimeSeconds: number) {
     super(durationSeconds);
     this.color = color;
-    this.transitionTimeSeconds = transitionTimeSeconds
+    this.transitionTimeSeconds = transitionTimeSeconds;
   }
   isCancelled = false;
   public cancel() {
