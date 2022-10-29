@@ -10,6 +10,7 @@ export namespace LightEffect {
     color: Color;
     delayInSeconds?: number;
     durationInSeconds: number;
+    childEffects?: Effect[];
   };
 }
 export abstract class LightEffect extends Effect {
@@ -25,8 +26,9 @@ export abstract class LightEffect extends Effect {
     color,
     delayInSeconds,
     durationInSeconds,
+    childEffects,
   }: LightEffect.Params) {
-    super({ type, name, delayInSeconds });
+    super({ type, name, delayInSeconds, childEffects });
     this.lightNames = lightNames;
     this.color = color;
     this.durationInSeconds = durationInSeconds;

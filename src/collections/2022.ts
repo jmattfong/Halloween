@@ -2,8 +2,8 @@ import { ChromecastPlaybackEffect } from "../effects/ChromecastPlaybackEffect";
 import { FlickerLightEffect } from "../effects/FlickerLightEffect";
 import { RandomSoundEffect } from "../effects/RandomSoundEffect";
 import { StableLightEffect } from "../effects/StableLightEffect";
-import { Sensors } from "../events";
-import { ENERGIZE, RED, RELAX } from "../lib/config";
+import { TRIGGERS } from "../events";
+import { ENERGIZE, ORANGE, RED, RELAX } from "../lib/config";
 import Scene from "../lib/scene/Scene";
 import { INTRO_VIDEO_2022 } from "../lib/videos";
 import { SceneCollection } from "./util";
@@ -11,7 +11,7 @@ import { SceneCollection } from "./util";
 export const scenes2022: SceneCollection = {
   welcome_inside: new Scene({
     name: "welcome_inside",
-    trigger: Sensors.RING.FRONT_DOOR.OPENED,
+    trigger: TRIGGERS.SENSORS.RING.FRONT_DOOR.OPENED,
     effects: [
       new RandomSoundEffect({
         soundFiles: [
@@ -28,7 +28,7 @@ export const scenes2022: SceneCollection = {
   }),
   front_light_flicker: new Scene({
     name: "front_light_flicker",
-    trigger: Sensors.HUE.TWO.DETECTED,
+    trigger: TRIGGERS.SENSORS.HUE.TWO.DETECTED,
     effects: [
       new FlickerLightEffect({
         lightNames: ["living_room_1", "living_room_2"],
@@ -39,7 +39,7 @@ export const scenes2022: SceneCollection = {
   }),
   front_door_video: new Scene({
     name: "front_door_video",
-    trigger: Sensors.HUE.TWO.DETECTED,
+    trigger: TRIGGERS.SENSORS.HUE.TWO.DETECTED,
     effects: [
       new ChromecastPlaybackEffect({
         video: INTRO_VIDEO_2022,
@@ -48,7 +48,7 @@ export const scenes2022: SceneCollection = {
   }),
   photobooth_thunder: new Scene({
     name: "photobooth_thunder",
-    trigger: Sensors.RING.FRONT_GATE.OPENED,
+    trigger: TRIGGERS.SENSORS.RING.FRONT_GATE.OPENED,
     effects: [
       new RandomSoundEffect({
         soundFiles: [
@@ -63,9 +63,91 @@ export const scenes2022: SceneCollection = {
       }),
     ],
   }),
+  halloween_hallway: new Scene({
+    name: "halloween_hallway",
+    trigger: TRIGGERS.REPEATING,
+    effects: [
+      new StableLightEffect({
+        lightNames: ["halloween_hallway_1"],
+        color: ORANGE,
+        on: true,
+        durationInSeconds: 1.5,
+        transitionInSeconds: 1,
+        childEffects: [
+          new StableLightEffect({
+            lightNames: ["halloween_hallway_1"],
+            color: ORANGE,
+            on: false,
+            durationInSeconds: 1,
+          }),
+          new StableLightEffect({
+            lightNames: ["halloween_hallway_2"],
+            color: ORANGE,
+            on: true,
+            durationInSeconds: 1.5,
+            transitionInSeconds: 1,
+            childEffects: [
+              new StableLightEffect({
+                lightNames: ["halloween_hallway_2"],
+                color: ORANGE,
+                on: false,
+                durationInSeconds: 1,
+              }),
+              new StableLightEffect({
+                lightNames: ["halloween_hallway_3"],
+                color: ORANGE,
+                on: true,
+                durationInSeconds: 1.5,
+                transitionInSeconds: 1,
+                childEffects: [
+                  new StableLightEffect({
+                    lightNames: ["halloween_hallway_3"],
+                    color: ORANGE,
+                    on: false,
+                    durationInSeconds: 1,
+                  }),
+                  new StableLightEffect({
+                    lightNames: ["halloween_hallway_4"],
+                    color: ORANGE,
+                    on: true,
+                    durationInSeconds: 1.5,
+                    transitionInSeconds: 1,
+                    childEffects: [
+                      new StableLightEffect({
+                        lightNames: ["halloween_hallway_4"],
+                        color: ORANGE,
+                        on: false,
+                        delayInSeconds: 5.5,
+                        durationInSeconds: 1,
+                      }),
+                      new StableLightEffect({
+                        lightNames: ["halloween_hallway_5"],
+                        color: ORANGE,
+                        on: true,
+                        durationInSeconds: 1.5,
+                        transitionInSeconds: 1,
+                        childEffects: [
+                          new StableLightEffect({
+                            lightNames: ["halloween_hallway_5"],
+                            color: ORANGE,
+                            on: false,
+                            durationInSeconds: 1,
+                          }),
+                        ],
+                      }),
+                    ],
+                  }),
+                ],
+              }),
+            ],
+          }),
+        ],
+      }),
+    ],
+  }),
   look_its_waffles: new Scene({
     name: "look_its_waffles",
-    trigger: Sensors.RING.FRONT_GATE.OPENED,
+    trigger: TRIGGERS.SENSORS.RING.FRONT_GATE.OPENED,
     effects: [
       new RandomSoundEffect({
         soundFiles: ["resources/alien_creature.mp3"],
@@ -89,7 +171,7 @@ export const scenes2022: SceneCollection = {
   }),
   guest_bed_clown: new Scene({
     name: "guest_bed_clown",
-    trigger: Sensors.RING.FRONT_GATE.OPENED,
+    trigger: TRIGGERS.SENSORS.RING.FRONT_GATE.OPENED,
     effects: [
       new RandomSoundEffect({
         soundFiles: ["resources/saw_laugh.mp3", "resources/creepy_child.mp3"],

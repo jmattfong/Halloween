@@ -1,4 +1,5 @@
 import { CategoryLogger } from "typescript-logging";
+import { TRIGGERS } from "../../events";
 import { getLogger } from "../logging";
 import Scene from "../scene/Scene";
 import { NewEvent } from "./Event";
@@ -16,11 +17,21 @@ class EventBridgeImpl implements EventBridge {
   register(eventName: string, scene: Scene): void {
     log.debug(`Scene: ${scene.name} === subscribed to === ${eventName}`);
 
-    if (!this.eventSubscriptions.has(eventName)) {
-      this.eventSubscriptions.set(eventName, []);
+    const sceneFinishedEvent = new NewEvent(scene, "finished");
+    let compEventName = eventName;
+    if (scene.trigger === TRIGGERS.REPEATING) {
+      compEventName = sceneFinishedEvent.fullName();
     }
 
-    this.eventSubscriptions.get(eventName)!!.push(scene);
+    if (!this.eventSubscriptions.has(compEventName)) {
+      this.eventSubscriptions.set(compEventName, []);
+    }
+
+    this.eventSubscriptions.get(compEventName)!!.push(scene);
+
+    if (scene.trigger === TRIGGERS.REPEATING) {
+      this.post(sceneFinishedEvent);
+    }
   }
 
   async post(event: NewEvent): Promise<void> {
