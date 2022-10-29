@@ -1,4 +1,5 @@
 import { ChromecastPlaybackEffect } from "../effects/ChromecastPlaybackEffect";
+import { CompoundEffect } from "../effects/CompoundEffect.";
 import { FlickerLightEffect } from "../effects/FlickerLightEffect";
 import { RandomSoundEffect } from "../effects/RandomSoundEffect";
 import { StableLightEffect } from "../effects/StableLightEffect";
@@ -149,23 +150,28 @@ export const scenes2022: SceneCollection = {
     name: "look_its_waffles",
     trigger: TRIGGERS.SENSORS.RING.FRONT_GATE.OPENED,
     effects: [
-      new RandomSoundEffect({
-        soundFiles: ["resources/alien_creature.mp3"],
+      new CompoundEffect({
         delayInSeconds: 5,
-      }),
-      new StableLightEffect({
-        lightNames: ["living_room_3"],
-        color: RED,
-        on: true,
-        delayInSeconds: 5,
-        durationInSeconds: 15,
-      }),
-      new StableLightEffect({
-        lightNames: ["living_room_3"],
-        color: RED,
-        on: false,
-        delayInSeconds: 20,
-        transitionInSeconds: 1,
+        childEffects: [
+          new RandomSoundEffect({
+            soundFiles: ["resources/alien_creature.mp3"],
+          }),
+          new StableLightEffect({
+            lightNames: ["living_room_3"],
+            color: RED,
+            on: true,
+            durationInSeconds: 15,
+            childEffects: [
+              new StableLightEffect({
+                lightNames: ["living_room_3"],
+                color: RED,
+                on: false,
+                delayInSeconds: 20,
+                transitionInSeconds: 1,
+              }),
+            ],
+          }),
+        ],
       }),
     ],
   }),
@@ -173,22 +179,30 @@ export const scenes2022: SceneCollection = {
     name: "guest_bed_clown",
     trigger: TRIGGERS.SENSORS.RING.FRONT_GATE.OPENED,
     effects: [
-      new RandomSoundEffect({
-        soundFiles: ["resources/saw_laugh.mp3", "resources/creepy_child.mp3"],
+      new CompoundEffect({
         delayInSeconds: 7,
-      }),
-      new StableLightEffect({
-        lightNames: ["master_1", "master_2", "master_3", "master_4"],
-        color: ENERGIZE,
-        on: false,
-        delayInSeconds: 7,
-        durationInSeconds: 14,
-      }),
-      new StableLightEffect({
-        lightNames: ["master_1", "master_2", "master_3", "master_4"],
-        color: RELAX,
-        on: true,
-        delayInSeconds: 21,
+        childEffects: [
+          new RandomSoundEffect({
+            soundFiles: [
+              "resources/saw_laugh.mp3",
+              "resources/creepy_child.mp3",
+            ],
+          }),
+          new StableLightEffect({
+            lightNames: ["master_1", "master_2", "master_3", "master_4"],
+            color: ENERGIZE,
+            on: false,
+            durationInSeconds: 14,
+            childEffects: [
+              new StableLightEffect({
+                lightNames: ["master_1", "master_2", "master_3", "master_4"],
+                color: RELAX,
+                on: true,
+                durationInSeconds: 1,
+              }),
+            ],
+          }),
+        ],
       }),
     ],
   }),
