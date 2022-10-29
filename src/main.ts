@@ -38,7 +38,7 @@ async function main() {
       },
       webserverPort: {
         type: Number,
-        defaultValue: 4343,
+        defaultValue: 8008,
         alias: "p",
         optional: true,
         description: `The port to run the webserver on. Defaults to (4343)`,

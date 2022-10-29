@@ -48,6 +48,7 @@ export class WebServer {
 
                 if (callbacks == undefined) {
                     log.info(`no callbacks for ${event.name}`);
+                    res.end(`no callbacks for ${event.name}`);
                     return;
                 }
 
