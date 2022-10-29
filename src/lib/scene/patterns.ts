@@ -129,9 +129,11 @@ export class RandomSoundPattern extends SoundPattern {
 
 export class FlickerPattern extends Pattern {
   color: Color;
-  constructor(durationSeconds: number, color: Color = ENERGIZE) {
+  private maxBrightness: number;
+  constructor(durationSeconds: number, color: Color = ENERGIZE, maxBrightness: number = 254) {
     super(durationSeconds);
     this.color = color;
+    this.maxBrightness = maxBrightness;
   }
 
   isCancelled = false;
@@ -149,7 +151,7 @@ export class FlickerPattern extends Pattern {
     while (!this.isCancelled) {
       let state = new LightState();
       if (lightOn) {
-        let brightness = getRandomInt(154) + 101;
+        let brightness = Math.min(getRandomInt(154) + 101, this.maxBrightness);
         state = createLightState(this.color, 0, brightness);
       } else {
         state = new LightState().on(false).transitiontime(0);
@@ -191,10 +193,12 @@ export class SleepPattern extends Pattern {
 
 export class PulsePattern extends Pattern {
   private color: Color;
+  private transitionTimeSeconds: number;
 
-  constructor(color: Color, durationSeconds: number) {
+  constructor(color: Color, durationSeconds: number, transitionTimeSeconds: number) {
     super(durationSeconds);
     this.color = color;
+    this.transitionTimeSeconds = transitionTimeSeconds
   }
   isCancelled = false;
   public cancel() {
@@ -206,8 +210,8 @@ export class PulsePattern extends Pattern {
     lightApi: SpookyHueApi
   ): Promise<boolean> {
     this.isCancelled = false;
-    const patternA = new StableColourPattern(this.color, 60, 2, 2);
-    const patternB = new StableColourPattern(this.color, 0, 3, 3);
+    const patternA = new StableColourPattern(this.color, 100, this.transitionTimeSeconds, 0);
+    const patternB = new StableColourPattern(this.color, 0, this.transitionTimeSeconds, 0);
 
     const spookyBulbApi = new SpookyHueBulbPlayer(lightApi);
 
@@ -317,7 +321,7 @@ export class StableColourPattern extends Pattern {
     lightName: string,
     lightApi: SpookyHueApi
   ): Promise<boolean> {
-    const state = createLightState(this.color, this.transitionTimeSeconds);
+    const state = createLightState(this.color, this.transitionTimeSeconds, this.brightness);
     await lightApi.setLightState(lightName, state);
     await sleep(this.durationMs);
     const wasCancelled = this.isCancelled;
