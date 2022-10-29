@@ -1,3 +1,3 @@
 #!/bin/bash
 
-ts-node main.ts "$@"
+ts-node ./src/main.ts "$@"
