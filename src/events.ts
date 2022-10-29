@@ -1,18 +1,15 @@
-export const TRIGGERS = {
-  SENSORS: {
-    RING: {
-      FRONT_GATE: {
-        OPENED: "Sensor-Front Gate-Ring-opened",
-      },
-      FRONT_DOOR: {
-        OPENED: "Sensor-Front Door-Ring-opened",
-      },
+export const Sensors = {
+  RING: {
+    FRONT_GATE: {
+      OPENED: "Sensor-Front Gate-Ring-opened",
     },
-    HUE: {
-      TWO: {
-        DETECTED: "Sensor-2-Hue-detected",
-      },
+    FRONT_DOOR: {
+      OPENED: "Sensor-Front Door-Ring-opened",
     },
   },
-  REPEATING: "REPEATING",
+  HUE: {
+    TWO: {
+      DETECTED: "Sensor-2-Hue-detected",
+    },
+  },
 };

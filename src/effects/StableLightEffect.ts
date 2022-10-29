@@ -1,6 +1,5 @@
 import LightState = require("node-hue-api/lib/model/lightstate/LightState");
 import { Color } from "../lib/config";
-import { Effect } from "../lib/scene/effects/Effect";
 import { LightEffect } from "../lib/scene/effects/LightEffect";
 import { createLightState } from "../lib/hue/light";
 
@@ -15,7 +14,6 @@ export class StableLightEffect extends LightEffect {
     delayInSeconds,
     durationInSeconds = 1,
     transitionInSeconds = 0,
-    childEffects,
   }: StableLightEffect.Params) {
     super({
       name: "StableLightEffect",
@@ -23,7 +21,6 @@ export class StableLightEffect extends LightEffect {
       color,
       delayInSeconds,
       durationInSeconds,
-      childEffects,
     });
     this.on = on;
     this.transitionMs = transitionInSeconds * 1000;
@@ -56,6 +53,5 @@ export namespace StableLightEffect {
     delayInSeconds?: number;
     durationInSeconds?: number;
     transitionInSeconds?: number;
-    childEffects?: Effect[];
   };
 }

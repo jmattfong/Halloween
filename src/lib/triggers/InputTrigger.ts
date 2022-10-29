@@ -6,7 +6,7 @@ const readline = require("readline");
 
 readline.emitKeypressEvents(process.stdin);
 
-process.stdin.on("keypress", (_, key) => {
+process.stdin.on("keypress", (ch, key) => {
   if (key && key.ctrl && key.name === "c") {
     process.exit();
   }
