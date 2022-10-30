@@ -267,7 +267,7 @@ class GuestBathroomScene extends AutoResetRingScene {
         ));
 
 
-        super(ringSensorName, spookyEvents, true);
+        super(ringSensorName, spookyEvents, false);
     }
 }
 
