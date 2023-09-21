@@ -41,7 +41,7 @@ async function main() {
         defaultValue: 8008,
         alias: "p",
         optional: true,
-        description: `The port to run the webserver on. Defaults to (4343)`,
+        description: `The port to run the webserver on. Defaults to (8008)`,
       },
       debug: {
         type: Boolean,

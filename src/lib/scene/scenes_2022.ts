@@ -339,6 +339,9 @@ class PortalToHellScene extends RepeatingScene {
         let events = [
             new Event(lightNames[0], new OnPattern(RELAX, 1), new SleepPattern(repeatTime),
                 new RandomSoundPattern(["resources/David_2022/rooftop_costume_contest.wav", "resources/David_2022/rooftop_feeding.wav", "resources/David_2022/rooftop_werewolf.wav"], new OffPattern(60)),
+                new OnPattern(RELAX, 1)),
+            new Event(lightNames[1], new OnPattern(RELAX, 1), new SleepPattern(repeatTime),
+                new OffPattern(60),
                 new OnPattern(RELAX, 1))
         ];
         for (var i = 1; i < lightNames.length; i++) {
@@ -369,5 +372,5 @@ export const SCENES_2022: { [key: string]: Scene; } = {
     "look_its_waffles": new LookItsWafflesScene("Front Gate", ["living_room_3"]),
     "guest_bathroom": new GuestBathroomScene("Garage Door", ["guest_bathroom_mirror_1", "guest_bathroom_mirror_2"], "guest_bathroom_shower"),
     "guest_bed_clown": new GuestBedClownScene(59, "Half Bathroom", ["guest_bed_1", "guest_bed_2"]),
-    "portal_to_hell": new PortalToHellScene(),
+    "portal_to_hell": new PortalToHellScene("guest_bed_1", "guest_bed_2"),
 };
