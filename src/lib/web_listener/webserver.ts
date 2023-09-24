@@ -5,13 +5,12 @@ const log: CategoryLogger = getLogger("webserver")
 
 export class EventMessage {
     name: string
-    state: string
+    data: number
 
-    constructor(name: string, state: string) {
+    constructor(name: string, data: number) {
         this.name = name;
-        this.state = state;
+        this.data = data;
     }
-
 }
 
 export class WebServer {

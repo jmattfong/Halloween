@@ -5,7 +5,6 @@ import { WebServer } from "./lib/web_listener/webserver";
 import { parse } from "ts-command-line-args";
 import { getLogger, setLogLevel } from "./lib/logging";
 import { CategoryLogger, LogLevel } from "typescript-logging";
-import { SCENES_2022 } from "./lib/scene/scenes_2022";
 import RingSensor from "./lib/triggers/sensors/RingSensor";
 import { scenes2022 } from "./collections/2022";
 import { InputTrigger } from "./lib/triggers/InputTrigger";
@@ -13,8 +12,10 @@ import { util_scenes } from "./collections/util";
 import { CONFIG } from "./lib/config";
 import { HueSensor } from "./lib/triggers/sensors/HueSensor";
 
+import { SCENES_2023 } from "./lib/scene/scenes_2023";
+const SCENES = SCENES_2023;
+
 const log: CategoryLogger = getLogger("main");
-const SCENES = SCENES_2022;
 
 // For details about adding new args, see https://www.npmjs.com/package/ts-command-line-args
 interface IHalloweenServerArgs {
@@ -38,10 +39,10 @@ async function main() {
       },
       webserverPort: {
         type: Number,
-        defaultValue: 8008,
+        defaultValue: 800,
         alias: "p",
         optional: true,
-        description: `The port to run the webserver on. Defaults to (8008)`,
+        description: `The port to run the webserver on. Defaults to (800)`,
       },
       debug: {
         type: Boolean,

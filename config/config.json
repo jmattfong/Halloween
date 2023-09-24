@@ -1,5 +1,34 @@
 {
     "secretPath": "./secrets/secrets.json",
+    "locations": [
+        {
+            "name": "main",
+            "port": 800,
+            "scene": "costume_contest",
+            "global": true,
+            "sensor": "ring_Half Bathroom"
+        },
+        {
+            "name": "entryway",
+            "port": 8008,
+            "scene": "lightning",
+            "invert": true,
+            "sensor": "ring_Front Door"
+        },
+        {
+            "name": "downstairs_bath",
+            "port": 42,
+            "scenes": ""
+        },
+        {
+            "name": "",
+            "port": 420
+        },
+        {
+            "name": "",
+            "port": 6969
+        }
+    ],
     "contactSensors": [
         "Front Gate",
         "Front Door",
