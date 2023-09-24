@@ -10,7 +10,7 @@ import { Event } from "./events";
 import { Scene, SplitPartScene, MultiPartScene, AutoResetRingScene, RepeatingScene } from './scenes';
 import { INTRO_VIDEO_2022 } from '../videos';
 import { CONFIG, RED, SOFT_RED, RELAX, CONCENTRATE, ENERGIZE, DIMMED, NIGHTLIGHT, ORANGE, BLUE } from '../config';
-import { EventMessage, WebServer } from "../web_listener/webserver";
+import { EventMessage, OrchestratorWebServer } from "../web_listener/webserver";
 import { RingDeviceData } from "ring-client-api";
 
 const log: CategoryLogger = getLogger("scenes_2023");
@@ -126,8 +126,8 @@ export class MainListeningServer {
     async start(
         ringFunction: () => Promise<RingEnhancedSpookinatorV2>,
         hueFunction: () => Promise<SpookyHueApi>,
-        webServer: WebServer
-      ): Promise<void> {
+        webServer: OrchestratorWebServer
+    ): Promise<void> {
         var ring = await ringFunction();
         const ringSensors = await ring.getSensors();
         ringSensors.forEach((ringSensor) => {
@@ -143,7 +143,8 @@ export class MainListeningServer {
                             name: ring_id,
                             data: data.faulted ? 1 : 0,
                         }),
-                        headers: {'Content-Type': 'application/json; charset=UTF-8'} }
+                        headers: { 'Content-Type': 'application/json; charset=UTF-8' }
+                    }
                     );
                 }
             };
@@ -166,7 +167,8 @@ export class MainListeningServer {
                             name: hue_id,
                             data: data.getPresence() ? 1 : 0,
                         }),
-                        headers: {'Content-Type': 'application/json; charset=UTF-8'} }
+                        headers: { 'Content-Type': 'application/json; charset=UTF-8' }
+                    }
                     );
                 }
             };

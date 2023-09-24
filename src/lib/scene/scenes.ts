@@ -3,7 +3,7 @@ import { HueSensorUpdate } from "../hue/sensor";
 import { getLogger } from "../logging";
 import { CategoryLogger } from "typescript-logging";
 import { RingEnhancedSpookinatorV2 } from "../ring";
-import { EventMessage, WebServer } from "../web_listener/webserver";
+import { EventMessage, OrchestratorWebServer } from "../web_listener/webserver";
 import { SpookyHueApi } from "../hue/hue";
 import { SpookyHueBulbPlayer } from "../hue/spooky_bulb_player";
 import { Event } from "./events";
@@ -27,13 +27,13 @@ export abstract class Scene {
   abstract setup(
     ringFunction: () => Promise<RingEnhancedSpookinatorV2>,
     hueFunction: () => Promise<SpookyHueApi>,
-    webServer: WebServer
+    webServer: OrchestratorWebServer
   ): Promise<void>;
 
   async start(
     ringFunction: () => Promise<RingEnhancedSpookinatorV2>,
     hueFunction: () => Promise<SpookyHueApi>,
-    webServer: WebServer
+    webServer: OrchestratorWebServer
   ): Promise<void> {
     await this.setup(ringFunction, hueFunction, webServer);
 
