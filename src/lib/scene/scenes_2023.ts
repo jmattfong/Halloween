@@ -110,13 +110,13 @@ class TestRingScene extends Scene {
 }
 
 class WebServerScene extends Scene {
-    async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>,  webServer: WebServer): Promise<void> {
-        
+    async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>, webServer: OrchestratorWebServer): Promise<void> {
+
     }
 }
 
 class RingCallbackScene extends WebServerScene {
-    
+
 }
 
 export class MainListeningServer {
@@ -177,13 +177,13 @@ export class MainListeningServer {
             hueSensor.start();
         })
 
-        webServer.addCallback("register",  (event: EventMessage) => {
+        webServer.addCallback("register", (event: EventMessage) => {
             let sensor_id: string = event.name;
             let port: number = event.data;
 
             this.callbacks.set(sensor_id, port);
-        });    
-      }
+        });
+    }
 }
 
 export const SCENES_2023: { [key: string]: Scene; } = {

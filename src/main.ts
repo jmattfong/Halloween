@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { RingEnhancedSpookinatorV2 } from "./lib/ring";
 import { SpookyHueApi } from "./lib/hue/hue";
-import { WebServer } from "./lib/web_listener/webserver";
+import { OrchestratorWebServer } from "./lib/web_listener/webserver";
 import { parse } from "ts-command-line-args";
 import { getLogger, setLogLevel } from "./lib/logging";
 import { CategoryLogger, LogLevel } from "typescript-logging";
@@ -73,7 +73,7 @@ async function main() {
 
   log.info(`input args: ${JSON.stringify(args)}\n`);
 
-  const server = new WebServer(args.webserverPort);
+  const server = new OrchestratorWebServer(args.webserverPort, (clientUri, sensors) => { });
   server.listen();
 
   var ringSpook: RingEnhancedSpookinatorV2;
