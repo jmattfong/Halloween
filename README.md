@@ -15,6 +15,11 @@ npm install -g ts-node
 npm install -g --unsafe-perm homebridge homebridge-config-ui-x
 ```
 
+- Raspberry Pi setup:
+```
+sudo apt-get install libavahi-compat-libdnssd-dev
+```
+
 - npm dependencies:
 
 ```
