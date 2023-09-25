@@ -3,12 +3,14 @@ import { CategoryLogger } from "typescript-logging";
 import { getLogger } from "../logging";
 const log: CategoryLogger = getLogger("webserver")
 
-export class RegisterMessage {
+export class RegisterEvent {
     ip: string
     port: number
     sensors: string[]
 
     constructor(ip: string, port: number, sensors: string[]) {
+        this.ip = ip;
+        this.port = port;
         this.sensors = sensors;
     }
 }
@@ -18,7 +20,7 @@ export enum SensorType {
     RING = "ring",
 }
 
-export class SensorUpdateMessage {
+export class SensorUpdateEvent {
     sensorId: string
     sensorType: SensorType
     data: boolean
@@ -47,9 +49,9 @@ export class OrchestratorWebServer {
             log.debug(`received ${req.method} @ ${req.url}`);
 
             if (req.method == "POST" && req.url == "/register") {
-                let registerEvent: RegisterMessage;
+                let registerEvent: RegisterEvent;
                 try {
-                    registerEvent = await getJSONDataFromRequestStream<RegisterMessage>(req);
+                    registerEvent = await getJSONDataFromRequestStream<RegisterEvent>(req);
                 } catch (e) {
                     log.info(`error processing the input: ${e}`);
                     res.statusCode = 400;
@@ -66,6 +68,9 @@ export class OrchestratorWebServer {
                 return
             }
 
+            res.statusCode = 404;
+            res.end("path not found");
+            return;
         }
 
         this.server = createServer(handler);
@@ -109,20 +114,20 @@ function getJSONDataFromRequestStream<T>(request: IncomingMessage): Promise<T> {
 export class ClientWebServer {
     private port: number
     private server: Server
-    private eventCallbackMap: Map<string, Array<(event: SensorUpdateMessage) => void>>
+    private eventCallback: (sensorId: string, sensorType: SensorType, data: boolean) => void
 
-    constructor(port: number) {
+    constructor(port: number, eventCallback: (sensorId: string, sensorType: SensorType, data: boolean) => void) {
         this.port = port;
-        this.eventCallbackMap = new Map();
+        this.eventCallback = eventCallback;
 
         let handler = async (req: IncomingMessage, res: ServerResponse) => {
 
             log.debug(`received ${req.method} @ ${req.url}`);
 
             if (req.method == "POST" && req.url == "/event") {
-                let sensorUpdate: SensorUpdateMessage;
+                let sensorUpdate: SensorUpdateEvent;
                 try {
-                    sensorUpdate = await getJSONDataFromRequestStream<SensorUpdateMessage>(req);
+                    sensorUpdate = await getJSONDataFromRequestStream<SensorUpdateEvent>(req);
                 } catch (e) {
                     log.info(`error processing the input: ${e}`);
                     res.statusCode = 400;
@@ -136,39 +141,20 @@ export class ClientWebServer {
                     return;
                 }
 
-                let callbacks: Array<(sensorUpdate: SensorUpdateMessage) => void> | undefined = this.eventCallbackMap.get(sensorUpdate.sensorId);
-
-                if (callbacks == undefined) {
-                    log.info(`no callbacks for ${sensorUpdate.sensorId}`);
-                    res.end(`no callbacks for ${sensorUpdate.sensorId}`);
-                    return;
-                }
-
-                callbacks.forEach(callback => callback(sensorUpdate));
+                this.eventCallback(sensorUpdate.sensorId, sensorUpdate.sensorType, sensorUpdate.data);
 
                 log.debug(`received message: ${req.method} -> ${JSON.stringify(sensorUpdate)}`);
                 res.statusCode = 200;
                 res.end("OK");
-            } else {
-                res.statusCode = 404;
-                res.end("not found");
+                return;
             }
+
+            res.statusCode = 404;
+            res.end("not found");
+            return;
         }
 
         this.server = createServer(handler);
-    }
-
-    addCallback(name: string, callback: (event: SensorUpdateMessage) => void) {
-
-        let callbacksForName = this.eventCallbackMap.get(name);
-
-        if (!callbacksForName) {
-            callbacksForName = [callback];
-        } else {
-            callbacksForName.push(callback);
-        }
-
-        this.eventCallbackMap.set(name, callbacksForName);
     }
 
     public listen() {
@@ -181,4 +167,18 @@ export class ClientWebServer {
         this.server.close();
     }
 
+}
+
+export function getIPAddress() {
+    var interfaces = require('os').networkInterfaces();
+    for (var devName in interfaces) {
+        var iface = interfaces[devName];
+
+        for (var i = 0; i < iface.length; i++) {
+            var alias = iface[i];
+            if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal)
+                return alias.address;
+        }
+    }
+    return '0.0.0.0';
 }

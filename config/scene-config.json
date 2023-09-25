@@ -1,0 +1,10 @@
+{
+    "version": "1.0.0",
+    "ring": {
+        "59": "get_light",
+        "9": "get_light"
+    },
+    "hue": {
+
+    }
+}

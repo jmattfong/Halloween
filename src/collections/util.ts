@@ -2,7 +2,7 @@ import { CategoryLogger } from "typescript-logging";
 import { getLogger } from "../lib/logging";
 import { CLIEffect } from "../effects/CLIEffect";
 import Scene from "../lib/scene/Scene";
-import { hueApi } from "../main";
+import { hueApi } from "../main-client";
 
 const log: CategoryLogger = getLogger("util_scenes");
 

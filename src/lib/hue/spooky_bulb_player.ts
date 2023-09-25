@@ -7,7 +7,7 @@ import { CategoryLogger } from 'typescript-logging';
 const log: CategoryLogger = getLogger("spooky-bulb-player");
 
 export class SpookyHueBulbPlayer {
-    private api: SpookyHueApi;
+    api: SpookyHueApi;
     private currPatternMap: Map<string, Pattern>;
 
     constructor(api: SpookyHueApi) {

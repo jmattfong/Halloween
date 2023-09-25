@@ -1,17 +1,13 @@
-import { HueSensorUpdate, HueSensor } from '../hue/sensor';
-import { Chromecaster } from '../chromecast';
 import { getLogger } from '../logging';
 import { CategoryLogger } from 'typescript-logging';
 import { RingEnhancedSpookinatorV2 } from '../ring';
 import { SpookyHueApi } from '../hue/hue';
 import { SpookyHueBulbPlayer } from '../hue/spooky_bulb_player';
-import { SoundPattern, RandomSoundPattern, FlickerPattern, OffPattern, StableColourPattern, SleepPattern, OnPattern, Pattern, PulsePattern } from './patterns';
+import { OnPattern, Pattern } from './patterns';
 import { Event } from "./events";
-import { Scene, SplitPartScene, MultiPartScene, AutoResetRingScene, RepeatingScene } from './scenes';
-import { INTRO_VIDEO_2022 } from '../videos';
-import { CONFIG, RED, SOFT_RED, RELAX, CONCENTRATE, ENERGIZE, DIMMED, NIGHTLIGHT, ORANGE, BLUE } from '../config';
-import { EventMessage, OrchestratorWebServer } from "../web_listener/webserver";
-import { RingDeviceData } from "ring-client-api";
+import { Scene, MultiPartScene } from './scenes';
+import { RED, RELAX } from '../config';
+import { SensorType } from "../web_listener/webserver";
 
 const log: CategoryLogger = getLogger("scenes_2023");
 
@@ -19,9 +15,9 @@ const log: CategoryLogger = getLogger("scenes_2023");
  * List all lights that are on
  */
 class ListOnLightsScene extends Scene {
-    async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
-        const hue: SpookyHueApi = await hueFunction();
-        const allLights = await hue.getLights();
+    async run(spookyHueBulbPlayer: SpookyHueBulbPlayer, sensorType: SensorType, sensorTriggedOn: boolean): Promise<void> {
+
+        const allLights = await spookyHueBulbPlayer.api.getLights();
 
         let lights: Object[] = [];
 
@@ -53,9 +49,8 @@ class GetLight extends Scene {
         this.lightIdToGet = lightIdToGet;
     }
 
-    async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
-        const hue: SpookyHueApi = await hueFunction();
-        const allLights = await hue.getLights();
+    async run(spookyHueBulbPlayer: SpookyHueBulbPlayer, sensorType: SensorType, sensorTriggedOn: boolean): Promise<void> {
+        const allLights = await spookyHueBulbPlayer.api.getLights();
 
         for (let i = 0; i < allLights.length; i++) {
             let light = allLights[i];
@@ -102,95 +97,11 @@ class FindBulb extends MultiPartScene {
     }
 }
 
-class TestRingScene extends Scene {
-    async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
-        const ring: RingEnhancedSpookinatorV2 = await _ringFunction();
-        ring.getSensors();
-    }
-}
-
-class WebServerScene extends Scene {
-    async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>, webServer: OrchestratorWebServer): Promise<void> {
-
-    }
-}
-
-class RingCallbackScene extends WebServerScene {
-
-}
-
-export class MainListeningServer {
-
-    private callbacks: Map<string, number> = new Map();
-
-    async start(
-        ringFunction: () => Promise<RingEnhancedSpookinatorV2>,
-        hueFunction: () => Promise<SpookyHueApi>,
-        webServer: OrchestratorWebServer
-    ): Promise<void> {
-        var ring = await ringFunction();
-        const ringSensors = await ring.getSensors();
-        ringSensors.forEach((ringSensor) => {
-            var ringCallback = (data: RingDeviceData) => {
-                let ring_id = `ring_${data.name}`;
-                log.info(`callback called on ${ring_id}`);
-                // call proper webserver
-                let callbackPort = this.callbacks.get(ring_id);
-                if (callbackPort) {
-                    fetch(`http://localhost:${callbackPort}/event`, {
-                        method: 'POST',
-                        body: JSON.stringify({
-                            name: ring_id,
-                            data: data.faulted ? 1 : 0,
-                        }),
-                        headers: { 'Content-Type': 'application/json; charset=UTF-8' }
-                    }
-                    );
-                }
-            };
-            ring.addSensorCallback(ringSensor, ringCallback);
-        });
-
-        var spookhue = await hueFunction();
-        const hueSensors = await spookhue.getSensors();
-        hueSensors.forEach((hueSensor) => {
-            let hueSensorId = hueSensor.getId();
-            var hueCallback = (data: HueSensorUpdate) => {
-                let hue_id = `ring_${hueSensor.getId()}`;
-                log.info(`callback called on ${hueSensorId} => ${data.getPresence()}`);
-                // TODO call proper webserver
-                let callbackPort = this.callbacks.get(hue_id);
-                if (callbackPort) {
-                    fetch(`http://localhost:${callbackPort}/event`, {
-                        method: 'POST',
-                        body: JSON.stringify({
-                            name: hue_id,
-                            data: data.getPresence() ? 1 : 0,
-                        }),
-                        headers: { 'Content-Type': 'application/json; charset=UTF-8' }
-                    }
-                    );
-                }
-            };
-
-            hueSensor.addCallback(hueCallback);
-            hueSensor.start();
-        })
-
-        webServer.addCallback("register", (event: EventMessage) => {
-            let sensor_id: string = event.name;
-            let port: number = event.data;
-
-            this.callbacks.set(sensor_id, port);
-        });
-    }
-}
-
 export const SCENES_2023: { [key: string]: Scene; } = {
     // Test and Utility scenes
     "list": new ListOnLightsScene(),
     "get_light": new GetLight(21), // Change this to get the state of different lights by ID
-    "test_ring": new TestRingScene(),
+    // "test_ring": new TestRingScene(),
     "find_bulb": new FindBulb("Waffles' Room", ["down_bath_1", "down_bath_2", "down_bath_3"]),
     // Scenes for the party
 

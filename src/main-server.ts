@@ -8,6 +8,7 @@ import { CategoryLogger, LogLevel } from "typescript-logging";
 import { CONFIG } from "./lib/config";
 import { SensorType, OrchestratorWebServer } from "./lib/web_listener/webserver";
 import { RingDeviceData, RingDevice } from "ring-client-api";
+import { sendSensorEvent } from './lib/web_listener/requests';
 
 
 const log: CategoryLogger = getLogger("main");
@@ -130,23 +131,7 @@ async function setupRingListener(registeredClients: Map<string, string[]>, ringS
     registeredClients.get(sensorId)?.forEach(async (clientUri: string) => {
       log.info(`sending ring callback to client @ ${clientUri}`)
       try {
-        const result = await fetch(`${clientUri}/event`, {
-          method: 'POST',
-          body: JSON.stringify({
-            sensorId: sensorId,
-            sensorType: SensorType.HUE,
-            data: data.faulted ? 1 : 0,
-          }),
-          headers: { 'Content-Type': 'application/json; charset=UTF-8' }
-        }
-        );
-
-        log.debug(`result of sending ring callback to client @ ${clientUri}: ${result}`)
-        if (result.ok) {
-          log.info("ring event sent successfully")
-        } else {
-          log.warn(`error sending ring callback to client @ ${clientUri}: ${result}`)
-        }
+        sendSensorEvent(clientUri, sensorId, SensorType.RING, data.faulted);
       } catch (e) {
         log.warn(`error sending ring callback to client @ ${clientUri}: ${e}`)
       }
@@ -170,24 +155,7 @@ async function setupHueListeners(registeredClients: Map<string, string[]>, spook
       registeredClients.get(`${sensorId}`)?.forEach(async (clientUri: string) => {
         log.info(`sending hue callback to client @ ${clientUri}`)
         try {
-          const result = await fetch(`${clientUri}/event`, {
-            method: 'POST',
-            body: JSON.stringify({
-              sensorId: sensorId,
-              sensorType: SensorType.HUE,
-              data: update.getPresence() ? 1 : 0,
-            }),
-            headers: { 'Content-Type': 'application/json; charset=UTF-8' }
-          }
-          );
-
-          log.debug(`result of sending hue callback to client @ ${clientUri}: ${result}`)
-          if (result.ok) {
-            log.info("hue event sent successfully")
-          } else {
-            log.warn(`error sending hue callback to client @ ${clientUri}: ${result}`)
-          }
-
+          sendSensorEvent(clientUri, `${sensorId}`, SensorType.HUE, update.getPresence());
         } catch (e) {
           log.warn(`error sending hue callback to client @ ${clientUri}: ${e}`)
         }

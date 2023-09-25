@@ -1,10 +1,6 @@
-import { RingDeviceData } from "ring-client-api";
-import { HueSensorUpdate } from "../hue/sensor";
 import { getLogger } from "../logging";
 import { CategoryLogger } from "typescript-logging";
-import { RingEnhancedSpookinatorV2 } from "../ring";
-import { EventMessage, OrchestratorWebServer } from "../web_listener/webserver";
-import { SpookyHueApi } from "../hue/hue";
+import { SensorType } from "../web_listener/webserver";
 import { SpookyHueBulbPlayer } from "../hue/spooky_bulb_player";
 import { Event } from "./events";
 
@@ -14,55 +10,7 @@ const log: CategoryLogger = getLogger("scenes");
  * A scene is something that uses a ring or hue callback to change some lights, display something, or play audio
  */
 export abstract class Scene {
-  ringCallback: [string, (data: RingDeviceData) => void] | null;
-  hueCallback: [number, (update: HueSensorUpdate) => void] | null;
-  webServerCallback: [string, (event: EventMessage) => void] | null;
-
-  constructor() {
-    this.ringCallback = null;
-    this.hueCallback = null;
-    this.webServerCallback = null;
-  }
-
-  abstract setup(
-    ringFunction: () => Promise<RingEnhancedSpookinatorV2>,
-    hueFunction: () => Promise<SpookyHueApi>,
-    webServer: OrchestratorWebServer
-  ): Promise<void>;
-
-  async start(
-    ringFunction: () => Promise<RingEnhancedSpookinatorV2>,
-    hueFunction: () => Promise<SpookyHueApi>,
-    webServer: OrchestratorWebServer
-  ): Promise<void> {
-    await this.setup(ringFunction, hueFunction, webServer);
-
-    if (this.ringCallback != null) {
-      var [ringId, ringCallback] = this.ringCallback;
-      var ring = await ringFunction();
-      const sensors = await ring.getSensors();
-      sensors.forEach((s) => {
-        if (ringId == s.name) {
-          ring.addSensorCallback(s, ringCallback);
-        }
-      });
-    }
-    if (this.hueCallback != null) {
-      var [hueId, hueCallback] = this.hueCallback;
-      var spookhue = await hueFunction();
-
-      const hueWalkwaySensor = await spookhue.getSensor(hueId);
-      log.info(`found hue sensor: ${hueWalkwaySensor.toString()}`);
-
-      hueWalkwaySensor.addCallback(hueCallback);
-      hueWalkwaySensor.start();
-    }
-
-    if (this.webServerCallback != null) {
-      var [eventName, callback] = this.webServerCallback;
-      webServer.addCallback(eventName, callback);
-    }
-  }
+  abstract run(spookyHueBulbPlayer: SpookyHueBulbPlayer, sensorType: SensorType, sensorTriggedOn: boolean): Promise<void>;
 }
 
 /**
@@ -87,28 +35,17 @@ export class AutoResetRingScene extends Scene {
     this.spookOnFaulted = spookOnFaulted;
   }
 
-  async setup(
-    _ringFunction: () => Promise<RingEnhancedSpookinatorV2>,
-    hueFunction: () => Promise<SpookyHueApi>
-  ): Promise<void> {
-    const spookyHueBulbPlayer = new SpookyHueBulbPlayer(await hueFunction());
+  async run(spookyHueBulbPlayer: SpookyHueBulbPlayer, sensorType: SensorType, sensorTriggedOn: boolean): Promise<void> {
+    // if the data.faulted is true, that means that the door is open
+    if (
+      (sensorTriggedOn && this.spookOnFaulted) ||
+      (!sensorTriggedOn && !this.spookOnFaulted)
+    ) {
+      this.spookyEvents.forEach((event) => {
+        spookyHueBulbPlayer.playPattern(event);
+      });
+    }
 
-    this.ringCallback = [
-      this.ringSensorName,
-      (data: RingDeviceData) => {
-        log.info(`callback called on ${data.name}`);
-
-        // if the data.faulted is true, that means that the door is open
-        if (
-          (data.faulted && this.spookOnFaulted) ||
-          (!data.faulted && !this.spookOnFaulted)
-        ) {
-          this.spookyEvents.forEach((event) => {
-            spookyHueBulbPlayer.playPattern(event);
-          });
-        }
-      },
-    ];
   }
 }
 
@@ -134,61 +71,29 @@ export class MultiPartScene extends Scene {
     this.spookOnFaulted = spookOnFaulted;
   }
 
-  async setup(
-    _ringFunction: () => Promise<RingEnhancedSpookinatorV2>,
-    hueFunction: () => Promise<SpookyHueApi>
-  ): Promise<void> {
-    const spookyHueBulbPlayer = new SpookyHueBulbPlayer(await hueFunction());
+  async run(spookyHueBulbPlayer: SpookyHueBulbPlayer, sensorType: SensorType, sensorTriggedOn: boolean): Promise<void> {
 
-    this.ringCallback = [
-      this.ringSensorName,
-      (data: RingDeviceData) => {
-        log.info(`callback called on ${data.name}`);
-
-        // if the data.faulted is true, that means that the door is open
-        if (data.faulted) {
-          if (this.spookOnFaulted) {
-            this.spookyEvents.forEach((event) => {
-              spookyHueBulbPlayer.playPattern(event);
-            });
-          } else {
-            this.unSpookyEvents.forEach((event) => {
-              spookyHueBulbPlayer.playPattern(event);
-            });
-          }
-        } else {
-          if (this.spookOnFaulted) {
-            this.unSpookyEvents.forEach((event) => {
-              spookyHueBulbPlayer.playPattern(event);
-            });
-          } else {
-            this.spookyEvents.forEach((event) => {
-              spookyHueBulbPlayer.playPattern(event);
-            });
-          }
-        }
-      },
-    ];
-
-    if (this.hueSensorId) {
-      this.hueCallback = [
-        this.hueSensorId,
-        (data: HueSensorUpdate) => {
-          log.info(
-            `callback called on ${this.hueSensorId} => ${data.getPresence()}`
-          );
-
-          if (data.getPresence()) {
-            this.spookyEvents.forEach((event) => {
-              spookyHueBulbPlayer.playPattern(event);
-            });
-          } else {
-            this.unSpookyEvents.forEach((event) => {
-              spookyHueBulbPlayer.playPattern(event);
-            });
-          }
-        },
-      ];
+    // if the data.faulted is true, that means that the door is open
+    if (sensorTriggedOn) {
+      if (this.spookOnFaulted) {
+        this.spookyEvents.forEach((event) => {
+          spookyHueBulbPlayer.playPattern(event);
+        });
+      } else {
+        this.unSpookyEvents.forEach((event) => {
+          spookyHueBulbPlayer.playPattern(event);
+        });
+      }
+    } else {
+      if (this.spookOnFaulted) {
+        this.unSpookyEvents.forEach((event) => {
+          spookyHueBulbPlayer.playPattern(event);
+        });
+      } else {
+        this.spookyEvents.forEach((event) => {
+          spookyHueBulbPlayer.playPattern(event);
+        });
+      }
     }
   }
 }
@@ -217,76 +122,56 @@ export class SplitPartScene extends Scene {
     this.isRingRunning = false;
   }
 
-  async setup(
-    _ringFunction: () => Promise<RingEnhancedSpookinatorV2>,
-    hueFunction: () => Promise<SpookyHueApi>
-  ): Promise<void> {
-    const spookyHueBulbPlayer = new SpookyHueBulbPlayer(await hueFunction());
-
-
-    this.ringCallback = [
-      this.ringSensorName,
-      async (data: RingDeviceData) => {
-        log.info(`callback called on ${data.name}`);
-
-        // if the data.faulted is true, that means that the door is open
-        if (data.faulted) {
-          log.info("door is open");
-          if (this.spookOnFaulted) {
-            log.info("canceling spooky hue events");
-            this.spookyHueEvents.forEach((event) => {
-              event.cancel();
-            });
-            this.spookyRingEvents.forEach((event) => {
-              spookyHueBulbPlayer.playPattern(event);
-            });
-            // log.info("canceling spooky ring events");
-            // this.spookyRingEvents.forEach((event) => {
-            //     event.cancel();
-            // });
-          }
-        } else {
-          if (!this.spookOnFaulted) {
-            log.info("canceling spooky hue events2");
-            this.spookyHueEvents.forEach((event) => {
-              event.cancel();
-            });
-            this.isRingRunning = true;
-            spookyHueBulbPlayer.playPattern(this.spookyRingEvents[0]).then(() => {
-              this.isRingRunning = false;
-            });
-            // this.spookyRingEvents.forEach(async event => {
-            //   await spookyHueBulbPlayer.playPattern(event);
-            // });
-          }
+  async run(spookyHueBulbPlayer: SpookyHueBulbPlayer, sensorType: SensorType, sensorTriggedOn: boolean): Promise<void> {
+    if (sensorType == SensorType.RING) {
+      // if the event data is true, that means that the door is open
+      if (sensorTriggedOn) {
+        log.info("door is open");
+        if (this.spookOnFaulted) {
+          log.info("canceling spooky hue events");
+          this.spookyHueEvents.forEach((event) => {
+            event.cancel();
+          });
+          this.spookyRingEvents.forEach((event) => {
+            spookyHueBulbPlayer.playPattern(event);
+          });
+          // log.info("canceling spooky ring events");
+          // this.spookyRingEvents.forEach((event) => {
+          //     event.cancel();
+          // });
+        }
+      } else {
+        if (!this.spookOnFaulted) {
+          log.info("canceling spooky hue events2");
+          this.spookyHueEvents.forEach((event) => {
+            event.cancel();
+          });
+          this.isRingRunning = true;
+          spookyHueBulbPlayer.playPattern(this.spookyRingEvents[0]).then(() => {
+            this.isRingRunning = false;
+          });
+          // this.spookyRingEvents.forEach(async event => {
+          //   await spookyHueBulbPlayer.playPattern(event);
+          // });
         }
       }
-    ];
+    }
 
-    if (this.hueSensorId) {
-      this.hueCallback = [
-        this.hueSensorId,
-        (data: HueSensorUpdate) => {
-          log.info(
-            `callback called on ${this.hueSensorId} => ${data.getPresence()}`
-          );
+    if (sensorType == SensorType.HUE) {
+      if (sensorTriggedOn) {
+        // log.info("canceling spooky hue events3");
+        // this.spookyRingEvents.forEach((event) => {
+        //   event.cancel();
+        // });
 
-          if (data.getPresence()) {
-            // log.info("canceling spooky hue events3");
-            // this.spookyRingEvents.forEach((event) => {
-            //   event.cancel();
-            // });
+        if (this.isRingRunning) {
+          return;
+        }
 
-            if (this.isRingRunning) {
-              return;
-            }
-
-            this.spookyHueEvents.forEach((event) => {
-              spookyHueBulbPlayer.playPattern(event);
-            });
-          }
-        },
-      ];
+        this.spookyHueEvents.forEach((event) => {
+          spookyHueBulbPlayer.playPattern(event);
+        });
+      }
     }
   }
 }
@@ -307,36 +192,24 @@ class RandomMultiScene extends Scene {
     this.unSpookyEvents = unSpookyEvents;
   }
 
-  async setup(
-    _ringFunction: () => Promise<RingEnhancedSpookinatorV2>,
-    hueFunction: () => Promise<SpookyHueApi>
-  ): Promise<void> {
-    const spookyHueBulbPlayer = new SpookyHueBulbPlayer(await hueFunction());
+  async run(spookyHueBulbPlayer: SpookyHueBulbPlayer, sensorType: SensorType, sensorTriggedOn: boolean): Promise<void> {
+    // if the data.faulted is true, that means that the door is open and we should resort to the
+    // unspooky base pattern
+    // otherwise, pick a random pattern and play it!
+    let patternWorkflow: Event[];
+    if (sensorTriggedOn) {
+      patternWorkflow = this.unSpookyEvents;
+    } else {
+      const patternIndex = Math.floor(
+        Math.random() * this.spookyEventChoices.length
+      );
+      log.debug(`choosing pattern #${patternIndex}`);
+      patternWorkflow = this.spookyEventChoices[patternIndex];
+    }
 
-    this.ringCallback = [
-      this.ringSensorName,
-      (data: RingDeviceData) => {
-        log.info(`callback called on ${data.name}`);
-
-        // if the data.faulted is true, that means that the door is open and we should resort to the
-        // unspooky base pattern
-        // otherwise, pick a random pattern and play it!
-        let patternWorkflow: Event[];
-        if (data.faulted) {
-          patternWorkflow = this.unSpookyEvents;
-        } else {
-          const patternIndex = Math.floor(
-            Math.random() * this.spookyEventChoices.length
-          );
-          log.debug(`choosing pattern #${patternIndex}`);
-          patternWorkflow = this.spookyEventChoices[patternIndex];
-        }
-
-        patternWorkflow.forEach((event) => {
-          spookyHueBulbPlayer.playPattern(event);
-        });
-      },
-    ];
+    patternWorkflow.forEach((event) => {
+      spookyHueBulbPlayer.playPattern(event);
+    });
   }
 }
 
@@ -351,11 +224,7 @@ export abstract class RepeatingScene extends Scene {
     this.mainLightNames = mainLightNames;
   }
 
-  async setup(
-    _ringFunction: () => Promise<RingEnhancedSpookinatorV2>,
-    hueFunction: () => Promise<SpookyHueApi>
-  ): Promise<void> {
-    const spookyHueBulbPlayer = new SpookyHueBulbPlayer(await hueFunction());
+  async run(spookyHueBulbPlayer: SpookyHueBulbPlayer, sensorType: SensorType, sensorTriggedOn: boolean): Promise<void> {
     // Setup infinitely repeating light patterns
     this.getRepeatingEvents(...this.mainLightNames).forEach((event) => {
       spookyHueBulbPlayer.playRepeatingEvent(event);

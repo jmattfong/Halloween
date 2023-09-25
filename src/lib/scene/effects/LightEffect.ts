@@ -1,4 +1,4 @@
-import { hueApi } from "../../../main";
+import { HueApi } from "node-hue-api";
 import { Color } from "../../config";
 import { Effect } from "./Effect";
 
@@ -16,7 +16,7 @@ export abstract class LightEffect extends Effect {
   readonly lightNames: string[];
   readonly color: Color;
   readonly durationInSeconds: number;
-  protected readonly lightApi = hueApi;
+  protected readonly lightApi = HueApi;
 
   constructor({
     type = "LightEffect",

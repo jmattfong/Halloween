@@ -2,14 +2,13 @@ import { HueSensorUpdate, HueSensor } from '../hue/sensor';
 import { Chromecaster } from '../chromecast';
 import { getLogger } from '../logging';
 import { CategoryLogger } from 'typescript-logging';
-import { RingEnhancedSpookinatorV2 } from '../ring';
-import { SpookyHueApi } from '../hue/hue';
 import { SpookyHueBulbPlayer } from '../hue/spooky_bulb_player';
-import { SoundPattern, RandomSoundPattern, FlickerPattern, OffPattern, StableColourPattern, SleepPattern, OnPattern, Pattern, PulsePattern } from './patterns';
+import { SoundPattern, RandomSoundPattern, FlickerPattern, OffPattern, SleepPattern, OnPattern, Pattern, PulsePattern } from './patterns';
 import { Event } from "./events";
 import { Scene, SplitPartScene, MultiPartScene, AutoResetRingScene, RepeatingScene } from './scenes';
 import { INTRO_VIDEO_2022 } from '../videos';
-import { CONFIG, RED, SOFT_RED, RELAX, CONCENTRATE, ENERGIZE, DIMMED, NIGHTLIGHT, ORANGE, BLUE } from '../config';
+import { RED, SOFT_RED, RELAX, ORANGE, BLUE } from '../config';
+import { SensorType } from '../web_listener/webserver';
 
 const log: CategoryLogger = getLogger("scene_2022");
 
@@ -17,9 +16,8 @@ const log: CategoryLogger = getLogger("scene_2022");
  * List all lights that are on
  */
 class ListOnLightsScene extends Scene {
-    async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
-        const hue: SpookyHueApi = await hueFunction();
-        const allLights = await hue.getLights();
+    async run(spookyHueBulbPlayer: SpookyHueBulbPlayer, sensorType: SensorType, sensorTriggedOn: boolean): Promise<void> {
+        const allLights = await spookyHueBulbPlayer.api.getLights();
 
         let lights: Object[] = [];
 
@@ -51,9 +49,8 @@ class GetLight extends Scene {
         this.lightIdToGet = lightIdToGet;
     }
 
-    async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
-        const hue: SpookyHueApi = await hueFunction();
-        const allLights = await hue.getLights();
+    async run(spookyHueBulbPlayer: SpookyHueBulbPlayer, sensorType: SensorType, sensorTriggedOn: boolean): Promise<void> {
+        const allLights = await spookyHueBulbPlayer.api.getLights();
 
         for (let i = 0; i < allLights.length; i++) {
             let light = allLights[i];
@@ -100,13 +97,6 @@ class FindBulb extends MultiPartScene {
     }
 }
 
-class TestRingScene extends Scene {
-    async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
-        const ring: RingEnhancedSpookinatorV2 = await _ringFunction();
-        ring.getSensors();
-    }
-}
-
 class ThunderScene extends MultiPartScene {
     constructor(ringSensorName: string, lights: string[]) {
         let defaultLighting: Pattern = new OnPattern(RELAX, 1);
@@ -140,24 +130,13 @@ class FrontLightFlickerScene extends MultiPartScene {
 
 class FrontDoorVideoScene extends Scene {
 
-    hueSensor: number;
-    constructor(hueSensor: number) {
-        super();
-        this.hueSensor = hueSensor;
-    }
-
-    async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
-        const chromecaster = new Chromecaster();
-        await chromecaster.start();
-        this.hueCallback = [
-            this.hueSensor,
-            (update: HueSensorUpdate) => {
-                log.info(`received status update: ${update}`);
-                if (update.getPresence()) {
-                    chromecaster.playVideo(INTRO_VIDEO_2022);
-                }
-            }
-        ];
+    async run(spookyHueBulbPlayer: SpookyHueBulbPlayer, sensorType: SensorType, sensorTriggedOn: boolean): Promise<void> {
+        if (sensorTriggedOn) {
+            // this should probably be instantiated outside of this method here
+            const chromecaster = new Chromecaster();
+            await chromecaster.start();
+            chromecaster.playVideo(INTRO_VIDEO_2022);
+        }
     }
 }
 
@@ -204,18 +183,10 @@ class WerewolfDoorJiggleScene extends Scene {
         this.spookyEvent = new Event(dummyLight, new SoundPattern("resources/David_2022/scratching_dog.wav", new SleepPattern(0), 0));
     }
 
-    async setup(_ringFunction: () => Promise<RingEnhancedSpookinatorV2>, hueFunction: () => Promise<SpookyHueApi>): Promise<void> {
-        const spookyHueBulbPlayer = new SpookyHueBulbPlayer(await hueFunction());
-
-        this.hueCallback = [
-            this.hueSensor,
-            (update: HueSensorUpdate) => {
-                log.info(`received status update: ${update}`);
-                if (update.getPresence()) {
-                    spookyHueBulbPlayer.playPattern(this.spookyEvent);
-                }
-            }
-        ];
+    async run(spookyHueBulbPlayer: SpookyHueBulbPlayer, sensorType: SensorType, sensorTriggedOn: boolean): Promise<void> {
+        if (sensorTriggedOn) {
+            spookyHueBulbPlayer.playPattern(this.spookyEvent);
+        }
     }
 }
 
@@ -359,11 +330,10 @@ export const SCENES_2022: { [key: string]: Scene; } = {
     // Test and Utility scenes
     "list": new ListOnLightsScene(),
     "get_light": new GetLight(21), // Change this to get the state of different lights by ID
-    "test_ring": new TestRingScene(),
     "find_bulb": new FindBulb("Waffles' Room", ["down_bath_1", "down_bath_2", "down_bath_3"]),
     // Scenes for the party
     "front_light_flicker": new FrontLightFlickerScene(2, ["living_room_1", "living_room_2"]),
-    "front_door_video": new FrontDoorVideoScene(2),
+    "front_door_video": new FrontDoorVideoScene(),
     "welcome_inside": new WelcomeInsideScene("Front Gate", ["living_room_1", "living_room_2"]),
     "photobooth_thunder": new PhotoboothThunderScene("Front Gate", ["living_room_1", "living_room_2"]),
     "creepy_clown_shower": new DownstairsBathCreepyClownShowerScene("Waffles' Room", ["down_bath_1", "down_bath_2"], "down_bath_3"),
