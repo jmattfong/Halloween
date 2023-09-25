@@ -5,7 +5,6 @@ const log: CategoryLogger = getLogger("requests")
 
 export async function sendRegisterEvent(orchestratorIp: string, orchestratorPort: number, clientIp: string, clientPort: number, sensors: string[]) {
     const event: RegisterEvent = new RegisterEvent(clientIp, clientPort, sensors);
-    log.debug(`sending register event: ${event.toString()}`);
     sendRequest(`http://${orchestratorIp}:${orchestratorPort}`, `register`, event);
 }
 

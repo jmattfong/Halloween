@@ -81,7 +81,7 @@ async function main() {
   let registeredClients = new Map<string, string[]>();
 
   const server = new OrchestratorWebServer(args.port, (clientUri: URL, sensors: string[]) => {
-    log.info(`registering client ${clientUri} for sensors ${sensors}`)
+    log.info(`registering client ${clientUri} for sensor(s) ${sensors}`)
     sensors.forEach((sensorId) => {
       let clients = registeredClients.get(sensorId);
       if (clients == null) {

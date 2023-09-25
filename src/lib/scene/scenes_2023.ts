@@ -1,7 +1,5 @@
 import { getLogger } from '../logging';
 import { CategoryLogger } from 'typescript-logging';
-import { RingEnhancedSpookinatorV2 } from '../ring';
-import { SpookyHueApi } from '../hue/hue';
 import { SpookyHueBulbPlayer } from '../hue/spooky_bulb_player';
 import { OnPattern, Pattern } from './patterns';
 import { Event } from "./events";

@@ -1,4 +1,3 @@
-import { HueSensorUpdate, HueSensor } from '../hue/sensor';
 import { Chromecaster } from '../chromecast';
 import { getLogger } from '../logging';
 import { CategoryLogger } from 'typescript-logging';

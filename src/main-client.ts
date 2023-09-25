@@ -10,6 +10,7 @@ import { SCENES_2023 } from "./lib/scene/scenes_2023";
 import { readFileSync } from "fs";
 import { sendRegisterEvent } from "./lib/web_listener/requests";
 import { SpookyHueBulbPlayer } from "./lib/hue/spooky_bulb_player";
+import { SceneConfig, getSceneConfigFromFile } from "./lib/scene/scene_config";
 const SCENES = SCENES_2023;
 
 const log: CategoryLogger = getLogger("main");
@@ -90,15 +91,24 @@ async function main() {
     return;
   }
 
-  const sceneConfig = JSON.parse(readFileSync('./config/scene-config.json', { encoding: 'utf-8' }));
+  const sceneConfig: SceneConfig = getSceneConfigFromFile('./config/scene-config.json');
+
+  const myScenes = sceneConfig.scenes.filter((s, index, array) => {
+    return args.scene.includes(s.name);
+  });
+
+  const mySensors = myScenes.map(s => s.sensorId);
+
+  log.info(`scenes to run: ${myScenes.map(s => s.name)}`)
+  log.info(`sensor to register for: ${mySensors}`)
 
   // first we need to get our ip address
   const clientIp = getIPAddress();
   log.info(`client ip address is ${clientIp}`);
 
   // now we have our IP address, we need to register ourselves with the orchestrator to tell it
-  // what scenes we need
-  sendRegisterEvent(args.orchestratorIp, args.orchestratorPort, clientIp, args.webserverPort, args.scene);
+  // what sensors we want to listen for updates on
+  sendRegisterEvent(args.orchestratorIp, args.orchestratorPort, clientIp, args.webserverPort, mySensors);
 
   log.info(`starting up the spooky hue api`);
   const spookHue = new SpookyHueApi(CONFIG.secretPath, CONFIG);
