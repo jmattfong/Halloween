@@ -113,11 +113,11 @@ async function main() {
   log.info(`starting up the spooky hue api`);
   const spookHue = new SpookyHueApi(CONFIG.secretPath, CONFIG);
   await spookHue.connectUsingIP(CONFIG.hue_bridge_ip);
-  // log.debug(
-  //   `get all lights: ${(await spookHue.getLights()).map((l: any) =>
-  //     l.toStringDetailed()
-  //   )} `
-  // );
+  log.debug(
+    `get all lights: ${(await spookHue.getLights()).map((l: any) =>
+      l.toStringDetailed()
+    )} `
+  );
   const spookyHueBulbPlayer = new SpookyHueBulbPlayer(spookHue);
 
   const server = new ClientWebServer(args.webserverPort, (sensorId: string, sensorType: SensorType, data: boolean) => {
