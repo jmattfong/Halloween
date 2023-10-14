@@ -126,11 +126,8 @@ async function main() {
     var sceneName = null;
 
     if (sensorType == SensorType.MANUAL) {
-      log.info(`sensor is manual, looking for specific trigger`);
-
-      sceneName = sceneConfig.scenes.find((s) =>
-        s.name === sensorId
-      )?.name;
+      log.info(`sensor is manual, using sensor id as scene name`);
+      sceneName = sensorId;
     } else {
       log.info(`sensor is not manual, looking for scene to run`);
 
@@ -140,6 +137,11 @@ async function main() {
     }
 
     if (sceneName == null) {
+      log.warn(`could not find scene to run for sensor ${sensorId} -> ${sensorType} `);
+      return
+    }
+
+    if (!(sceneName in SCENES)) {
       log.warn(`could not find scene to run for sensor ${sensorId} -> ${sensorType} `);
       return
     }
