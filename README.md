@@ -65,17 +65,17 @@ When you turn on the server, it needs to be listening on an open port. Also, you
 
 Halloween Spooktacular Main Server
 
-  Get ready to spook and be spooked. This is the main server that runs the      
-  show. All sensors are connected from this server, which sends all             
-  notifications to the connected clients                                        
+  Get ready to spook and be spooked. This is the main server that runs the
+  show. All sensors are connected from this server, which sends all
+  notifications to the connected clients
 
 Options
 
-  -r, --startRingListener    Whether to start the ring listener 
-  -b, --startHueListener     Whether to start the hue listener  
-  -p, --port number          The port to listen for requests on 
-  -d, --debug                Turn on debug logging              
-  -h, --help                 Prints this usage guide     
+  -r, --startRingListener    Whether to start the ring listener
+  -b, --startHueListener     Whether to start the hue listener
+  -p, --port number          The port to listen for requests on
+  -d, --debug                Turn on debug logging
+  -h, --help                 Prints this usage guide
 ```
 
 ### Starting the Client
@@ -85,21 +85,21 @@ Once the server is running, you can start the clients! The clients can be starte
 By passing the `-s` flag, you can specify which scenes that a client is in charge of. You also will need to supply the clients both the IP and port where the orchestrator (server) is running
 
 ```sh
-./run-client -h 
+./run-client -h
 
 Halloween Spooktacular
 
-  Get ready to spook and be spooked 
+  Get ready to spook and be spooked
 
 Options
 
-  -s, --scene string[]            The scene to run. Choose from:                                                                               
-                                  list,get_light,find_bulb,front_light_flicker,welcome_inside,photobooth_thunder,creepy_clown_shower,halloween_hallway,werewolf_door_jiggle,look_its_waffles,guest_bathroom,portal_to_hell 
-  -p, --webserverPort number      The port to run the webserver on. Defaults to (800)                                                          
-  -o, --orchestratorIp string     The ip where the orchestrator runs                                                                           
-  -x, --orchestratorPort number   The port where the orchestrator is listening for requests on                                                 
-  -d, --debug                     Turn on debug logging                                                                                        
-  -h, --help                      Prints this usage guide 
+  -s, --scene string[]            The scene to run. Choose from:
+                                  list,get_light,find_bulb,front_light_flicker,welcome_inside,photobooth_thunder,creepy_clown_shower,halloween_hallway,werewolf_door_jiggle,look_its_waffles,guest_bathroom,portal_to_hell
+  -p, --webserverPort number      The port to run the webserver on. Defaults to (800)
+  -o, --orchestratorIp string     The ip where the orchestrator runs
+  -x, --orchestratorPort number   The port where the orchestrator is listening for requests on
+  -d, --debug                     Turn on debug logging
+  -h, --help                      Prints this usage guide
 ```
 
 `./run -h` will give you the most up-to-date running instructions
