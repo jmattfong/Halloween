@@ -1,10 +1,10 @@
 import { getLogger } from '../logging';
 import { CategoryLogger } from 'typescript-logging';
 import { SpookyHueBulbPlayer } from '../hue/spooky_bulb_player';
-import { OnPattern, Pattern } from './patterns';
+import { SoundPattern, RandomSoundPattern, FlickerPattern, OffPattern, SleepPattern, OnPattern, Pattern, PulsePattern } from './patterns';
 import { Event } from "./events";
-import { Scene, MultiPartScene } from './scenes';
-import { RED, RELAX } from '../config';
+import { Scene, SplitPartScene, MultiPartScene, AutoResetRingScene, RepeatingScene } from './scenes';
+import { RED, SOFT_RED, RELAX, ORANGE, BLUE } from '../config';
 import { SensorType } from "../web_listener/webserver";
 
 const log: CategoryLogger = getLogger("scenes_2023");
@@ -94,6 +94,191 @@ class FindBulb extends MultiPartScene {
         super(ringSensorName, events, unSpookyEvents);
     }
 }
+class ThunderScene extends MultiPartScene {
+    constructor(ringSensorName: string, lights: string[]) {
+        let defaultLighting: Pattern = new OnPattern(RELAX, 1);
+        let events: Event[] = lights.map(light => {
+            return new Event(light,
+                new RandomSoundPattern(["resources/lightning_bolt.mp3", "resources/lightning_bolt_2.mp3"], new FlickerPattern(3)),
+                defaultLighting);
+        });
+        let unSpookyEvents: Event[] = lights.map(light => {
+            return new Event(light, defaultLighting);
+        });
+        unSpookyEvents = [];
+        super(ringSensorName, events, unSpookyEvents);
+    }
+}
+
+class FrontLightFlickerScene extends MultiPartScene {
+    constructor(hueSensorId: number, lights: string[]) {
+        let defaultLighting: Pattern = new OnPattern(RELAX, 1);
+        let events: Event[] = lights.map(light => {
+            return new Event(light,
+                new FlickerPattern(7),
+                defaultLighting);
+        });
+        let unSpookyEvents: Event[] = lights.map(light => {
+            return new Event(light, defaultLighting);
+        });
+        super("", events, unSpookyEvents, hueSensorId);
+    }
+}
+
+class WelcomeInsideScene extends ThunderScene {
+    constructor(ringSensorName: string, lights: string[]) {
+        super(ringSensorName, lights);
+    }
+}
+
+class PhotoboothThunderScene extends ThunderScene {
+    constructor(ringSensorName: string, lights: string[]) {
+        super(ringSensorName, lights);
+    }
+}
+
+class DownstairsBathCreepyClownShowerScene extends AutoResetRingScene {
+    constructor(ringSensorName: string, mirrorLights: string[], showerLight: string) {
+        let spookyEvents: Event[] = mirrorLights.map(light => {
+            return new Event(light,
+                new SleepPattern(0.0125),
+                new FlickerPattern(5),
+                new OnPattern(RELAX, 5, 5),
+                new OffPattern(1, 5),
+                new SleepPattern(13),
+                new FlickerPattern(3),
+                new OnPattern(RELAX, 1, 10));
+        });
+
+        spookyEvents.push(new Event(showerLight,
+            new SoundPattern("resources/David_2022/downstairs_bathroom.wav", new OnPattern(RED, 10, 5), 10),
+            new OffPattern(1)));
+
+        super(ringSensorName, spookyEvents);
+    }
+}
+
+class WerewolfDoorJiggleScene extends Scene {
+
+    hueSensor: number;
+    spookyEvent: Event;
+    constructor(hueSensor: number, dummyLight: string) {
+        super();
+        this.hueSensor = hueSensor;
+        this.spookyEvent = new Event(dummyLight, new SoundPattern("resources/David_2022/scratching_dog.wav", new SleepPattern(0), 0));
+    }
+
+    async run(spookyHueBulbPlayer: SpookyHueBulbPlayer, sensorType: SensorType, sensorTriggedOn: boolean): Promise<void> {
+        if (sensorTriggedOn) {
+            spookyHueBulbPlayer.playPattern(this.spookyEvent);
+        }
+    }
+}
+
+class LookItsWafflesScene extends AutoResetRingScene {
+    constructor(ringSensorName: string, lights: string[]) {
+        let events: Event[] = lights.map(light => {
+            // 0-4 - growl
+            // 5-10 growl
+            // 12-14 LOUD
+            // 15-17 LOUD
+            // 17-19 growl
+            // 21-24 growl
+            // 25-28 growl
+            // 29-31 LOUD
+            // -32 LOUD
+            return new Event(light,
+                new SoundPattern("resources/David_2022/the_beast.wav", new OnPattern(SOFT_RED, 4), 0),
+                new SleepPattern(0.1),
+                new OffPattern(1),
+                new OnPattern(SOFT_RED, 5),
+                new OffPattern(2),
+                new OnPattern(RED, 5),
+                new OnPattern(SOFT_RED, 2),
+                new OffPattern(1),
+                new OnPattern(SOFT_RED, 8),
+                new OffPattern(1),
+                new OnPattern(RED, 9),
+                new OffPattern(1, 1));
+        });
+        super(ringSensorName, events, true);
+    }
+}
+
+class GuestBathroomScene extends AutoResetRingScene {
+    constructor(ringSensorName: string, mirrorLights: string[], showerLight: string) {
+
+        let spookyEvents = mirrorLights.map(light => {
+            return new Event(light,
+                new OnPattern(RELAX, 13, 4),
+                new PulsePattern(RED, 14, 0.5),
+                new OnPattern(RELAX, 10, 5),
+            );
+        });
+
+        spookyEvents.push(new Event(showerLight,
+            new SoundPattern("resources/David_2022/guest_bathroom_psycho.wav", new FlickerPattern(13.5, BLUE, 110), 0),
+            new PulsePattern(RED, 14, 0.5),
+            new OffPattern(6, 6),
+        ));
+
+
+        super(ringSensorName, spookyEvents, false);
+    }
+}
+
+class HalloweenHallway extends RepeatingScene {
+    getRepeatingEvents(...lightNames: string[]): Event[] {
+        let eventLights: string[][] = [[], [], [], [], []];
+        let i = 0;
+        lightNames.forEach(light => {
+            eventLights[i].push(light);
+            i = (++i) % eventLights.length;
+        });
+
+        log.info(`eventLights: ${JSON.stringify(eventLights)}`);
+
+        let result = eventLights[0].map(light => {
+            return new Event(light, new OnPattern(ORANGE, 1.5, 1), new OffPattern(1), new OffPattern(1), new OffPattern(1), new OffPattern(1));
+        });
+        result = result.concat(eventLights[1].map(light => {
+            return new Event(light, new OffPattern(1), new OnPattern(ORANGE, 1.5, 1), new OffPattern(1), new OffPattern(1), new OffPattern(1));
+        }));
+        result = result.concat(eventLights[2].map(light => {
+            return new Event(light, new OffPattern(1), new OffPattern(1), new OnPattern(ORANGE, 1.5, 1), new OffPattern(1), new OffPattern(1));
+        }));
+        result = result.concat(eventLights[3].map(light => {
+            return new Event(light, new OffPattern(1), new OffPattern(1), new OffPattern(1), new OnPattern(ORANGE, 1.5, 1), new OffPattern(1));
+        }));
+        result = result.concat(eventLights[4].map(light => {
+            return new Event(light, new OffPattern(1), new OffPattern(1), new OffPattern(1), new OffPattern(1), new OnPattern(ORANGE, 1.5, 1));
+        }));
+        log.info(`result: ${JSON.stringify(result)}`);
+        return result;
+    }
+}
+
+class PortalToHellScene extends RepeatingScene {
+    getRepeatingEvents(...lightNames: string[]): Event[] {
+        let repeatTime = 5;
+        let events = [
+            new Event(lightNames[0], new OnPattern(RELAX, 1), new SleepPattern(repeatTime),
+                new RandomSoundPattern(["resources/David_2022/rooftop_costume_contest.wav", "resources/David_2022/rooftop_feeding.wav", "resources/David_2022/rooftop_werewolf.wav"], new OffPattern(60)),
+                new OnPattern(RELAX, 1)),
+            new Event(lightNames[1], new OnPattern(RELAX, 1), new SleepPattern(repeatTime),
+                new OffPattern(60),
+                new OnPattern(RELAX, 1))
+        ];
+        for (var i = 1; i < lightNames.length; i++) {
+            events.push(new Event(lightNames[0], new OnPattern(RELAX, 1), new SleepPattern(repeatTime),
+                new OffPattern(60),
+                new OnPattern(RELAX, 1)));
+        }
+
+        log.info(`PortalToHellScene events: ${JSON.stringify(events)}`);
+        return events;
+    }
+}
 
 export const SCENES_2023: { [key: string]: Scene; } = {
     // Test and Utility scenes
@@ -102,5 +287,13 @@ export const SCENES_2023: { [key: string]: Scene; } = {
     // "test_ring": new TestRingScene(),
     "find_bulb": new FindBulb("Waffles' Room", ["down_bath_1", "down_bath_2", "down_bath_3"]),
     // Scenes for the party
-
+    "front_light_flicker": new FrontLightFlickerScene(2, ["living_room_1", "living_room_2"]),
+    "welcome_inside": new WelcomeInsideScene("Front Gate", ["living_room_1", "living_room_2"]),
+    "photobooth_thunder": new PhotoboothThunderScene("Front Gate", ["living_room_1", "living_room_2"]),
+    "creepy_clown_shower": new DownstairsBathCreepyClownShowerScene("Waffles' Room", ["down_bath_1", "down_bath_2"], "down_bath_3"),
+    "halloween_hallway": new HalloweenHallway("halloween_hallway_1", "halloween_hallway_2", "halloween_hallway_3", "halloween_hallway_4", "halloween_hallway_5"),
+    "werewolf_door_jiggle": new WerewolfDoorJiggleScene(9, "master_1"),
+    "look_its_waffles": new LookItsWafflesScene("Front Gate", ["living_room_3"]),
+    "guest_bathroom": new GuestBathroomScene("Garage Door", ["guest_bathroom_mirror_1", "guest_bathroom_mirror_2"], "guest_bathroom_shower"),
+    "portal_to_hell": new PortalToHellScene("guest_bed_1", "guest_bed_2"),
 };
