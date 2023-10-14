@@ -60,6 +60,14 @@ You need to run the server, prior to starting off the client
 
 When you turn on the server, it needs to be listening on an open port. Also, you can conditionally turn on the ring and hue listener code.
 
+#### Example
+
+```sh
+./run-server -r -b -p 5425
+```
+
+#### Help
+
 ```sh
 ./run-server -h
 
@@ -84,6 +92,15 @@ Once the server is running, you can start the clients! The clients can be starte
 
 By passing the `-s` flag, you can specify which scenes that a client is in charge of. You also will need to supply the clients both the IP and port where the orchestrator (server) is running
 
+#### Example
+
+```sh
+./run-client -p 5426 -o localhost -x 5425 -s get_light
+```
+
+
+#### Help
+
 ```sh
 ./run-client -h
 
@@ -101,9 +118,6 @@ Options
   -d, --debug                     Turn on debug logging
   -h, --help                      Prints this usage guide
 ```
-
-`./run -h` will give you the most up-to-date running instructions
-
 ### Find the IP of a Hue bridge
 
 This can be necessary if you are rate limited by the discovery API
