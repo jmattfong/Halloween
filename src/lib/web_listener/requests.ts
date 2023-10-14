@@ -14,7 +14,7 @@ export async function sendSensorEvent(clientUri: string, sensorId: string, senso
 }
 
 async function sendRequest<T>(endpoint: string, path: string, request: T) {
-    const fullPath = `${endpoint}/${path}`;
+    const fullPath = endpoint.endsWith("/") ? `${endpoint}${path}` : `${endpoint}/${path}`;
     log.info(`sending request to ${fullPath}`)
     const requestObject = JSON.stringify(request);
     log.debug(`sending request: ${requestObject}`)
