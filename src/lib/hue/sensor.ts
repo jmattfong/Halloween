@@ -70,7 +70,7 @@ export class HueSensor {
 
         // if the sensor state is the same, then do nothing
         if (sensorUpdate.isEqual(this.lastSensorUpdate)) {
-            log.info(`no change on sensor state on ${this.sensorId}. Returning`)
+            log.debug(`no change on sensor state on ${this.sensorId}. Returning`)
             return;
         }
 
