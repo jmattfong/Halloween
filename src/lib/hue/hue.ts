@@ -97,12 +97,12 @@ export class SpookyHueApi {
         log.info(
           `Checking sensor ${sensor.name} -> ${sensor.type} -> ${sensor.id}}`
         );
-        // currently we are only returing presence sensors, but we can also update this
+        // currently we are only returning presence sensors, but we can also update this
         // to get temperature, ambient light, and other spooky sensors
         return String(sensor.type) == "ZLLPresence";
       })
       .map((sensor: any) => {
-        log.info(
+        log.debug(
           `Adding sensor ${sensor.name} -> ${sensor.type} -> ${sensor.id}}`
         );
         return new HueSensor(this.hueApi.sensors, sensor.id);
