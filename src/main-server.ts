@@ -101,11 +101,11 @@ async function main() {
       if (scope == TriggerScope.GLOBAL) {
         log.info(`sending trigger to all clients`);
         allClients.forEach((clientUri: string) => {
-          log.info(`sending trigger to client @ ${clientUri}`)
+          log.info(`sending trigger to client @${clientUri} `)
           try {
             sendSensorEvent(clientUri, name, SensorType.MANUAL, true);
           } catch (e) {
-            log.warn(`error sending trigger to client @ ${clientUri}: ${e}`)
+            log.warn(`error sending trigger to client @${clientUri}: ${e} `)
           }
         });
         return
@@ -125,7 +125,7 @@ async function main() {
   if (args.startRingListener) {
     log.info("Setting up Ring");
     const ringSpook = new RingEnhancedSpookinatorV2(CONFIG.secretPath, true);
-    log.debug(`all ring sensors: ${await ringSpook.getSensors()}`);
+    log.debug(`all ring sensors: ${await ringSpook.getSensors()} `);
 
     setupRingListener(registeredClients, ringSpook);
 
@@ -138,7 +138,7 @@ async function main() {
     log.info("Setting up connection to the Hue API");
     const spookHue: SpookyHueApi = new SpookyHueApi(CONFIG.secretPath, CONFIG);
     await spookHue.connectUsingIP(CONFIG.hue_bridge_ip);
-    log.debug(`all hue sensors: ${await spookHue.getSensors()}`);
+    log.debug(`all hue sensors: ${await spookHue.getSensors()} `);
 
     setupHueListeners(registeredClients, spookHue);
 
@@ -157,13 +157,13 @@ async function setupRingListener(registeredClients: Map<string, string[]>, ringS
 
   const ringCallback = (data: RingDeviceData) => {
     const sensorId = data.name;
-    log.info(`ring callback called on ${sensorId}`);
+    log.info(`ring callback called on ${sensorId} `);
     registeredClients.get(sensorId)?.forEach(async (clientUri: string) => {
-      log.info(`sending ring callback to client @ ${clientUri}`)
+      log.info(`sending ring callback to client @${clientUri} `)
       try {
         sendSensorEvent(clientUri, sensorId, SensorType.RING, data.faulted);
       } catch (e) {
-        log.warn(`error sending ring callback to client @ ${clientUri}: ${e}`)
+        log.warn(`error sending ring callback to client @${clientUri}: ${e} `)
       }
     })
   };
@@ -181,13 +181,13 @@ async function setupHueListeners(registeredClients: Map<string, string[]>, spook
   hueSensors.forEach((hueSensor: HueSensor) => {
     const hueCallback = (update: HueSensorUpdate) => {
       const sensorId = hueSensor.getId();
-      log.info(`hue callback called on ${sensorId}`);
-      registeredClients.get(`${sensorId}`)?.forEach(async (clientUri: string) => {
-        log.info(`sending hue callback to client @ ${clientUri}`)
+      log.info(`hue callback called on ${sensorId} `);
+      registeredClients.get(`${sensorId} `)?.forEach(async (clientUri: string) => {
+        log.info(`sending hue callback to client @${clientUri} `)
         try {
-          sendSensorEvent(clientUri, `${sensorId}`, SensorType.HUE, update.getPresence());
+          sendSensorEvent(clientUri, `${sensorId} `, SensorType.HUE, update.getPresence());
         } catch (e) {
-          log.warn(`error sending hue callback to client @ ${clientUri}: ${e}`)
+          log.warn(`error sending hue callback to client @${clientUri}: ${e} `)
         }
       })
     };
