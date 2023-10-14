@@ -94,9 +94,9 @@ async function main() {
         clients.push(clientUri.toString());
       });
     },
-    (name: string, scope: TriggerScope) => {
+    (name: string, scope: TriggerScope, clientEndpoint?: string) => {
 
-      log.info(`triggering ${name} with scope ${scope}`);
+      log.info(`triggering ${name} with scope ${scope} (endpoint? ${clientEndpoint})`);
 
       if (scope == TriggerScope.GLOBAL) {
         log.info(`sending trigger to all clients`);
@@ -108,6 +108,17 @@ async function main() {
             log.warn(`error sending trigger to client @ ${clientUri}: ${e}`)
           }
         });
+        return
+      }
+
+      if (scope == TriggerScope.DIRECT) {
+        log.info(`sending trigger to client @${clientEndpoint} `)
+        try {
+          sendSensorEvent(clientEndpoint!, name, SensorType.MANUAL, true);
+        } catch (e) {
+          log.warn(`error sending trigger to client @${clientEndpoint}: ${e} `)
+        }
+        return
       }
     });
 

@@ -17,15 +17,18 @@ export class RegisterEvent {
 
 export enum TriggerScope {
     GLOBAL = "global",
+    DIRECT = "direct",
 }
 
 export class TriggerEvent {
     name: string
     scope: TriggerScope
+    clientEndpoint?: string
 
-    constructor(name: string, scope: TriggerScope) {
+    constructor(name: string, scope: TriggerScope, clientEndpoint?: string) {
         this.name = name;
         this.scope = scope;
+        this.clientEndpoint = clientEndpoint;
     }
 }
 
@@ -55,9 +58,9 @@ export class OrchestratorWebServer {
     private port: number
     private server: Server
     private registerCallback: (clientUri: URL, sensors: string[]) => void
-    private triggerCallback: (name: string, scope: TriggerScope) => void
+    private triggerCallback: (name: string, scope: TriggerScope, clientEndpoint?: string) => void
 
-    constructor(port: number, registerCallback: (clientUri: URL, sensors: string[]) => void, triggerCallback: (name: string, scope: TriggerScope) => void) {
+    constructor(port: number, registerCallback: (clientUri: URL, sensors: string[]) => void, triggerCallback: (name: string, scope: TriggerScope, clientEndpoint?: string) => void) {
         this.port = port;
         this.registerCallback = registerCallback;
         this.triggerCallback = triggerCallback;
@@ -97,7 +100,7 @@ export class OrchestratorWebServer {
                     return;
                 }
 
-                this.triggerCallback(triggerEvent.name, triggerEvent.scope);
+                this.triggerCallback(triggerEvent.name, triggerEvent.scope, triggerEvent.clientEndpoint);
 
                 res.statusCode = 200;
                 res.end("OK");
