@@ -91,6 +91,7 @@ async function main() {
   }
 
   const sceneConfig: SceneConfig = getSceneConfigFromFile('./config/scene-config.json');
+  log.debug(`WHOLE CONFIG: ${JSON.stringify(sceneConfig)}`)
 
   const myScenes = sceneConfig.scenes.filter((s, index, array) => {
     return args.scene.includes(s.name);
@@ -122,8 +123,27 @@ async function main() {
   const server = new ClientWebServer(args.webserverPort, (sensorId: string, sensorType: SensorType, data: boolean) => {
     log.info(`callback called on ${sensorId} -> ${sensorType} `);
 
-    const sensorScenes = sceneConfig[sensorType];
-    const sceneName = sensorScenes[sensorId];
+    var sceneName = null;
+
+    if (sensorType == SensorType.MANUAL) {
+      log.info(`sensor is manual, looking for specific trigger`);
+
+      sceneName = sceneConfig.scenes.find((s) =>
+        s.name === sensorId
+      )?.name;
+    } else {
+      log.info(`sensor is not manual, looking for scene to run`);
+
+      sceneName = sceneConfig.scenes.find((s) =>
+        (s.sensorId == sensorId && sensorType == s.sensorType)
+      )?.name;
+    }
+
+    if (sceneName == null) {
+      log.warn(`could not find scene to run for sensor ${sensorId} -> ${sensorType} `);
+      return
+    }
+
     log.info(`found scene to run ${sceneName} `)
     const sceneToRun = SCENES[sceneName];
 
