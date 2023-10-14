@@ -6,7 +6,7 @@ import { parse } from "ts-command-line-args";
 import { getLogger, setLogLevel } from "./lib/logging";
 import { CategoryLogger, LogLevel } from "typescript-logging";
 import { CONFIG } from "./lib/config";
-import { SensorType, OrchestratorWebServer } from "./lib/web_listener/webserver";
+import { SensorType, OrchestratorWebServer, TriggerScope } from "./lib/web_listener/webserver";
 import { RingDeviceData, RingDevice } from "ring-client-api";
 import { sendSensorEvent } from './lib/web_listener/requests';
 
@@ -79,18 +79,37 @@ async function main() {
   // the key is the sensor id, and the value is a list of clients that are listening to
   // that sensor
   let registeredClients = new Map<string, string[]>();
+  let allClients = new Set<string>();
 
-  const server = new OrchestratorWebServer(args.port, (clientUri: URL, sensors: string[]) => {
-    log.info(`registering client ${clientUri} for sensor(s) ${sensors}`)
-    sensors.forEach((sensorId) => {
-      let clients = registeredClients.get(sensorId);
-      if (clients == null) {
-        clients = [];
-        registeredClients.set(sensorId, clients);
+  const server = new OrchestratorWebServer(args.port,
+    (clientUri: URL, sensors: string[]) => {
+      log.info(`registering client ${clientUri} for sensor(s) ${sensors}`)
+      sensors.forEach((sensorId) => {
+        let clients = registeredClients.get(sensorId);
+        if (clients == null) {
+          clients = [];
+          registeredClients.set(sensorId, clients);
+        }
+        allClients.add(clientUri.toString());
+        clients.push(clientUri.toString());
+      });
+    },
+    (name: string, scope: TriggerScope) => {
+
+      log.info(`triggering ${name} with scope ${scope}`);
+
+      if (scope == TriggerScope.GLOBAL) {
+        log.info(`sending trigger to all clients`);
+        allClients.forEach((clientUri: string) => {
+          log.info(`sending trigger to client @ ${clientUri}`)
+          try {
+            sendSensorEvent(clientUri, name, SensorType.MANUAL, true);
+          } catch (e) {
+            log.warn(`error sending trigger to client @ ${clientUri}: ${e}`)
+          }
+        });
       }
-      clients.push(clientUri.toString());
     });
-  });
 
   if (args.startRingListener) {
     log.info("Setting up Ring");

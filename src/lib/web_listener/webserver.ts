@@ -15,9 +15,25 @@ export class RegisterEvent {
     }
 }
 
+export enum TriggerScope {
+    GLOBAL = "global",
+}
+
+export class TriggerEvent {
+    name: string
+    scope: TriggerScope
+
+    constructor(name: string, scope: TriggerScope) {
+        this.name = name;
+        this.scope = scope;
+    }
+}
+
+
 export enum SensorType {
     HUE = "hue",
     RING = "ring",
+    MANUAL = "manual",
 }
 
 export class SensorUpdateEvent {
@@ -39,10 +55,12 @@ export class OrchestratorWebServer {
     private port: number
     private server: Server
     private registerCallback: (clientUri: URL, sensors: string[]) => void
+    private triggerCallback: (name: string, scope: TriggerScope) => void
 
-    constructor(port: number, registerCallback: (clientUri: URL, sensors: string[]) => void) {
+    constructor(port: number, registerCallback: (clientUri: URL, sensors: string[]) => void, triggerCallback: (name: string, scope: TriggerScope) => void) {
         this.port = port;
         this.registerCallback = registerCallback;
+        this.triggerCallback = triggerCallback;
 
         let handler = async (req: IncomingMessage, res: ServerResponse) => {
 
@@ -63,6 +81,24 @@ export class OrchestratorWebServer {
                 log.info(`registering client ${clientUri}`);
 
                 this.registerCallback(clientUri, registerEvent.sensors);
+                res.statusCode = 200;
+                res.end("OK");
+                return
+            }
+
+            if (req.method == "POST" && req.url == "/trigger") {
+                let triggerEvent: TriggerEvent;
+                try {
+                    triggerEvent = await getJSONDataFromRequestStream<TriggerEvent>(req);
+                } catch (e) {
+                    log.info(`error processing the input: ${e}`);
+                    res.statusCode = 400;
+                    res.end("error with request");
+                    return;
+                }
+
+                this.triggerCallback(triggerEvent.name, triggerEvent.scope);
+
                 res.statusCode = 200;
                 res.end("OK");
                 return
