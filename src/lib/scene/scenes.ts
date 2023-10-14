@@ -38,7 +38,7 @@ export class AutoResetRingScene extends Scene {
   async run(spookyHueBulbPlayer: SpookyHueBulbPlayer, sensorType: SensorType, sensorTriggedOn: boolean): Promise<void> {
     // if the data.faulted is true, that means that the door is open
     if (
-      (sensorTriggedOn && this.spookOnFaulted) ||
+      ((sensorType === SensorType.MANUAL) || sensorTriggedOn && this.spookOnFaulted) ||
       (!sensorTriggedOn && !this.spookOnFaulted)
     ) {
       this.spookyEvents.forEach((event) => {
@@ -74,8 +74,8 @@ export class MultiPartScene extends Scene {
   async run(spookyHueBulbPlayer: SpookyHueBulbPlayer, sensorType: SensorType, sensorTriggedOn: boolean): Promise<void> {
 
     // if the data.faulted is true, that means that the door is open
-    if (sensorTriggedOn) {
-      if (this.spookOnFaulted) {
+    if (sensorType === SensorType.MANUAL || sensorTriggedOn) {
+      if (sensorType === SensorType.MANUAL || this.spookOnFaulted) {
         this.spookyEvents.forEach((event) => {
           spookyHueBulbPlayer.playPattern(event);
         });
