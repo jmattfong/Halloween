@@ -18,18 +18,22 @@ async function sendRequest<T>(endpoint: string, path: string, request: T) {
     log.info(`sending request to ${fullPath}`)
     const requestObject = JSON.stringify(request);
     log.debug(`sending request: ${requestObject}`)
-    const response = await fetch(`${fullPath}`, {
-        method: "POST",
-        body: requestObject,
-        headers: {
-            "Content-Type": "application/json",
-        },
-    });
+    try {
+        const response = await fetch(`${fullPath}`, {
+            method: "POST",
+            body: requestObject,
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
 
-    log.debug(`result of sending request to @${fullPath}`)
-    if (response.ok) {
-        log.info("request was successful")
-    } else {
-        log.warn(`error sending request to client @${fullPath}`)
+        log.debug(`result of sending request to @${fullPath}`)
+        if (response.ok) {
+            log.info("request was successful")
+        } else {
+            log.warn(`error sending request to client @${fullPath}`)
+        }
+    } catch (e) {
+        log.warn(`error sending request to client @${fullPath}: ${e}`)
     }
 }

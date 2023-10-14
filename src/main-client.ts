@@ -120,37 +120,38 @@ async function main() {
   );
   const spookyHueBulbPlayer = new SpookyHueBulbPlayer(spookHue);
 
-  const server = new ClientWebServer(args.webserverPort, (sensorId: string, sensorType: SensorType, data: boolean) => {
-    log.info(`callback called on ${sensorId} -> ${sensorType} `);
+  const server = new ClientWebServer(args.webserverPort,
+    (sensorId: string, sensorType: SensorType, data: boolean) => {
+      log.info(`callback called on ${sensorId} -> ${sensorType} `);
 
-    var sceneName = null;
+      var sceneName = null;
 
-    if (sensorType == SensorType.MANUAL) {
-      log.info(`sensor is manual, using sensor id as scene name`);
-      sceneName = sensorId;
-    } else {
-      log.info(`sensor is not manual, looking for scene to run`);
+      if (sensorType == SensorType.MANUAL) {
+        log.info(`sensor is manual, using sensor id as scene name`);
+        sceneName = sensorId;
+      } else {
+        log.info(`sensor is not manual, looking for scene to run`);
 
-      sceneName = sceneConfig.scenes.find((s) =>
-        (s.sensorId == sensorId && sensorType == s.sensorType)
-      )?.name;
-    }
+        sceneName = sceneConfig.scenes.find((s) =>
+          (s.sensorId == sensorId && sensorType == s.sensorType)
+        )?.name;
+      }
 
-    if (sceneName == null) {
-      log.warn(`could not find scene to run for sensor ${sensorId} -> ${sensorType} `);
-      return
-    }
+      if (sceneName == null) {
+        log.warn(`could not find scene to run for sensor ${sensorId} -> ${sensorType} `);
+        return
+      }
 
-    if (!(sceneName in SCENES)) {
-      log.warn(`could not find scene to run for sensor ${sensorId} -> ${sensorType} `);
-      return
-    }
+      if (!(sceneName in SCENES)) {
+        log.warn(`could not find scene to run for sensor ${sensorId} -> ${sensorType} `);
+        return
+      }
 
-    log.info(`found scene to run ${sceneName} `)
-    const sceneToRun = SCENES[sceneName];
+      log.info(`found scene to run ${sceneName} `)
+      const sceneToRun = SCENES[sceneName];
 
-    sceneToRun.run(spookyHueBulbPlayer, sensorType, data)
-  });
+      sceneToRun.run(spookyHueBulbPlayer, sensorType, data)
+    });
 
   server.listen();
 }
