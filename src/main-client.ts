@@ -7,7 +7,6 @@ import { CategoryLogger, LogLevel } from "typescript-logging";
 import { CONFIG } from "./lib/config";
 
 import { SCENES_2023 } from "./lib/scene/scenes_2023";
-import { readFileSync } from "fs";
 import { sendRegisterEvent } from "./lib/web_listener/requests";
 import { SpookyHueBulbPlayer } from "./lib/hue/spooky_bulb_player";
 import { SceneConfig, getSceneConfigFromFile } from "./lib/scene/scene_config";
