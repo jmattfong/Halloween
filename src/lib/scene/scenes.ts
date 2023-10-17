@@ -93,25 +93,19 @@ export class MultiPartScene extends Scene {
 }
 
 export class SplitPartScene extends Scene {
-  ringSensorName: string;
-  hueSensorId?: number;
   spookyHueEvents: Event[];
   spookyRingEvents: Event[];
   spookOnFaulted: boolean;
   private isRingRunning: boolean;
 
   constructor(
-    ringSensorName: string,
     spookyHueEvents: Event[],
     spookyRingEvents: Event[],
-    hueSensorId?: number,
     spookOnFaulted: boolean = false
   ) {
     super();
-    this.ringSensorName = ringSensorName;
     this.spookyHueEvents = spookyHueEvents;
     this.spookyRingEvents = spookyRingEvents;
-    this.hueSensorId = hueSensorId;
     this.spookOnFaulted = spookOnFaulted;
     this.isRingRunning = false;
   }
