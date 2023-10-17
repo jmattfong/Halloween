@@ -39,6 +39,10 @@ export class RingEnhancedSpookinatorV2 {
                     return
                 }
 
+                if (newRefreshToken === oldRefreshToken) {
+                    log.info("refresh token did not change. Ignoring");
+                    return
+                }
 
                 const fileContents = readFileSync(this.configPath, { encoding: 'utf-8' })
                 let config = JSON.parse(fileContents);
