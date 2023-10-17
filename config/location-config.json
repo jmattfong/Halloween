@@ -1,0 +1,29 @@
+{
+    "version": "1.0.0",
+    "devices": [
+        {
+            "name": "bill",
+            "ip": "192.168.86.39",
+            "port": "5425",
+            "location": "downstairs_closet"
+        },
+        {
+            "name": "hank",
+            "ip": "192.168.86.38",
+            "port": "5425",
+            "location": "downstairs_bathroom"
+        },
+        {
+            "name": "dale",
+            "ip": "192.168.86.37",
+            "port": "5425",
+            "location": "living_room_bathroom"
+        },
+        {
+            "name": "boomhauer",
+            "ip": "192.168.86.223",
+            "port": "5425",
+            "location": "master_bedroom"
+        },
+    ]
+}
