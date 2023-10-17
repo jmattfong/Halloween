@@ -116,6 +116,7 @@ class ElectricLady extends MultiPartScene {
     constructor(lights: string[]) {
         let defaultLighting: Pattern = new OnPattern(RELAX, 1);
         var events: Event[] = lights.slice(0, -1).map(light => {
+            log.info(`my LIGHT: ${light}`)
             return new Event(light,
                 new FlickerPattern(4),
                 new OffPattern(1),
@@ -123,6 +124,7 @@ class ElectricLady extends MultiPartScene {
                 defaultLighting
             )
         });
+        log.info(`other LIGHT: ${lights[lights.length - 1]}`)
         events.push(new Event(lights[lights.length - 1],
             new SoundPattern("resources/sparks.mp3", new FlickerPattern(5), 0),
             new SoundPattern("resources/woman_screaming.mp3", new StableColourPattern(RED, 15, 30, 0), 0.5),
