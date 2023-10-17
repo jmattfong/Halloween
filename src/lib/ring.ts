@@ -31,18 +31,14 @@ export class RingEnhancedSpookinatorV2 {
 
         this.ring.onRefreshTokenUpdated.subscribe(
             async ({ newRefreshToken, oldRefreshToken }) => {
-                log.info(`Refresh Token Updated: ${newRefreshToken}`);
-
-                // If you are implementing a project that use `ring-client-api`, you should subscribe to onRefreshTokenUpdated and update your config each time it fires an event
-                // Here is an example using a .env file for configuration
-                if (!oldRefreshToken) {
-                    return
-                }
+                log.info("Got ring token refresh event");
 
                 if (newRefreshToken === oldRefreshToken) {
                     log.info("refresh token did not change. Ignoring");
                     return
                 }
+
+                log.info(`Refresh Token Updated: ${newRefreshToken}`);
 
                 const fileContents = readFileSync(this.configPath, { encoding: 'utf-8' })
                 let config = JSON.parse(fileContents);
