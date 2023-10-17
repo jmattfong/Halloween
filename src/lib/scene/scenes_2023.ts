@@ -117,7 +117,7 @@ class ElectricLady extends MultiPartScene {
             return new Event(light,
                 new SoundPattern("resources/sparks.mp3", new FlickerPattern(4), 0),
                 new OffPattern(1),
-                new SoundPattern("resources/woman_screaming.mp3", new StableColourPattern(RED, 60, 12, 0), 0.8),
+                new SoundPattern("resources/woman_screaming.mp3", new StableColourPattern(RED, 60, 30, 0), 0.5),
                 defaultLighting
             )
         });
