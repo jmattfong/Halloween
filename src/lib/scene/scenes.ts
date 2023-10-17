@@ -161,12 +161,12 @@ export class SplitPartScene extends Scene {
   }
 }
 
-class RandomMultiScene extends Scene {
-  spookyEventChoices: Event[][];
+export class RandomMultiScene extends Scene {
+  spookyEventChoices: Scene[];
   unSpookyEvents: Event[];
 
   constructor(
-    spookyEventChoices: Event[][],
+    spookyEventChoices: Scene[],
     unSpookyEvents: Event[]
   ) {
     super();
@@ -178,20 +178,20 @@ class RandomMultiScene extends Scene {
     // if the data.faulted is true, that means that the door is open and we should resort to the
     // unspooky base pattern
     // otherwise, pick a random pattern and play it!
-    let patternWorkflow: Event[];
     if (sensorTriggedOn) {
-      patternWorkflow = this.unSpookyEvents;
+      this.unSpookyEvents.forEach((event) => {
+        spookyHueBulbPlayer.playPattern(event);
+      });
     } else {
       const patternIndex = Math.floor(
         Math.random() * this.spookyEventChoices.length
       );
       log.debug(`choosing pattern #${patternIndex}`);
-      patternWorkflow = this.spookyEventChoices[patternIndex];
+      const spookySceneToRun = this.spookyEventChoices[patternIndex];
+      log.debug(`Choice: ${spookySceneToRun}`);
+      spookySceneToRun.run(spookyHueBulbPlayer, sensorType, sensorTriggedOn);
     }
 
-    patternWorkflow.forEach((event) => {
-      spookyHueBulbPlayer.playPattern(event);
-    });
   }
 }
 

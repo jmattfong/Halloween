@@ -3,7 +3,7 @@ import { CategoryLogger } from 'typescript-logging';
 import { SpookyHueBulbPlayer } from '../hue/spooky_bulb_player';
 import { SoundPattern, RandomSoundPattern, FlickerPattern, OffPattern, SleepPattern, OnPattern, Pattern, PulsePattern } from './patterns';
 import { Event } from "./events";
-import { Scene, SplitPartScene, MultiPartScene, AutoResetRingScene, RepeatingScene } from './scenes';
+import { Scene, RandomMultiScene, MultiPartScene, AutoResetRingScene, RepeatingScene } from './scenes';
 import { RED, SOFT_RED, RELAX, ORANGE, BLUE } from '../config';
 import { SensorType } from "../web_listener/webserver";
 
@@ -111,7 +111,7 @@ class ThunderScene extends MultiPartScene {
 }
 
 class FrontLightFlickerScene extends MultiPartScene {
-    constructor(hueSensorId: number, lights: string[]) {
+    constructor(number, lights: string[]) {
         let defaultLighting: Pattern = new OnPattern(RELAX, 1);
         let events: Event[] = lights.map(light => {
             return new Event(light,
@@ -121,7 +121,7 @@ class FrontLightFlickerScene extends MultiPartScene {
         let unSpookyEvents: Event[] = lights.map(light => {
             return new Event(light, defaultLighting);
         });
-        super(events, unSpookyEvents, hueSensorId);
+        super(events, unSpookyEvents);
     }
 }
 
@@ -160,11 +160,9 @@ class DownstairsBathCreepyClownShowerScene extends AutoResetRingScene {
 
 class WerewolfDoorJiggleScene extends Scene {
 
-    hueSensor: number;
     spookyEvent: Event;
-    constructor(hueSensor: number, dummyLight: string) {
+    constructor(dummyLight: string) {
         super();
-        this.hueSensor = hueSensor;
         this.spookyEvent = new Event(dummyLight, new SoundPattern("resources/David_2022/scratching_dog.wav", new SleepPattern(0), 0));
     }
 
@@ -280,6 +278,13 @@ class PortalToHellScene extends RepeatingScene {
     }
 }
 
+function get_downstairs_bathroom_scene(): RandomMultiScene {
+    const spookyScenes = [
+        new DownstairsBathCreepyClownShowerScene(["down_bath_1", "down_bath_2"], "down_bath_3"),
+    ];
+    return new RandomMultiScene(spookyScenes, []);
+}
+
 export const SCENES_2023: { [key: string]: Scene; } = {
     // Test and Utility scenes
     "list": new ListOnLightsScene(),
@@ -292,6 +297,7 @@ export const SCENES_2023: { [key: string]: Scene; } = {
     "photobooth_thunder": new PhotoboothThunderScene(["living_room_1", "living_room_2"]),
     "creepy_clown_shower": new DownstairsBathCreepyClownShowerScene(["down_bath_1", "down_bath_2"], "down_bath_3"),
     "halloween_hallway": new HalloweenHallway("halloween_hallway_1", "halloween_hallway_2", "halloween_hallway_3", "halloween_hallway_4", "halloween_hallway_5"),
+    "downstairs_bathroom": get_downstairs_bathroom_scene(),
     "werewolf_door_jiggle": new WerewolfDoorJiggleScene(9, "master_1"),
     "look_its_waffles": new LookItsWafflesScene(["living_room_3"]),
     "guest_bathroom": new GuestBathroomScene(["guest_bathroom_mirror_1", "guest_bathroom_mirror_2"], "guest_bathroom_shower"),
