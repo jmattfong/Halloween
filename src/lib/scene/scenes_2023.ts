@@ -115,7 +115,7 @@ class ElectricLady extends MultiPartScene {
     /// at a time
     constructor(lights: string[]) {
         let defaultLighting: Pattern = new OnPattern(RELAX, 1);
-        var events: Event[] = lights.slice(0, -2).map(light => {
+        var events: Event[] = lights.slice(0, -1).map(light => {
             return new Event(light,
                 new FlickerPattern(4),
                 new OffPattern(1),
@@ -129,20 +129,6 @@ class ElectricLady extends MultiPartScene {
             defaultLighting
         ));
 
-        // let spookyEvents: Event[] = mirrorLights.map(light => {
-        //     return new Event(light,
-        //         new SleepPattern(0.0125),
-        //         new FlickerPattern(5),
-        //         new OnPattern(RELAX, 5, 5),
-        //         new OffPattern(1, 5),
-        //         new SleepPattern(13),
-        //         new FlickerPattern(3),
-        //         new OnPattern(RELAX, 1, 10));
-        // });
-
-        // spookyEvents.push(new Event(showerLight,
-        //     new SoundPattern("resources/David_2022/downstairs_bathroom.wav", new OnPattern(RED, 10, 5), 10),
-        //     new OffPattern(1)));
         const unSpookyEvents: Event[] = lights.map(light => {
             return new Event(light, defaultLighting);
         });
@@ -320,48 +306,9 @@ class PortalToHellScene extends RepeatingScene {
 }
 
 function get_downstairs_bathroom_scene(mirror_light_1: string, mirror_light_2: string, shower_light: string): RandomMultiScene {
-    // export function getElectricLadyEvent(subLightName: string, ...mainLightNames: string[]): Event[] {
-    //     return buildEventsWithSubroutine(
-    //         [
-    //             new OffPattern(5),
-    //             new OffPattern(4.5),
-    //             new OffPattern(1),
-    //             new SoundPattern('resources/woman_screaming.mp3', new StableColourPattern(red, 60, 12, 0), 0.7),
-    //             new OffPattern(10)
-    //         ], subLightName,
-    //         [
-    //             new StableColourPattern(white, 40, 5, 0),
-    //             new SoundPattern('resources/sparks.mp3', new FlickerPattern(4.5), 0.01, .7),
-    //             new OffPattern(1),
-    //             new OffPattern(12),
-    //             new StableColourPattern(white, 60, 10, 10)
-    //         ], mainLightNames)
-    // }
-
-    let spookyElectricLadySceneEvents: Event[] = [mirror_light_1, mirror_light_2].map(light => {
-        return new Event(light,
-            new OffPattern(5),
-            new OffPattern(4.5),
-            new OffPattern(1),
-            new SoundPattern('resources/woman_screaming.mp3', new StableColourPattern(RED, 60, 12, 0), 0.7),
-            new OffPattern(10))
-    });
-
-    spookyElectricLadySceneEvents.push(new Event(shower_light,
-        new StableColourPattern(CONCENTRATE, 40, 5, 0),
-        new SoundPattern('resources/sparks.mp3', new FlickerPattern(4.5), 0.01, .7),
-        new OffPattern(1),
-        new OffPattern(12),
-        new StableColourPattern(CONCENTRATE, 60, 10, 10)
-    ));
-
-    const electricLadyEvent = new AutoResetRingScene(spookyElectricLadySceneEvents, false);
-
     const spookyScenes = [
-        // new DownstairsBathCreepyClownShowerScene([mirror_light_1, mirror_light_2], shower_light),
-        // electricLadyEvent,
+        new DownstairsBathCreepyClownShowerScene([mirror_light_1, mirror_light_2], shower_light),
         new ElectricLady([mirror_light_1, mirror_light_2, shower_light]),
-        // new ThunderScene([mirror_light_1, mirror_light_2, shower_light]),
     ];
     return new RandomMultiScene(spookyScenes, []);
 }
