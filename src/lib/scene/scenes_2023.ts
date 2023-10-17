@@ -111,16 +111,38 @@ class ThunderScene extends MultiPartScene {
 }
 
 class ElectricLady extends MultiPartScene {
+    /// We attach the sound to the last light in the list so only one sound plays
+    /// at a time
     constructor(lights: string[]) {
         let defaultLighting: Pattern = new OnPattern(RELAX, 1);
-        const events: Event[] = lights.map(light => {
+        var events: Event[] = lights.slice(0, -2).map(light => {
             return new Event(light,
-                new SoundPattern("resources/sparks.mp3", new FlickerPattern(4), 0),
+                new FlickerPattern(4),
                 new OffPattern(1),
-                new SoundPattern("resources/woman_screaming.mp3", new StableColourPattern(RED, 60, 30, 0), 0.5),
+                new StableColourPattern(RED, 60, 30, 0),
                 defaultLighting
             )
         });
+        events.push(new Event(lights[lights.length - 1],
+            new SoundPattern("resources/sparks.mp3", new FlickerPattern(5), 0),
+            new SoundPattern("resources/woman_screaming.mp3", new StableColourPattern(RED, 15, 30, 0), 0.5),
+            defaultLighting
+        ));
+
+        // let spookyEvents: Event[] = mirrorLights.map(light => {
+        //     return new Event(light,
+        //         new SleepPattern(0.0125),
+        //         new FlickerPattern(5),
+        //         new OnPattern(RELAX, 5, 5),
+        //         new OffPattern(1, 5),
+        //         new SleepPattern(13),
+        //         new FlickerPattern(3),
+        //         new OnPattern(RELAX, 1, 10));
+        // });
+
+        // spookyEvents.push(new Event(showerLight,
+        //     new SoundPattern("resources/David_2022/downstairs_bathroom.wav", new OnPattern(RED, 10, 5), 10),
+        //     new OffPattern(1)));
         const unSpookyEvents: Event[] = lights.map(light => {
             return new Event(light, defaultLighting);
         });
