@@ -295,7 +295,7 @@ export const SCENES_2023: { [key: string]: Scene; } = {
     "find_bulb_3": new FindBulb(["down_bath_1", "down_bath_2", "down_bath_3", "living_room_3", "living_room_4"]),
     // Scenes for the party
     "front_light_flicker": new FrontLightFlickerScene(["living_room_1", "living_room_2"]),
-    "welcome_inside": new WelcomeInsideScene(["living_room_1", "living_room_2"]),
+    "welcome_inside": new WelcomeInsideScene(["entry_2", "downstairs_1"]),
     "photobooth_thunder": new PhotoboothThunderScene(["living_room_1", "living_room_2"]),
     "creepy_clown_shower": new DownstairsBathCreepyClownShowerScene(["down_bath_1", "down_bath_2"], "down_bath_3"),
     "halloween_hallway": new HalloweenHallway("halloween_hallway_1", "halloween_hallway_2", "halloween_hallway_3", "halloween_hallway_4", "halloween_hallway_5"),

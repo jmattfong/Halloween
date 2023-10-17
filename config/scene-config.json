@@ -25,6 +25,11 @@
             "name": "get_light",
             "sensorId": "9",
             "sensorType": "ring"
+        },
+        {
+            "name": "welcome_inside",
+            "sensorId": "Front Door",
+            "sensorType": "ring"
         }
     ]
 }
