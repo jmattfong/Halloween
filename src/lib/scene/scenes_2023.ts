@@ -298,7 +298,7 @@ export const SCENES_2023: { [key: string]: Scene; } = {
     "creepy_clown_shower": new DownstairsBathCreepyClownShowerScene(["down_bath_1", "down_bath_2"], "down_bath_3"),
     "halloween_hallway": new HalloweenHallway("halloween_hallway_1", "halloween_hallway_2", "halloween_hallway_3", "halloween_hallway_4", "halloween_hallway_5"),
     "downstairs_bathroom": get_downstairs_bathroom_scene(),
-    "werewolf_door_jiggle": new WerewolfDoorJiggleScene(9, "master_1"),
+    "werewolf_door_jiggle": new WerewolfDoorJiggleScene("master_1"),
     "look_its_waffles": new LookItsWafflesScene(["living_room_3"]),
     "guest_bathroom": new GuestBathroomScene(["guest_bathroom_mirror_1", "guest_bathroom_mirror_2"], "guest_bathroom_shower"),
     "portal_to_hell": new PortalToHellScene("guest_bed_1", "guest_bed_2"),
