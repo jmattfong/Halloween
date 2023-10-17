@@ -1,4 +1,4 @@
-import { sleep } from "../scene/patterns";
+import { platform } from "os";
 const { exec } = require('node:child_process');
 import { getLogger } from "../logging";
 import { CategoryLogger } from "typescript-logging";
@@ -13,7 +13,23 @@ export class SoundPlayer {
         this.controller = new AbortController();
         log.info(`attempting to play ${soundFile}`);
         const { signal } = this.controller;
+
+        if (platform() === 'darwin') {
+            this.play_music_mac(soundFile, volume, signal);
+            return;
+        }
+
+        this.play_music_linux(soundFile, volume, signal);
+    }
+
+    async play_music_mac(soundFile: string, volume: number, signal: AbortSignal) {
         exec(`afplay ${soundFile} -v ${volume}`, { signal }, (_error) => {
+            log.info(`Canceled ${soundFile} playback`);
+        });
+    }
+
+    async play_music_linux(soundFile: string, volume: number, signal: AbortSignal) {
+        exec(`aplay ${soundFile} -v ${volume}`, { signal }, (_error) => {
             log.info(`Canceled ${soundFile} playback`);
         });
     }
