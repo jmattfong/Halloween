@@ -29,7 +29,7 @@ export class SoundPlayer {
     }
 
     async play_music_linux(soundFile: string, volume: number, signal: AbortSignal) {
-        exec(`aplay ${soundFile} -v ${volume}`, { signal }, (_error) => {
+        exec(`mpg321 ${soundFile} -g ${volume*100}`, { signal }, (_error) => {
             log.info(`Canceled ${soundFile} playback`);
         });
     }
