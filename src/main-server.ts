@@ -78,7 +78,7 @@ async function main() {
   // We store the client's ip address and the sensor it is looking for in a map where
   // the key is the sensor id, and the value is a list of clients that are listening to
   // that sensor
-  let registeredClients = new Map<string, string[]>();
+  let registeredClients = new Map<string, Set<string>>();
   let allClients = new Set<string>();
 
   const server = new OrchestratorWebServer(args.port,
@@ -87,11 +87,11 @@ async function main() {
       sensors.forEach((sensorId) => {
         let clients = registeredClients.get(sensorId);
         if (clients == null) {
-          clients = [];
+          clients = new Set();
           registeredClients.set(sensorId, clients);
         }
         allClients.add(clientUri.toString());
-        clients.push(clientUri.toString());
+        clients.add(clientUri.toString());
       });
     },
     (name: string, scope: TriggerScope, clientEndpoint?: string) => {
@@ -152,7 +152,7 @@ async function main() {
 }
 
 // Sets up the ring listeners and callbacks for the ring sensors
-async function setupRingListener(registeredClients: Map<string, string[]>, ringSpook: RingEnhancedSpookinatorV2) {
+async function setupRingListener(registeredClients: Map<string, Set<string>>, ringSpook: RingEnhancedSpookinatorV2) {
   const ringSensors: RingDevice[] = await ringSpook.getSensors();
 
   const ringCallback = (data: RingDeviceData) => {
@@ -175,7 +175,7 @@ async function setupRingListener(registeredClients: Map<string, string[]>, ringS
 
 
 // Sets up the hue sensors and callbacks for the hue sensors
-async function setupHueListeners(registeredClients: Map<string, string[]>, spookHue: SpookyHueApi) {
+async function setupHueListeners(registeredClients: Map<string, Set<string>>, spookHue: SpookyHueApi) {
 
   const hueSensors = await spookHue.getSensors();
   hueSensors.forEach((hueSensor: HueSensor) => {
