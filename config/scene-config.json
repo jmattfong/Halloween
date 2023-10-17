@@ -12,6 +12,11 @@
             "sensorType": "ring"
         },
         {
+            "name": "downstairs_bathroom",
+            "sensorId": "Waffles' Room",
+            "sensorType": "ring"
+        },
+        {
             "name": "get_light",
             "sensorId": "9",
             "sensorType": "ring"

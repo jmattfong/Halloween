@@ -290,7 +290,9 @@ export const SCENES_2023: { [key: string]: Scene; } = {
     "list": new ListOnLightsScene(),
     "get_light": new GetLight(21), // Change this to get the state of different lights by ID
     // "test_ring": new TestRingScene(),
-    "find_bulb": new FindBulb(["down_bath_1", "down_bath_2", "down_bath_3"]),
+    "find_bulb": new FindBulb(["down_bath_1", "down_bath_2", "down_bath_3", "living_room_3", "living_room_4"]),
+    "find_bulb_2": new FindBulb(["halloween_hallway_2", "halloween_hallway_3", "guest_bathroom_shower", "garage_2"]),
+    "find_bulb_3": new FindBulb(["down_bath_1", "down_bath_2", "down_bath_3", "living_room_3", "living_room_4"]),
     // Scenes for the party
     "front_light_flicker": new FrontLightFlickerScene(["living_room_1", "living_room_2"]),
     "welcome_inside": new WelcomeInsideScene(["living_room_1", "living_room_2"]),

@@ -24,6 +24,6 @@
             "ip": "192.168.86.223",
             "port": "5425",
             "location": "master_bedroom"
-        },
+        }
     ]
 }

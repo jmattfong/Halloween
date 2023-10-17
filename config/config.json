@@ -42,9 +42,9 @@
         "Entry Motion Sensor"
     ],
     "lights": {
-        "down_bath_1": 7,
-        "down_bath_2": 8,
-        "down_bath_3": 9,
+        "down_bath_1": 1,
+        "down_bath_2": 2,
+        "down_bath_3": 3,
 
         "waffles_room_1": 26,
         "waffles_room_2": 30,
