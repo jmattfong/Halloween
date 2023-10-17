@@ -125,11 +125,11 @@ class ElectricLady extends MultiPartScene {
             )
         });
         log.info(`other LIGHT: ${lights[lights.length - 1]}`)
-        events.push(new Event(lights[lights.length - 1],
-            new SoundPattern("resources/sparks.mp3", new FlickerPattern(5), 0),
-            new SoundPattern("resources/woman_screaming.mp3", new StableColourPattern(RED, 15, 30, 0), 0.5),
-            defaultLighting
-        ));
+        // events.push(new Event(lights[lights.length - 1],
+        //     new SoundPattern("resources/sparks.mp3", new FlickerPattern(5), 0),
+        //     new SoundPattern("resources/woman_screaming.mp3", new StableColourPattern(RED, 15, 30, 0), 0.5),
+        //     defaultLighting
+        // ));
 
         const unSpookyEvents: Event[] = lights.map(light => {
             return new Event(light, defaultLighting);
