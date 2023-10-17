@@ -7,6 +7,11 @@
             "sensorType": "ring"
         },
         {
+            "name": "dev_scene",
+            "sensorId": "Guest Bathroom",
+            "sensorType": "ring"
+        },
+        {
             "name": "photobooth_thunder",
             "sensorId": "Guest Bathroom",
             "sensorType": "ring"

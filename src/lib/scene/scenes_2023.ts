@@ -304,4 +304,5 @@ export const SCENES_2023: { [key: string]: Scene; } = {
     "look_its_waffles": new LookItsWafflesScene(["living_room_3"]),
     "guest_bathroom": new GuestBathroomScene(["guest_bathroom_mirror_1", "guest_bathroom_mirror_2"], "guest_bathroom_shower"),
     "portal_to_hell": new PortalToHellScene("guest_bed_1", "guest_bed_2"),
+    "dev_scene": new DownstairsBathCreepyClownShowerScene(["down_bath_1", "down_bath_2"], "down_bath_3"),
 };
