@@ -20,17 +20,14 @@ export abstract class Scene {
  * For this type of scene, the spooky scenes will always finish playing.
  */
 export class AutoResetRingScene extends Scene {
-  ringSensorName: string;
   spookyEvents: Event[];
   spookOnFaulted: boolean;
 
   constructor(
-    ringSensorName: string,
     spookyEvents: Event[],
     spookOnFaulted: boolean = false
   ) {
     super();
-    this.ringSensorName = ringSensorName;
     this.spookyEvents = spookyEvents;
     this.spookOnFaulted = spookOnFaulted;
   }
@@ -50,21 +47,18 @@ export class AutoResetRingScene extends Scene {
 }
 
 export class MultiPartScene extends Scene {
-  ringSensorName: string;
   hueSensorId?: number;
   spookyEvents: Event[];
   unSpookyEvents: Event[];
   spookOnFaulted: boolean;
 
   constructor(
-    ringSensorName: string,
     spookyEvents: Event[],
     unSpookyEvents: Event[],
     hueSensorId?: number,
     spookOnFaulted: boolean = false
   ) {
     super();
-    this.ringSensorName = ringSensorName;
     this.spookyEvents = spookyEvents;
     this.unSpookyEvents = unSpookyEvents;
     this.hueSensorId = hueSensorId;

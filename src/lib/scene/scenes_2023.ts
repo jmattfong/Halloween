@@ -63,7 +63,7 @@ class GetLight extends Scene {
 }
 
 class FindBulb extends MultiPartScene {
-    constructor(ringSensorName: string, lights: string[]) {
+    constructor(lights: string[]) {
         let defaultLighting: Pattern = new OnPattern(RELAX, 3);
         let events: Event[] = lights.map(light => {
             return new Event(light,
@@ -91,11 +91,11 @@ class FindBulb extends MultiPartScene {
         let unSpookyEvents: Event[] = lights.map(light => {
             return new Event(light, defaultLighting);
         });
-        super(ringSensorName, events, unSpookyEvents);
+        super(events, unSpookyEvents);
     }
 }
 class ThunderScene extends MultiPartScene {
-    constructor(ringSensorName: string, lights: string[]) {
+    constructor(lights: string[]) {
         let defaultLighting: Pattern = new OnPattern(RELAX, 1);
         let events: Event[] = lights.map(light => {
             return new Event(light,
@@ -106,7 +106,7 @@ class ThunderScene extends MultiPartScene {
             return new Event(light, defaultLighting);
         });
         unSpookyEvents = [];
-        super(ringSensorName, events, unSpookyEvents);
+        super(events, unSpookyEvents);
     }
 }
 
@@ -121,24 +121,24 @@ class FrontLightFlickerScene extends MultiPartScene {
         let unSpookyEvents: Event[] = lights.map(light => {
             return new Event(light, defaultLighting);
         });
-        super("", events, unSpookyEvents, hueSensorId);
+        super(events, unSpookyEvents, hueSensorId);
     }
 }
 
 class WelcomeInsideScene extends ThunderScene {
-    constructor(ringSensorName: string, lights: string[]) {
-        super(ringSensorName, lights);
+    constructor(lights: string[]) {
+        super(lights);
     }
 }
 
 class PhotoboothThunderScene extends ThunderScene {
-    constructor(ringSensorName: string, lights: string[]) {
-        super(ringSensorName, lights);
+    constructor(lights: string[]) {
+        super(lights);
     }
 }
 
 class DownstairsBathCreepyClownShowerScene extends AutoResetRingScene {
-    constructor(ringSensorName: string, mirrorLights: string[], showerLight: string) {
+    constructor(mirrorLights: string[], showerLight: string) {
         let spookyEvents: Event[] = mirrorLights.map(light => {
             return new Event(light,
                 new SleepPattern(0.0125),
@@ -154,7 +154,7 @@ class DownstairsBathCreepyClownShowerScene extends AutoResetRingScene {
             new SoundPattern("resources/David_2022/downstairs_bathroom.wav", new OnPattern(RED, 10, 5), 10),
             new OffPattern(1)));
 
-        super(ringSensorName, spookyEvents);
+        super(spookyEvents);
     }
 }
 
@@ -176,7 +176,7 @@ class WerewolfDoorJiggleScene extends Scene {
 }
 
 class LookItsWafflesScene extends AutoResetRingScene {
-    constructor(ringSensorName: string, lights: string[]) {
+    constructor(lights: string[]) {
         let events: Event[] = lights.map(light => {
             // 0-4 - growl
             // 5-10 growl
@@ -201,12 +201,12 @@ class LookItsWafflesScene extends AutoResetRingScene {
                 new OnPattern(RED, 9),
                 new OffPattern(1, 1));
         });
-        super(ringSensorName, events, true);
+        super(events, true);
     }
 }
 
 class GuestBathroomScene extends AutoResetRingScene {
-    constructor(ringSensorName: string, mirrorLights: string[], showerLight: string) {
+    constructor(mirrorLights: string[], showerLight: string) {
 
         let spookyEvents = mirrorLights.map(light => {
             return new Event(light,
@@ -223,7 +223,7 @@ class GuestBathroomScene extends AutoResetRingScene {
         ));
 
 
-        super(ringSensorName, spookyEvents, false);
+        super(spookyEvents, false);
     }
 }
 
@@ -285,15 +285,15 @@ export const SCENES_2023: { [key: string]: Scene; } = {
     "list": new ListOnLightsScene(),
     "get_light": new GetLight(21), // Change this to get the state of different lights by ID
     // "test_ring": new TestRingScene(),
-    "find_bulb": new FindBulb("Waffles' Room", ["down_bath_1", "down_bath_2", "down_bath_3"]),
+    "find_bulb": new FindBulb(["down_bath_1", "down_bath_2", "down_bath_3"]),
     // Scenes for the party
     "front_light_flicker": new FrontLightFlickerScene(2, ["living_room_1", "living_room_2"]),
-    "welcome_inside": new WelcomeInsideScene("Front Gate", ["living_room_1", "living_room_2"]),
-    "photobooth_thunder": new PhotoboothThunderScene("Front Gate", ["living_room_1", "living_room_2"]),
-    "creepy_clown_shower": new DownstairsBathCreepyClownShowerScene("Waffles' Room", ["down_bath_1", "down_bath_2"], "down_bath_3"),
+    "welcome_inside": new WelcomeInsideScene(["living_room_1", "living_room_2"]),
+    "photobooth_thunder": new PhotoboothThunderScene(["living_room_1", "living_room_2"]),
+    "creepy_clown_shower": new DownstairsBathCreepyClownShowerScene(["down_bath_1", "down_bath_2"], "down_bath_3"),
     "halloween_hallway": new HalloweenHallway("halloween_hallway_1", "halloween_hallway_2", "halloween_hallway_3", "halloween_hallway_4", "halloween_hallway_5"),
     "werewolf_door_jiggle": new WerewolfDoorJiggleScene(9, "master_1"),
-    "look_its_waffles": new LookItsWafflesScene("Front Gate", ["living_room_3"]),
-    "guest_bathroom": new GuestBathroomScene("Garage Door", ["guest_bathroom_mirror_1", "guest_bathroom_mirror_2"], "guest_bathroom_shower"),
+    "look_its_waffles": new LookItsWafflesScene(["living_room_3"]),
+    "guest_bathroom": new GuestBathroomScene(["guest_bathroom_mirror_1", "guest_bathroom_mirror_2"], "guest_bathroom_shower"),
     "portal_to_hell": new PortalToHellScene("guest_bed_1", "guest_bed_2"),
 };
