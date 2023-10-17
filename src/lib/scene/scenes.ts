@@ -47,7 +47,6 @@ export class AutoResetRingScene extends Scene {
 }
 
 export class MultiPartScene extends Scene {
-  hueSensorId?: number;
   spookyEvents: Event[];
   unSpookyEvents: Event[];
   spookOnFaulted: boolean;
@@ -55,13 +54,11 @@ export class MultiPartScene extends Scene {
   constructor(
     spookyEvents: Event[],
     unSpookyEvents: Event[],
-    hueSensorId?: number,
     spookOnFaulted: boolean = false
   ) {
     super();
     this.spookyEvents = spookyEvents;
     this.unSpookyEvents = unSpookyEvents;
-    this.hueSensorId = hueSensorId;
     this.spookOnFaulted = spookOnFaulted;
   }
 
@@ -165,17 +162,14 @@ export class SplitPartScene extends Scene {
 }
 
 class RandomMultiScene extends Scene {
-  ringSensorName: string;
   spookyEventChoices: Event[][];
   unSpookyEvents: Event[];
 
   constructor(
-    ringSensorName: string,
     spookyEventChoices: Event[][],
     unSpookyEvents: Event[]
   ) {
     super();
-    this.ringSensorName = ringSensorName;
     this.spookyEventChoices = spookyEventChoices;
     this.unSpookyEvents = unSpookyEvents;
   }
