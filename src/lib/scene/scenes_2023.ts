@@ -111,7 +111,7 @@ class ThunderScene extends MultiPartScene {
 }
 
 class FrontLightFlickerScene extends MultiPartScene {
-    constructor(number, lights: string[]) {
+    constructor(lights: string[]) {
         let defaultLighting: Pattern = new OnPattern(RELAX, 1);
         let events: Event[] = lights.map(light => {
             return new Event(light,
@@ -292,7 +292,7 @@ export const SCENES_2023: { [key: string]: Scene; } = {
     // "test_ring": new TestRingScene(),
     "find_bulb": new FindBulb(["down_bath_1", "down_bath_2", "down_bath_3"]),
     // Scenes for the party
-    "front_light_flicker": new FrontLightFlickerScene(2, ["living_room_1", "living_room_2"]),
+    "front_light_flicker": new FrontLightFlickerScene(["living_room_1", "living_room_2"]),
     "welcome_inside": new WelcomeInsideScene(["living_room_1", "living_room_2"]),
     "photobooth_thunder": new PhotoboothThunderScene(["living_room_1", "living_room_2"]),
     "creepy_clown_shower": new DownstairsBathCreepyClownShowerScene(["down_bath_1", "down_bath_2"], "down_bath_3"),
