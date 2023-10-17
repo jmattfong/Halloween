@@ -7,14 +7,14 @@
             "sensorType": "ring"
         },
         {
-            "name": "get_light",
-            "sensorId": "9",
+            "name": "photobooth_thunder",
+            "sensorId": "Guest Bathroom",
             "sensorType": "ring"
         },
         {
-            "name": "photobooth_thunder",
-            "sensorId": "59",
-            "sensorType": "hue"
+            "name": "get_light",
+            "sensorId": "9",
+            "sensorType": "ring"
         }
     ]
 }
