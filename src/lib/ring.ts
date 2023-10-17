@@ -1,5 +1,5 @@
 import { RingApi, RingDevice, RingDeviceType, RingDeviceData } from "ring-client-api";
-import { readFileSync } from 'fs';
+import { readFileSync, writeFileSync } from 'fs';
 import { getLogger } from './logging'
 import { CategoryLogger } from 'typescript-logging';
 
@@ -14,19 +14,39 @@ interface RingConfig {
 export class RingEnhancedSpookinatorV2 {
     private ring: RingApi
     private sensors: RingDevice[]
+    private configPath: string
 
     constructor(configPath: string, debug: boolean = false) {
         if (configPath === '') {
             throw new Error('config path must set');
         }
-        const fileContents = readFileSync(configPath, {encoding: 'utf-8'})
+        this.configPath = configPath;
+        const fileContents = readFileSync(configPath, { encoding: 'utf-8' })
         let config: RingConfig = JSON.parse(fileContents);
         this.ring = new RingApi({
             cameraStatusPollingSeconds: 2,
             debug: debug,
             refreshToken: config.refreshToken,
         });
-       this.sensors = new Array();
+
+        this.ring.onRefreshTokenUpdated.subscribe(
+            async ({ newRefreshToken, oldRefreshToken }) => {
+                console.log('Refresh Token Updated: ', newRefreshToken)
+
+                // If you are implementing a project that use `ring-client-api`, you should subscribe to onRefreshTokenUpdated and update your config each time it fires an event
+                // Here is an example using a .env file for configuration
+                if (!oldRefreshToken) {
+                    return
+                }
+
+
+                const fileContents = readFileSync(this.configPath, { encoding: 'utf-8' })
+                let config = JSON.parse(fileContents);
+                config["refreshToken"] = newRefreshToken;
+                writeFileSync(this.configPath, JSON.stringify(config, null, 2));
+            }
+        )
+        this.sensors = new Array();
     }
 
     public addSensorCallback(sensor: RingDevice, callback: (data: RingDeviceData) => void): void {
