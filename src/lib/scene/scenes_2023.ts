@@ -303,7 +303,7 @@ class ChromecastPortalToHell extends Scene {
         super()
         // this should probably be instantiated outside of this method here
         // TODO figure out device name for new Chromecast
-        this.chromecaster = new Chromecaster("Chromecast-TODO");
+        this.chromecaster = new Chromecaster();
         this.chromecaster.start();
     }
 
