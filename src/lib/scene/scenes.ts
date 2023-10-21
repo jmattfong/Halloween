@@ -183,11 +183,9 @@ export class RandomMultiScene extends Scene {
         spookyHueBulbPlayer.playPattern(event);
       });
     } else {
-      const patternIndex = Math.floor(
-        Math.random() * this.spookyEventChoices.length
-      );
-      log.debug(`choosing pattern #${patternIndex}`);
-      const spookySceneToRun = this.spookyEventChoices[patternIndex];
+      const sceneIndex = Math.floor(Math.random() * this.spookyEventChoices.length);
+      log.debug(`choosing pattern #${sceneIndex}`);
+      const spookySceneToRun = this.spookyEventChoices[sceneIndex];
       log.debug(`Choice: ${spookySceneToRun}`);
       spookySceneToRun.run(spookyHueBulbPlayer, sensorType, sensorTriggedOn);
     }

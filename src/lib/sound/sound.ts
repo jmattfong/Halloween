@@ -16,10 +16,9 @@ export class SoundPlayer {
 
         if (platform() === 'darwin') {
             this.play_music_mac(soundFile, volume, signal);
-            return;
+        } else {
+            this.play_music_linux(soundFile, volume, signal);
         }
-
-        this.play_music_linux(soundFile, volume, signal);
     }
 
     async play_music_mac(soundFile: string, volume: number, signal: AbortSignal) {

@@ -19,7 +19,7 @@ export class Chromecaster {
     private debug: boolean
     private isBlankPlaying: boolean = false;
 
-    constructor(baseServerUrl: string = 'https://jmattfong-halloween.s3.us-west-2.amazonaws.com', deviceName: string = DEVICE_NAME, debug: boolean = false) {
+    constructor(deviceName: string = DEVICE_NAME, baseServerUrl: string = 'https://jmattfong-halloween.s3.us-west-2.amazonaws.com', debug: boolean = false) {
         this.baseServerUrl = baseServerUrl;
         this.debug = debug;
         const client = new Client();
@@ -84,6 +84,7 @@ export class Chromecaster {
 
         log.info('chromecast is ready. Starting spooky vids, with some spooky blank vids of course');
 
+        // Hmmm, should this go in the isReady block?
         setInterval(() => {
             if (!this.currentPlayingVideo) {
                 log.info('nothing playing. Playing blank video')
