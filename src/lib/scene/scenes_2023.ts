@@ -13,6 +13,14 @@ const log: CategoryLogger = getLogger("scenes_2023");
 
 const RESOURCES_DIR: String = "resources/2023_sounds";
 
+const DEFAULT_LIGHTING: Pattern = new OnPattern(RELAX, 3);
+
+function getUnspookyEvents(lights: string[]) {
+    return lights.map(light => {
+        return new Event(light, DEFAULT_LIGHTING);
+    });
+}
+
 /**
  * List all lights that are on
  */
@@ -68,40 +76,35 @@ class GetLight extends Scene {
 
 class FindBulb extends MultiPartScene {
     constructor(lights: string[]) {
-        let defaultLighting: Pattern = new OnPattern(RELAX, 3);
         let events: Event[] = lights.map(light => {
             return new Event(light,
                 new OnPattern(RED, 10),
-                defaultLighting,
+                DEFAULT_LIGHTING,
                 new OnPattern(RED, 10),
-                defaultLighting,
+                DEFAULT_LIGHTING,
                 new OnPattern(RED, 10),
-                defaultLighting,
+                DEFAULT_LIGHTING,
                 new OnPattern(RED, 10),
-                defaultLighting,
+                DEFAULT_LIGHTING,
                 new OnPattern(RED, 10),
-                defaultLighting,
+                DEFAULT_LIGHTING,
                 new OnPattern(RED, 10),
-                defaultLighting,
+                DEFAULT_LIGHTING,
                 new OnPattern(RED, 10),
-                defaultLighting,
+                DEFAULT_LIGHTING,
                 new OnPattern(RED, 10),
-                defaultLighting,
+                DEFAULT_LIGHTING,
                 new OnPattern(RED, 10),
-                defaultLighting,
+                DEFAULT_LIGHTING,
                 new OnPattern(RED, 10),
-                defaultLighting);
+                DEFAULT_LIGHTING);
         });
-        let unSpookyEvents: Event[] = lights.map(light => {
-            return new Event(light, defaultLighting);
-        });
-        super(events, unSpookyEvents);
+        super(events, getUnspookyEvents(lights));
     }
 }
 
 class ThunderScene extends MultiPartScene {
     constructor(lights: string[]) {
-        let defaultLighting: Pattern = new OnPattern(RELAX, 1);
         let events: Event[] = lights.map(light => {
             return new Event(light,
                 new RandomSoundPattern([`${RESOURCES_DIR}/david_thunder_and_clowns.wav`,
@@ -111,12 +114,9 @@ class ThunderScene extends MultiPartScene {
                                         `${RESOURCES_DIR}/thunder_sound_1.mp3`,
                                         `${RESOURCES_DIR}/thunder_sound_2.mp3`], 
                                     new FlickerPattern(3)),
-                defaultLighting);
+                                    DEFAULT_LIGHTING);
         });
-        let unSpookyEvents: Event[] = lights.map(light => {
-            return new Event(light, defaultLighting);
-        });
-        super(events, unSpookyEvents);
+        super(events, getUnspookyEvents(lights));
     }
 }
 
@@ -124,14 +124,13 @@ class ElectricLady extends MultiPartScene {
     /// We attach the sound to the last light in the list so only one sound plays
     /// at a time
     constructor(lights: string[]) {
-        let defaultLighting: Pattern = new OnPattern(RELAX, 1);
         var events: Event[] = lights.slice(0, -1).map(light => {
             log.info(`my LIGHT: ${light}`)
             return new Event(light,
                 new FlickerPattern(4),
                 new OffPattern(1),
                 new StableColourPattern(RED, 60, 30, 0),
-                defaultLighting
+                DEFAULT_LIGHTING
             )
         });
         log.info(`other LIGHT: ${lights[lights.length - 1]}`)
@@ -141,26 +140,19 @@ class ElectricLady extends MultiPartScene {
         //     defaultLighting
         // ));
 
-        const unSpookyEvents: Event[] = lights.map(light => {
-            return new Event(light, defaultLighting);
-        });
-        super(events, unSpookyEvents);
+        super(events, getUnspookyEvents(lights));
     }
 }
 
 
 class FrontLightFlickerScene extends MultiPartScene {
     constructor(lights: string[]) {
-        let defaultLighting: Pattern = new OnPattern(RELAX, 1);
         let events: Event[] = lights.map(light => {
             return new Event(light,
                 new FlickerPattern(7),
-                defaultLighting);
+                DEFAULT_LIGHTING);
         });
-        let unSpookyEvents: Event[] = lights.map(light => {
-            return new Event(light, defaultLighting);
-        });
-        super(events, unSpookyEvents);
+        super(events, getUnspookyEvents(lights));
     }
 }
 
