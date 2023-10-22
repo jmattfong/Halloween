@@ -2,33 +2,106 @@
     "version": "1.0.0",
     "scenes": [
         {
-            "name": "list",
-            "sensorId": "59",
-            "sensorType": "ring"
-        },
-        {
             "name": "dev_scene",
             "sensorId": "Guest Bathroom",
             "sensorType": "ring"
         },
+
         {
-            "name": "photobooth_thunder",
+            "name": "photobooth_spooks",
             "sensorId": "Guest Bathroom",
             "sensorType": "ring"
         },
         {
-            "name": "downstairs_bathroom",
-            "sensorId": "Waffles' Room",
+            "name": "costume_contest",
+            "sensorId": "Guest Bathroom",
             "sensorType": "ring"
         },
         {
-            "name": "get_light",
-            "sensorId": "9",
+            "name": "down_bath_random",
+            "sensorId": "Waffles' Room",
             "sensorType": "ring"
         },
         {
             "name": "welcome_inside",
             "sensorId": "Front Door",
+            "sensorType": "ring"
+        },
+        {
+            "name": "front_light_flicker",
+            "sensorId": "Guest Bathroom",
+            "sensorType": "ring"
+        },
+        {
+            "name": "calming_cockroaches",
+            "sensorId": "Guest Bathroom",
+            "sensorType": "ring"
+        },
+        {
+            "name": "scream",
+            "sensorId": "Guest Bathroom",
+            "sensorType": "ring"
+        },
+        {
+            "name": "chromecast_portal_to_hell",
+            "sensorId": "Guest Bathroom",
+            "sensorType": "ring"
+        },
+        {
+            "name": "chromecast_ghosts",
+            "sensorId": "Guest Bathroom",
+            "sensorType": "ring"
+        },
+
+        {
+            "name": "creepy_clown_shower",
+            "sensorId": "Guest Bathroom",
+            "sensorType": "ring"
+        },
+        {
+            "name": "psycho",
+            "sensorId": "Guest Bathroom",
+            "sensorType": "ring"
+        },
+        {
+            "name": "electric_lady",
+            "sensorId": "Guest Bathroom",
+            "sensorType": "ring"
+        },
+        {
+            "name": "werewolf_door_jiggle",
+            "sensorId": "Guest Bathroom",
+            "sensorType": "ring"
+        },
+        {
+            "name": "look_its_waffles",
+            "sensorId": "Guest Bathroom",
+            "sensorType": "ring"
+        },
+
+        {
+            "name": "list",
+            "sensorId": "Guest Bathroom",
+            "sensorType": "ring"
+        },
+        {
+            "name": "get_light",
+            "sensorId": "Guest Bathroom",
+            "sensorType": "ring"
+        },
+        {
+            "name": "find_bulb",
+            "sensorId": "Guest Bathroom",
+            "sensorType": "ring"
+        },
+        {
+            "name": "find_bulb_2",
+            "sensorId": "Guest Bathroom",
+            "sensorType": "ring"
+        },
+        {
+            "name": "find_bulb_3",
+            "sensorId": "Guest Bathroom",
             "sensorType": "ring"
         }
     ]

@@ -1,4 +1,4 @@
-//import { Chromecaster } from '../chromecast';
+import { Chromecaster } from '../chromecast';
 import { getLogger } from '../logging';
 import { CategoryLogger } from 'typescript-logging';
 import { SpookyHueBulbPlayer } from '../hue/spooky_bulb_player';
@@ -300,44 +300,51 @@ class CostumeContestScene extends Scene {
         // TODO
     }
 }
-/*
-class ChromecastPortalToHell extends Scene {
+
+class ChromecastScene extends Scene {
     chromecaster: Chromecaster
+    started: boolean
 
     constructor() {
         super()
         // this should probably be instantiated outside of this method here
         // TODO figure out device name for new Chromecast
         this.chromecaster = new Chromecaster();
-        this.chromecaster.start();
+        this.started = false;
+    }
+
+    start() {
+        if (!this.started) {
+            this.chromecaster.start();
+            this.started = true;
+        }
     }
 
     async run(_spook_yHueBulbPlayer: SpookyHueBulbPlayer, _sensorType: SensorType, _sensorTriggedOn: boolean): Promise<void> {
+        this.start();
+    }
+}
+
+class ChromecastPortalToHell extends ChromecastScene {
+    async run(hue: SpookyHueBulbPlayer, type: SensorType, on: boolean): Promise<void> {
+        super.run(hue, type, on);
         while (true) {
             this.chromecaster.playVideo(PORTAL_TO_HELL);
-            sleep(PORTAL_TO_HELL.getVideoLengthSeconds() * 1000 - 5);
+            await sleep(PORTAL_TO_HELL.getVideoLengthSeconds() * 1000 - 5);
         }
     }
 }
 
-class ChromecastGhosts extends Scene {
-    chromecaster: Chromecaster
-
-    constructor() {
-        super()
-        // this should probably be instantiated outside of this method here
-        this.chromecaster = new Chromecaster();
-        this.chromecaster.start();
-    }
-
-    async run(_spook_yHueBulbPlayer: SpookyHueBulbPlayer, _sensorType: SensorType, sensorTriggedOn: boolean): Promise<void> {
+class ChromecastGhosts extends ChromecastScene {
+    async run(hue: SpookyHueBulbPlayer, type: SensorType, sensorTriggedOn: boolean): Promise<void> {
+        super.run(hue, type, sensorTriggedOn);
         if (sensorTriggedOn) {
             let video = VIDEOS_2023[Math.floor(Math.random() * VIDEOS_2023.length)];
             this.chromecaster.playVideo(video);
         }
     }
 }
-*/
+
 function get_photobooth_scene(): RandomMultiScene {
     const spookyScenes = [
         new WerewolfDoorJiggleScene(),
@@ -394,8 +401,8 @@ export const SCENES_2023: { [key: string]: Scene; } = {
     "calming_cockroaches": new CalmingCockroachesScene(LIGHTS["half_bathroom"]),
     // Boomhaur's scenes
     "scream": new ScreamScene(LIGHTS["guest_bathroom"]),
-//    "chromecast_portal_to_hell": new ChromecastPortalToHell(),
-//    "chromecast_ghosts": new ChromecastGhosts(),
+    "chromecast_portal_to_hell": new ChromecastPortalToHell(),
+    "chromecast_ghosts": new ChromecastGhosts(),
 
     // Test individual scenes
     "creepy_clown_shower": new DownstairsBathCreepyClownShowerScene(LIGHTS["half_bathroom"]),
