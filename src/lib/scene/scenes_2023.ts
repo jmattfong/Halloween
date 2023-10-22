@@ -304,32 +304,36 @@ class CostumeContestScene extends Scene {
 class ChromecastScene extends Scene {
     chromecaster: Chromecaster
     started: boolean
+    deviceId: string
 
-    constructor() {
+    constructor(deviceId: string) {
         super()
         // this should probably be instantiated outside of this method here
         // TODO figure out device name for new Chromecast
-        this.chromecaster = new Chromecaster();
         this.started = false;
+        this.deviceId = deviceId;
     }
 
-    start() {
+    async start() {
         if (!this.started) {
-            this.chromecaster.start();
+            log.info(`Starting chromecast ${this.deviceId}`)
+            this.chromecaster = new Chromecaster(this.deviceId);
+            await this.chromecaster.start();
             this.started = true;
         }
     }
 
     async run(_spook_yHueBulbPlayer: SpookyHueBulbPlayer, _sensorType: SensorType, _sensorTriggedOn: boolean): Promise<void> {
-        this.start();
+        await this.start();
     }
 }
 
 class ChromecastPortalToHell extends ChromecastScene {
     async run(hue: SpookyHueBulbPlayer, type: SensorType, on: boolean): Promise<void> {
-        super.run(hue, type, on);
+        log.info(`ChromecastPortalToHell got a callback with sensor ${on}`)
+        await super.run(hue, type, on);
         while (true) {
-            this.chromecaster.playVideo(PORTAL_TO_HELL);
+            await this.chromecaster.playVideo(PORTAL_TO_HELL);
             await sleep(PORTAL_TO_HELL.getVideoLengthSeconds() * 1000 - 5);
         }
     }
@@ -337,10 +341,11 @@ class ChromecastPortalToHell extends ChromecastScene {
 
 class ChromecastGhosts extends ChromecastScene {
     async run(hue: SpookyHueBulbPlayer, type: SensorType, sensorTriggedOn: boolean): Promise<void> {
-        super.run(hue, type, sensorTriggedOn);
+        log.info(`ChromecastGhosts got a callback with sensor ${sensorTriggedOn}`)
+        await super.run(hue, type, sensorTriggedOn);
         if (sensorTriggedOn) {
             let video = VIDEOS_2023[Math.floor(Math.random() * VIDEOS_2023.length)];
-            this.chromecaster.playVideo(video);
+            await this.chromecaster.playVideo(video);
         }
     }
 }
@@ -401,8 +406,8 @@ export const SCENES_2023: { [key: string]: Scene; } = {
     "calming_cockroaches": new CalmingCockroachesScene(LIGHTS["half_bathroom"]),
     // Boomhaur's scenes
     "scream": new ScreamScene(LIGHTS["guest_bathroom"]),
-    "chromecast_portal_to_hell": new ChromecastPortalToHell(),
-    "chromecast_ghosts": new ChromecastGhosts(),
+    "chromecast_portal_to_hell": new ChromecastPortalToHell("Chromecast-HD-36a10199048bd09c03c63e7f05c555c2"),
+    "chromecast_ghosts": new ChromecastGhosts("Chromecast-70c4c8babee87879b01e6d819b6b5e97"),
 
     // Test individual scenes
     "creepy_clown_shower": new DownstairsBathCreepyClownShowerScene(LIGHTS["half_bathroom"]),

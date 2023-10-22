@@ -95,6 +95,7 @@ export class Chromecaster {
             const now = Date.now();
             const timePlayedMs = (now - this.videoPlayStartTime);
             if ((this.currentPlayingVideo.getVideoLengthSeconds() * 1000) - timePlayedMs < 500) {
+                log.info(`Video ${this.currentPlayingVideo.getName()} over. Playing blank video`)
                 this.playBlankVideo();
             }
 

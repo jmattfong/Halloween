@@ -132,7 +132,7 @@ async function main() {
       } else {
         log.info(`sensor is not manual, looking for scene to run`);
 
-        sceneName = sceneConfig.scenes.find((s) =>
+        sceneName = myScenes.find((s) =>
           (s.sensorId == sensorId && sensorType == s.sensorType)
         )?.name;
       }
