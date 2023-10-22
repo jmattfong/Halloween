@@ -172,7 +172,7 @@ class DownstairsBathCreepyClownShowerScene extends AutoResetRingScene {
         });
 
         spookyEvents.push(new Event(showerLight,
-            new SoundPattern(`${RESOURCES_DIR}/david_bathroom_clowns_pop.wav`, new OnPattern(RED, 10, 5), 10),
+            new SoundPattern(`${RESOURCES_DIR}/david_bathroom_clowns_pop.mp3`, new OnPattern(RED, 10, 5), 10),
             new OffPattern(1)));
 
         super(spookyEvents);
@@ -184,7 +184,7 @@ class WerewolfDoorJiggleScene extends Scene {
     spookyEvent: Event;
     constructor() {
         super();
-        this.spookyEvent = new Event("", new SoundPattern(`${RESOURCES_DIR}/david_scratching_dog.wav`, new SleepPattern(0), 0));
+        this.spookyEvent = new Event("", new SoundPattern(`${RESOURCES_DIR}/david_scratching_dog.mp3`, new SleepPattern(0), 0));
     }
 
     async run(spookyHueBulbPlayer: SpookyHueBulbPlayer, _sensorType: SensorType, sensorTriggedOn: boolean): Promise<void> {
@@ -207,7 +207,7 @@ class LookItsWafflesScene extends AutoResetRingScene {
             // 29-31 LOUD
             // -32 LOUD
             return new Event(light,
-                new SoundPattern(`${RESOURCES_DIR}/david_the_beast.wav`, new OnPattern(SOFT_RED, 4), 0),
+                new SoundPattern(`${RESOURCES_DIR}/david_the_beast.mp3`, new OnPattern(SOFT_RED, 4), 0),
                 new SleepPattern(0.1),
                 new OffPattern(1),
                 new OnPattern(SOFT_RED, 5),
@@ -239,7 +239,7 @@ class CalmingCockroachesScene extends AutoResetRingScene {
         });
 
         spookyEvents.push(new Event(showerLight,
-            new SoundPattern(`${RESOURCES_DIR}/david_psycho.wav`, new FlickerPattern(13.5, BLUE, 110), 0),
+            new SoundPattern(`${RESOURCES_DIR}/david_psycho.mp3`, new FlickerPattern(13.5, BLUE, 110), 0),
             new PulsePattern(RED, 14, 0.5),
             new OffPattern(6, 6),
         ));
@@ -262,7 +262,7 @@ class PsychoScene extends AutoResetRingScene {
         });
 
         spookyEvents.push(new Event(showerLight,
-            new SoundPattern(`${RESOURCES_DIR}/david_psycho.wav`, new FlickerPattern(13.5, BLUE, 110), 0),
+            new SoundPattern(`${RESOURCES_DIR}/david_psycho.mp3`, new FlickerPattern(13.5, BLUE, 110), 0),
             new PulsePattern(RED, 14, 0.5),
             new OffPattern(6, 6),
         ));
