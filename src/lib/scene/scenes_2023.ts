@@ -157,8 +157,10 @@ class FrontLightFlickerScene extends MultiPartScene {
 }
 
 class DownstairsBathCreepyClownShowerScene extends AutoResetRingScene {
-    constructor(mirrorLights: string[], showerLight: string) {
-        let spookyEvents: Event[] = mirrorLights.map(light => {
+    constructor(lights: string[]) {
+        let showerLight = lights.pop();
+
+        let spookyEvents: Event[] = lights.map(light => {
             return new Event(light,
                 new SleepPattern(0.0125),
                 new FlickerPattern(5),
@@ -180,12 +182,12 @@ class DownstairsBathCreepyClownShowerScene extends AutoResetRingScene {
 class WerewolfDoorJiggleScene extends Scene {
 
     spookyEvent: Event;
-    constructor(dummyLight: string) {
+    constructor() {
         super();
-        this.spookyEvent = new Event(dummyLight, new SoundPattern(`${RESOURCES_DIR}/david_scratching_dog.wav`, new SleepPattern(0), 0));
+        this.spookyEvent = new Event("", new SoundPattern(`${RESOURCES_DIR}/david_scratching_dog.wav`, new SleepPattern(0), 0));
     }
 
-    async run(spookyHueBulbPlayer: SpookyHueBulbPlayer, sensorType: SensorType, sensorTriggedOn: boolean): Promise<void> {
+    async run(spookyHueBulbPlayer: SpookyHueBulbPlayer, _sensorType: SensorType, sensorTriggedOn: boolean): Promise<void> {
         if (sensorTriggedOn) {
             spookyHueBulbPlayer.playPattern(this.spookyEvent);
         }
@@ -224,9 +226,11 @@ class LookItsWafflesScene extends AutoResetRingScene {
 
 // TODO
 class CalmingCockroachesScene extends AutoResetRingScene {
-    constructor(mirrorLights: string[], showerLight: string) {
+    constructor(lights: string[]) {
 
-        let spookyEvents = mirrorLights.map(light => {
+        let showerLight = lights.pop();
+
+        let spookyEvents = lights.map(light => {
             return new Event(light,
                 new OnPattern(RELAX, 13, 4),
                 new PulsePattern(RED, 14, 0.5),
@@ -246,9 +250,10 @@ class CalmingCockroachesScene extends AutoResetRingScene {
 }
 
 class PsychoScene extends AutoResetRingScene {
-    constructor(mirrorLights: string[], showerLight: string) {
+    constructor(lights: string[]) {
+        let showerLight = lights.pop();
 
-        let spookyEvents = mirrorLights.map(light => {
+        let spookyEvents = lights.map(light => {
             return new Event(light,
                 new OnPattern(RELAX, 13, 4),
                 new PulsePattern(RED, 14, 0.5),
@@ -269,9 +274,11 @@ class PsychoScene extends AutoResetRingScene {
 
 // TODO
 class ScreamScene extends AutoResetRingScene {
-    constructor(mirrorLights: string[], showerLight: string) {
+    constructor(lights: string[]) {
 
-        let spookyEvents = mirrorLights.map(light => {
+        let showerLight = lights.pop();
+
+        let spookyEvents = lights.map(light => {
             return new Event(light,
                 new OnPattern(RELAX, 13, 4),
                 new PulsePattern(RED, 14, 0.5),
@@ -335,27 +342,31 @@ class ChromecastGhosts extends Scene {
 */
 function get_photobooth_scene(): RandomMultiScene {
     const spookyScenes = [
-        new WerewolfDoorJiggleScene(""),
+        new WerewolfDoorJiggleScene(),
         new LookItsWafflesScene([""]),
     ];
     return new RandomMultiScene(spookyScenes, []);
 }
 
-function get_downstairs_bathroom_scene(mirror_light_1: string, mirror_light_2: string, shower_light: string): RandomMultiScene {
+function get_downstairs_bathroom_scene(lights: string[]): RandomMultiScene {
+    let mirror_light_1 = lights[0];
+    let mirror_light_2 = lights[1];
+    let shower_light = lights[2];
+
     const spookyScenes = [
-        new DownstairsBathCreepyClownShowerScene([mirror_light_1, mirror_light_2], shower_light),
+        new DownstairsBathCreepyClownShowerScene([mirror_light_1, mirror_light_2, shower_light]),
         new ElectricLady([mirror_light_1, mirror_light_2, shower_light]),
-        new PsychoScene([mirror_light_1, mirror_light_2], shower_light),
+        new PsychoScene([mirror_light_1, mirror_light_2, shower_light]),
     ];
     return new RandomMultiScene(spookyScenes, []);
 }
 
 const LIGHTS = {
     "front_walkway": [
-        
+        "8", "9"
     ],
     "downstairs_entry": [
-
+        "17", "25"
     ],
     "downstairs_bathroom": [
         "1", "2", "3"
@@ -377,30 +388,30 @@ export const SCENES_2023: { [key: string]: Scene; } = {
     "photobooth_spooks": get_photobooth_scene(),
     "costume_contest": new CostumeContestScene(),
     // Hank's scenes
-    "down_bath_random": get_downstairs_bathroom_scene("1", "2", "3"),
+    "down_bath_random": get_downstairs_bathroom_scene(LIGHTS["downstairs_bathroom"]),
     // Bill's scenes
     "welcome_inside": new ThunderScene(LIGHTS["half_bathroom"]),
     "front_light_flicker": new FrontLightFlickerScene(LIGHTS["front_walkway"]),
     // Dale's scene
-    "calming_cockroaches": new CalmingCockroachesScene(["down_bath_1", "down_bath_2"], "down_bath_3"),
+    "calming_cockroaches": new CalmingCockroachesScene(LIGHTS["half_bathroom"]),
     // Boomhaur's scenes
-    "scream": new ScreamScene(["guest_bathroom_mirror_1", "guest_bathroom_mirror_2"], "guest_bathroom_shower"),
+    "scream": new ScreamScene(LIGHTS["guest_bathroom"]),
 //    "chromecast_portal_to_hell": new ChromecastPortalToHell(),
 //    "chromecast_ghosts": new ChromecastGhosts(),
+
+    // Test individual scenes
+    "creepy_clown_shower": new DownstairsBathCreepyClownShowerScene(LIGHTS["half_bathroom"]),
+    "psycho": new PsychoScene(LIGHTS["half_bathroom"]),
+    "electric_lady": new ElectricLady(LIGHTS["half_bathroom"]),
+    "werewolf_door_jiggle": new WerewolfDoorJiggleScene(),
+    "look_its_waffles": new LookItsWafflesScene(LIGHTS["half_bathroom"]),
 
     // Test and Utility scenes
     "list": new ListOnLightsScene(),
     "get_light": new GetLight(21), // Change this to get the state of different lights by ID
-    "find_bulb": new FindBulb(["down_bath_1", "down_bath_2", "down_bath_3", "living_room_3", "living_room_4"]),
-    "find_bulb_2": new FindBulb(["halloween_hallway_2", "halloween_hallway_3", "guest_bathroom_shower", "garage_2"]),
-    "find_bulb_3": new FindBulb(["down_bath_1", "down_bath_2", "down_bath_3", "living_room_3", "living_room_4"]),
-
-    // Test individual scenes
-    "creepy_clown_shower": new DownstairsBathCreepyClownShowerScene(["down_bath_1", "down_bath_2"], "down_bath_3"),
-    "psycho": new PsychoScene(["guest_bathroom_mirror_1", "guest_bathroom_mirror_2"], "guest_bathroom_shower"),
-    "electric_lady": new ElectricLady(["guest_bathroom_mirror_1", "guest_bathroom_mirror_2", "guest_bathroom_shower"]),
-    "werewolf_door_jiggle": new WerewolfDoorJiggleScene("master_1"),
-    "look_its_waffles": new LookItsWafflesScene(["living_room_3"]),
+    "find_bulb": new FindBulb(["0", "1", "2", "3", "4"]),
+    "find_bulb_2": new FindBulb(["5", "6", "7", "8"]),
+    "find_bulb_3": new FindBulb(["9", "10", "11", "12", "13"]),
 };
 
 const DEV_SCENE = "welcome_inside"
