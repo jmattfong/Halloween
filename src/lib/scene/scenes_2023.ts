@@ -1,4 +1,4 @@
-import { Chromecaster } from '../chromecast';
+//import { Chromecaster } from '../chromecast';
 import { getLogger } from '../logging';
 import { CategoryLogger } from 'typescript-logging';
 import { SpookyHueBulbPlayer } from '../hue/spooky_bulb_player';
@@ -295,7 +295,7 @@ class CostumeContestScene extends Scene {
         // TODO
     }
 }
-
+/*
 class ChromecastPortalToHell extends Scene {
     chromecaster: Chromecaster
 
@@ -332,7 +332,7 @@ class ChromecastGhosts extends Scene {
         }
     }
 }
-
+*/
 function get_photobooth_scene(): RandomMultiScene {
     const spookyScenes = [
         new WerewolfDoorJiggleScene(""),
@@ -385,8 +385,8 @@ export const SCENES_2023: { [key: string]: Scene; } = {
     "calming_cockroaches": new CalmingCockroachesScene(["down_bath_1", "down_bath_2"], "down_bath_3"),
     // Boomhaur's scenes
     "scream": new ScreamScene(["guest_bathroom_mirror_1", "guest_bathroom_mirror_2"], "guest_bathroom_shower"),
-    "chromecast_portal_to_hell": new ChromecastPortalToHell(),
-    "chromecast_ghosts": new ChromecastGhosts(),
+//    "chromecast_portal_to_hell": new ChromecastPortalToHell(),
+//    "chromecast_ghosts": new ChromecastGhosts(),
 
     // Test and Utility scenes
     "list": new ListOnLightsScene(),
