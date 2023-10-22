@@ -6,7 +6,7 @@ import { SoundPattern, RandomSoundPattern, FlickerPattern, OffPattern, SleepPatt
 import { Event } from "./events";
 import { Scene, RandomMultiScene, MultiPartScene, AutoResetRingScene, RepeatingScene } from './scenes';
 import { VIDEOS_2023, PORTAL_TO_HELL } from '../videos';
-import { RED, SOFT_RED, RELAX, ORANGE, BLUE, CONCENTRATE } from '../config';
+import { RED, PURP, SOFT_RED, RELAX, ORANGE, BLUE, CONCENTRATE } from '../config';
 import { SensorType } from "../web_listener/webserver";
 
 const log: CategoryLogger = getLogger("scenes_2023");
@@ -224,7 +224,7 @@ class LookItsWafflesScene extends AutoResetRingScene {
     }
 }
 
-// TODO
+// Song is 161 seconds long
 class CalmingCockroachesScene extends AutoResetRingScene {
     constructor(lights: string[]) {
 
@@ -233,14 +233,12 @@ class CalmingCockroachesScene extends AutoResetRingScene {
         let spookyEvents = lights.map(light => {
             return new Event(light,
                 new OnPattern(RELAX, 13, 4),
-                new PulsePattern(RED, 14, 0.5),
                 new OnPattern(RELAX, 10, 5),
             );
         });
 
         spookyEvents.push(new Event(showerLight,
-            new SoundPattern(`${RESOURCES_DIR}/calming_cockroaches/enya_bugs.mp3`, new FlickerPattern(13.5, BLUE, 110), 0),
-            new PulsePattern(RED, 14, 0.5),
+            new SoundPattern(`${RESOURCES_DIR}/calming_cockroaches/enya_bugs.mp3`, new OnPattern(PURP, 150, 11), 0),
             new OffPattern(6, 6),
         ));
 
