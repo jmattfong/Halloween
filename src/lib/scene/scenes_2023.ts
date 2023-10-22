@@ -188,6 +188,7 @@ class WerewolfDoorJiggleScene extends Scene {
     }
 
     async run(spookyHueBulbPlayer: SpookyHueBulbPlayer, _sensorType: SensorType, sensorTriggedOn: boolean): Promise<void> {
+        log.info(`WerewolfDoorJiggleScene got callback with sensor ${sensorTriggedOn}`)
         if (sensorTriggedOn) {
             spookyHueBulbPlayer.playPattern(this.spookyEvent);
         }
@@ -221,6 +222,11 @@ class LookItsWafflesScene extends AutoResetRingScene {
                 new OffPattern(1, 1));
         });
         super(events, true);
+    }
+
+    async run(spookyHueBulbPlayer: SpookyHueBulbPlayer, sensorType: SensorType, sensorTriggedOn: boolean): Promise<void> {
+        log.info(`LookItsWafflesScene got a callback with sensor ${sensorTriggedOn}`)
+        await super.run(spookyHueBulbPlayer, sensorType, sensorTriggedOn);
     }
 }
 
@@ -390,6 +396,10 @@ const LIGHTS = {
     "guest_bedroom": [
 
     ],
+} as const
+
+function getLights(roomName: string): string[] {
+    return Object.assign([], LIGHTS[roomName]);
 }
 
 export const SCENES_2023: { [key: string]: Scene; } = {
@@ -398,23 +408,23 @@ export const SCENES_2023: { [key: string]: Scene; } = {
     "photobooth_spooks": get_photobooth_scene(),
     "costume_contest": new CostumeContestScene(),
     // Hank's scenes
-    "down_bath_random": get_downstairs_bathroom_scene(LIGHTS["downstairs_bathroom"]),
+    "down_bath_random": get_downstairs_bathroom_scene(getLights("downstairs_bathroom")),
     // Bill's scenes
-    "welcome_inside": new ThunderScene(LIGHTS["half_bathroom"]),
-    "front_light_flicker": new FrontLightFlickerScene(LIGHTS["front_walkway"]),
+    "welcome_inside": new ThunderScene(getLights("half_bathroom")),
+    "front_light_flicker": new FrontLightFlickerScene(getLights("front_walkway")),
     // Dale's scene
-    "calming_cockroaches": new CalmingCockroachesScene(LIGHTS["half_bathroom"]),
+    "calming_cockroaches": new CalmingCockroachesScene(getLights("half_bathroom")),
     // Boomhaur's scenes
-    "scream": new ScreamScene(LIGHTS["guest_bathroom"]),
+    "scream": new ScreamScene(getLights("guest_bathroom")),
     "chromecast_portal_to_hell": new ChromecastPortalToHell("Chromecast-HD-36a10199048bd09c03c63e7f05c555c2"),
     "chromecast_ghosts": new ChromecastGhosts("Chromecast-70c4c8babee87879b01e6d819b6b5e97"),
 
     // Test individual scenes
-    "creepy_clown_shower": new DownstairsBathCreepyClownShowerScene(LIGHTS["half_bathroom"]),
-    "psycho": new PsychoScene(LIGHTS["half_bathroom"]),
-    "electric_lady": new ElectricLady(LIGHTS["half_bathroom"]),
+    "creepy_clown_shower": new DownstairsBathCreepyClownShowerScene(getLights("half_bathroom")),
+    "psycho": new PsychoScene(getLights("half_bathroom")),
+    "electric_lady": new ElectricLady(getLights("half_bathroom")),
     "werewolf_door_jiggle": new WerewolfDoorJiggleScene(),
-    "look_its_waffles": new LookItsWafflesScene(LIGHTS["half_bathroom"]),
+    "look_its_waffles": new LookItsWafflesScene(getLights("half_bathroom")),
 
     // Test and Utility scenes
     "list": new ListOnLightsScene(),
@@ -424,5 +434,5 @@ export const SCENES_2023: { [key: string]: Scene; } = {
     "find_bulb_3": new FindBulb(["9", "10", "11", "12", "13"]),
 };
 
-const DEV_SCENE = "calming_cockroaches"
+const DEV_SCENE = "welcome_inside"
 SCENES_2023["dev_scene"] = SCENES_2023[DEV_SCENE];
