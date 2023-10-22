@@ -24,6 +24,7 @@ export class SoundPlayer {
     async play_music_mac(soundFile: string, volume: number, signal: AbortSignal) {
         log.debug("playing sound on mac")
         exec(`afplay ${soundFile} -v ${volume}`, { signal }, (_error) => {
+            log.info(`error: ${_error}`)
             log.info(`Canceled ${soundFile} playback`);
         });
     }
@@ -31,6 +32,7 @@ export class SoundPlayer {
     async play_music_linux(soundFile: string, volume: number, signal: AbortSignal) {
         log.debug("playing sound on linux")
         exec(`mpg321 ${soundFile} -g ${volume * 100}`, { signal }, (_error) => {
+            log.info(`error: ${_error}`)
             log.info(`Canceled ${soundFile} playback`);
         });
     }
