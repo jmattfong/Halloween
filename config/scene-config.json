@@ -44,13 +44,12 @@
         },
         {
             "name": "chromecast_portal_to_hell",
-            "sensorId": "Guest Bathroom",
-            "sensorType": "ring"
+            "sensorType": "manual"
         },
         {
             "name": "chromecast_ghosts",
-            "sensorId": "Guest Bathroom",
-            "sensorType": "ring"
+            "sensorId": "59",
+            "sensorType": "hue"
         },
 
         {

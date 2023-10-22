@@ -180,12 +180,12 @@ async function setupHueListeners(registeredClients: Map<string, Set<string>>, sp
   const hueSensors = await spookHue.getSensors();
   hueSensors.forEach((hueSensor: HueSensor) => {
     const hueCallback = (update: HueSensorUpdate) => {
-      const sensorId = hueSensor.getId();
+      const sensorId = `${hueSensor.getId()}`;
       log.info(`hue callback called on ${sensorId} `);
-      registeredClients.get(`${sensorId} `)?.forEach(async (clientUri: string) => {
+      registeredClients.get(sensorId)?.forEach(async (clientUri: string) => {
         log.info(`sending hue callback to client @${clientUri} `)
         try {
-          sendSensorEvent(clientUri, `${sensorId} `, SensorType.HUE, update.getPresence());
+          sendSensorEvent(clientUri, sensorId, SensorType.HUE, update.getPresence());
         } catch (e) {
           log.warn(`error sending hue callback to client @${clientUri}: ${e} `)
         }
