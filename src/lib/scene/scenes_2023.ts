@@ -239,7 +239,7 @@ class CalmingCockroachesScene extends AutoResetRingScene {
         });
 
         spookyEvents.push(new Event(showerLight,
-            new SoundPattern(`${RESOURCES_DIR}/david_psycho.mp3`, new FlickerPattern(13.5, BLUE, 110), 0),
+            new SoundPattern(`${RESOURCES_DIR}/calming_cockroaches/enya_bugs.mp3`, new FlickerPattern(13.5, BLUE, 110), 0),
             new PulsePattern(RED, 14, 0.5),
             new OffPattern(6, 6),
         ));
@@ -414,5 +414,5 @@ export const SCENES_2023: { [key: string]: Scene; } = {
     "find_bulb_3": new FindBulb(["9", "10", "11", "12", "13"]),
 };
 
-const DEV_SCENE = "welcome_inside"
+const DEV_SCENE = "calming_cockroaches"
 SCENES_2023["dev_scene"] = SCENES_2023[DEV_SCENE];
