@@ -350,16 +350,37 @@ function get_downstairs_bathroom_scene(mirror_light_1: string, mirror_light_2: s
     return new RandomMultiScene(spookyScenes, []);
 }
 
+const LIGHTS = {
+    "front_walkway": [
+        
+    ],
+    "downstairs_entry": [
+
+    ],
+    "downstairs_bathroom": [
+        "1", "2", "3"
+    ],
+    "half_bathroom": [
+        "6", "7"
+    ],
+    "guest_bathroom": [
+        "20", "21", "22"
+    ],
+    "guest_bedroom": [
+
+    ],
+}
+
 export const SCENES_2023: { [key: string]: Scene; } = {
     // Scenes for the party
     // Main server's scenes
     "photobooth_spooks": get_photobooth_scene(),
     "costume_contest": new CostumeContestScene(),
     // Hank's scenes
-    "down_bath_random": get_downstairs_bathroom_scene("down_bath_1", "down_bath_2", "down_bath_3"),
+    "down_bath_random": get_downstairs_bathroom_scene("1", "2", "3"),
     // Bill's scenes
-    "welcome_inside": new ThunderScene(["entry_2", "downstairs_1"]),
-    "front_light_flicker": new FrontLightFlickerScene(["living_room_1", "living_room_2"]),
+    "welcome_inside": new ThunderScene(LIGHTS["half_bathroom"]),
+    "front_light_flicker": new FrontLightFlickerScene(LIGHTS["front_walkway"]),
     // Dale's scene
     "calming_cockroaches": new CalmingCockroachesScene(["down_bath_1", "down_bath_2"], "down_bath_3"),
     // Boomhaur's scenes
@@ -381,3 +402,6 @@ export const SCENES_2023: { [key: string]: Scene; } = {
     "werewolf_door_jiggle": new WerewolfDoorJiggleScene("master_1"),
     "look_its_waffles": new LookItsWafflesScene(["living_room_3"]),
 };
+
+const DEV_SCENE = "welcome_inside"
+SCENES_2023["dev_scene"] = SCENES_2023[DEV_SCENE];

@@ -42,62 +42,38 @@
         "Entry Motion Sensor"
     ],
     "lights": {
-        "down_bath_1": 1,
-        "down_bath_2": 2,
-        "down_bath_3": 3,
-
-        "waffles_room_1": 26,
-        "waffles_room_2": 30,
-        "waffles_room_3": 29,
-
-        "garage_1": 1,
-        "garage_2": 6,
-        "garage_3": 2,
-
-        "half_bath_1": 21,
-        "half_bath_2": 16,
-        "half_bath_3": 9,
-
-        "living_room_1": 7,
-        "living_room_2": 8,
-        "living_room_3": 18,
-        "living_room_4": 19,
-
-        "entry_1": 0,
-        "entry_2": 25,
-
-        "downstairs_1": 17,
-        "downstairs_2": 24,
-
-        "upstairs_1": 14,
-        "upstairs_2": 15,
-
-        "roofstairs_1": 27,
-        "roofstairs_2": 28,
-
-        "hallway_1": 5,
-        "hallway_2": 4,
-
-        "guest_bed_1": 23,
-        "guest_bed_2": 31,
-
-        "master_1": 12,
-        "master_2": 13,
-        "master_3": 10,
-        "master_4": 11,
-
-        "rooftop_1": 4,
-        "rooftop_2": 5,
-
-        "halloween_hallway_1": 21,
-        "halloween_hallway_2": 1,
-        "halloween_hallway_3": 2,
-        "halloween_hallway_4": 19,
-        "halloween_hallway_5": 16,
-
-        "guest_bathroom_mirror_1": 20,
-        "guest_bathroom_mirror_2": 22,
-        "guest_bathroom_shower": 3
+        "0": 0,
+        "1": 1,
+        "2": 2,
+        "3": 3,
+        "4": 4,
+        "5": 5,
+        "6": 6,
+        "7": 7,
+        "8": 8,
+        "9": 9,
+        "10": 10,
+        "11": 11,
+        "12": 12,
+        "13": 13,
+        "14": 14,
+        "15": 15,
+        "16": 16,
+        "17": 17,
+        "18": 18,
+        "19": 19,
+        "20": 20,
+        "21": 21,
+        "22": 22,
+        "23": 23,
+        "24": 24,
+        "25": 25,
+        "26": 26,
+        "27": 27,
+        "28": 28,
+        "29": 29,
+        "30": 30,
+        "31": 31
     },
     "hue_bridge_ip": "192.168.86.44",
     "colors": {
