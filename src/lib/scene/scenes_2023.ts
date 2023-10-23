@@ -397,36 +397,38 @@ function getLights(roomName: string): string[] {
     return Object.assign([], LIGHTS[roomName]);
 }
 
-export const SCENES_2023: { [key: string]: Scene; } = {
-    // Scenes for the party
-    // Main server's scenes
-    "photobooth_spooks": get_photobooth_scene(),
-    "costume_contest": new CostumeContestScene(),
-    // Hank's scenes
-    "down_bath_random": get_downstairs_bathroom_scene(getLights("downstairs_bathroom")),
-    // Bill's scenes
-    "welcome_inside": new ThunderScene(getLights("half_bathroom")),
-    "front_light_flicker": new FrontLightFlickerScene(getLights("front_walkway")),
-    // Dale's scene
-    "calming_cockroaches": new CalmingCockroachesScene(getLights("half_bathroom")),
-    // Boomhaur's scenes
-    "scream": new ScreamScene(getLights("guest_bathroom")),
-    "chromecast_portal_to_hell": new ChromecastPortalToHell("Chromecast-HD-36a10199048bd09c03c63e7f05c555c2"),
-    "chromecast_ghosts": new ChromecastGhosts("Chromecast-70c4c8babee87879b01e6d819b6b5e97"),
+export function getScenes(device_name: string): { [key: string]: Scene; } {
+    return {
+        // Scenes for the party
+        // Main server's scenes
+        "photobooth_spooks": get_photobooth_scene(),
+        "costume_contest": new CostumeContestScene(),
+        // Hank's scenes
+        "down_bath_random": get_downstairs_bathroom_scene(getLights("downstairs_bathroom")),
+        // Bill's scenes
+        "welcome_inside": new ThunderScene(getLights("half_bathroom")),
+        "front_light_flicker": new FrontLightFlickerScene(getLights("front_walkway")),
+        // Dale's scene
+        "calming_cockroaches": new CalmingCockroachesScene(getLights("half_bathroom")),
+        // Boomhaur's scenes
+        "scream": new ScreamScene(getLights("guest_bathroom")),
+        "chromecast_portal_to_hell": new ChromecastPortalToHell("Chromecast-HD-36a10199048bd09c03c63e7f05c555c2"),
+        "chromecast_ghosts": new ChromecastGhosts("Chromecast-70c4c8babee87879b01e6d819b6b5e97"),
 
-    // Test individual scenes
-    "creepy_clown_shower": new DownstairsBathCreepyClownShowerScene(getLights("half_bathroom")),
-    "psycho": new PsychoScene(getLights("half_bathroom")),
-    "electric_lady": new ElectricLady(getLights("half_bathroom")),
-    "werewolf_door_jiggle": new WerewolfDoorJiggleScene(),
-    "look_its_waffles": new LookItsWafflesScene(getLights("half_bathroom")),
+        // Test individual scenes
+        "creepy_clown_shower": new DownstairsBathCreepyClownShowerScene(getLights("half_bathroom")),
+        "psycho": new PsychoScene(getLights("half_bathroom")),
+        "electric_lady": new ElectricLady(getLights("half_bathroom")),
+        "werewolf_door_jiggle": new WerewolfDoorJiggleScene(),
+        "look_its_waffles": new LookItsWafflesScene(getLights("half_bathroom")),
 
-    // Test and Utility scenes
-    "list": new ListOnLightsScene(),
-    "get_light": new GetLight(21), // Change this to get the state of different lights by ID
-    "find_bulb": new FindBulb(["0", "1", "2", "3", "4"]),
-    "find_bulb_2": new FindBulb(["5", "6", "7", "8"]),
-    "find_bulb_3": new FindBulb(["9", "10", "11", "12", "13"]),
+        // Test and Utility scenes
+        "list": new ListOnLightsScene(),
+        "get_light": new GetLight(21), // Change this to get the state of different lights by ID
+        "find_bulb": new FindBulb(["0", "1", "2", "3", "4"]),
+        "find_bulb_2": new FindBulb(["5", "6", "7", "8"]),
+        "find_bulb_3": new FindBulb(["9", "10", "11", "12", "13"]),
+    }
 };
 
 

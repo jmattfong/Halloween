@@ -6,17 +6,17 @@ import { getLogger, setLogLevel } from "./lib/logging";
 import { CategoryLogger, LogLevel } from "typescript-logging";
 import { CONFIG } from "./lib/config";
 
-import { SCENES_2023 } from "./lib/scene/scenes_2023";
+import { getScenes } from "./lib/scene/scenes_2023";
 import { sendRegisterEvent } from "./lib/web_listener/requests";
 import { SpookyHueBulbPlayer } from "./lib/hue/spooky_bulb_player";
 import { SceneConfig, getSceneConfigFromFile } from "./lib/scene/scene_config";
-const SCENES = SCENES_2023;
 
 const log: CategoryLogger = getLogger("main");
 
 // For details about adding new args, see https://www.npmjs.com/package/ts-command-line-args
 interface IHalloweenServerArgs {
   scene: string[];
+  name: string;
   webserverPort: number;
   orchestratorIp: string;
   orchestratorPort: number;
@@ -34,7 +34,13 @@ async function main() {
         alias: "s",
         multiple: true,
         optional: true,
-        description: `The scene to run. Choose from: ${Object.keys(SCENES)}`,
+        description: `The scene to run. Choose from: ${Object.keys(getScenes(""))}`,
+      },
+      name: {
+        type: String,
+        alias: "n",
+        optional: true,
+        description: "The identifiable name of this client. Ex: 'dale'",
       },
       webserverPort: {
         type: Number,
@@ -80,8 +86,10 @@ async function main() {
     }
   );
 
+
   const logLevel = args.debug ? LogLevel.Debug : LogLevel.Info;
   setLogLevel(logLevel);
+
 
   log.debug(`input args: ${JSON.stringify(args)}\n`);
 
@@ -89,6 +97,9 @@ async function main() {
     log.warn(`no scenes were specified. Please specify at least one scene to run. Choose from: ${Object.keys(SCENES)}`);
     return;
   }
+
+  const scenes = getScenes(args.name);
+  log.info(`Welcome to the Halloween Spooktacular. Client: ${args.name}`);
 
   const sceneConfig: SceneConfig = getSceneConfigFromFile('./config/scene-config.json');
   log.debug(`WHOLE CONFIG: ${JSON.stringify(sceneConfig)}`)
@@ -142,13 +153,13 @@ async function main() {
         return
       }
 
-      if (!(sceneName in SCENES)) {
+      if (!(sceneName in scenes)) {
         log.warn(`could not find scene to run for sensor ${sensorId} -> ${sensorType} `);
         return
       }
 
       log.info(`found scene to run ${sceneName} `)
-      const sceneToRun = SCENES[sceneName];
+      const sceneToRun = scenes[sceneName];
 
       sceneToRun.run(spookyHueBulbPlayer, sensorType, data)
     });
