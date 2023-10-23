@@ -164,6 +164,7 @@ export class SplitPartScene extends Scene {
 export class RandomMultiScene extends Scene {
   spookyEventChoices: Scene[];
   unSpookyEvents: Event[];
+  currentScene: Scene | null;
 
   constructor(
     spookyEventChoices: Scene[],
@@ -172,24 +173,22 @@ export class RandomMultiScene extends Scene {
     super();
     this.spookyEventChoices = spookyEventChoices;
     this.unSpookyEvents = unSpookyEvents;
+    this.currentScene = null;
   }
 
   async run(spookyHueBulbPlayer: SpookyHueBulbPlayer, sensorType: SensorType, sensorTriggedOn: boolean): Promise<void> {
     // if the data.faulted is true, that means that the door is open and we should resort to the
     // unspooky base pattern
     // otherwise, pick a random pattern and play it!
-    if (sensorTriggedOn) {
-      this.unSpookyEvents.forEach((event) => {
-        spookyHueBulbPlayer.playPattern(event);
-      });
-    } else {
+    if (sensorTriggedOn || this.currentScene == null) {
+      // We switch scenes when the sensor is on
       const sceneIndex = Math.floor(Math.random() * this.spookyEventChoices.length);
       log.debug(`choosing pattern #${sceneIndex}`);
-      const spookySceneToRun = this.spookyEventChoices[sceneIndex];
-      log.debug(`Choice: ${spookySceneToRun}`);
-      spookySceneToRun.run(spookyHueBulbPlayer, sensorType, sensorTriggedOn);
+      this.currentScene = this.spookyEventChoices[sceneIndex];
+      log.debug(`Choice: ${this.currentScene}`);
     }
 
+    this.currentScene.run(spookyHueBulbPlayer, sensorType, sensorTriggedOn);
   }
 }
 

@@ -29,8 +29,8 @@
         },
         {
             "name": "front_light_flicker",
-            "sensorId": "Guest Bathroom",
-            "sensorType": "ring"
+            "sensorId": "9",
+            "sensorType": "hue"
         },
         {
             "name": "calming_cockroaches",
