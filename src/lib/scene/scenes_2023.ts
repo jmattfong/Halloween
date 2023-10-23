@@ -398,7 +398,7 @@ function getLights(roomName: string): string[] {
 }
 
 export function getScenes(device_name: string): { [key: string]: Scene; } {
-    return {
+    let main_scenes = {
         // Scenes for the party
         // Main server's scenes
         "photobooth_spooks": get_photobooth_scene(),
@@ -429,8 +429,9 @@ export function getScenes(device_name: string): { [key: string]: Scene; } {
         "find_bulb_2": new FindBulb(["5", "6", "7", "8"]),
         "find_bulb_3": new FindBulb(["9", "10", "11", "12", "13"]),
     }
+
+    main_scenes["dev_scene"] = main_scenes["scream"];
+
+    return main_scenes;
 };
 
-
-const DEV_SCENE = "scream"
-SCENES_2023["dev_scene"] = SCENES_2023[DEV_SCENE];

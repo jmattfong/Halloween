@@ -90,15 +90,15 @@ async function main() {
   const logLevel = args.debug ? LogLevel.Debug : LogLevel.Info;
   setLogLevel(logLevel);
 
-
   log.debug(`input args: ${JSON.stringify(args)}\n`);
 
+  const scenes = getScenes(args.name);
+
   if (args.scene == null || args.scene.length == 0) {
-    log.warn(`no scenes were specified. Please specify at least one scene to run. Choose from: ${Object.keys(SCENES)}`);
+    log.warn(`no scenes were specified. Please specify at least one scene to run. Choose from: ${Object.keys(scenes)}`);
     return;
   }
 
-  const scenes = getScenes(args.name);
   log.info(`Welcome to the Halloween Spooktacular. Client: ${args.name}`);
 
   const sceneConfig: SceneConfig = getSceneConfigFromFile('./config/scene-config.json');
