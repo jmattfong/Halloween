@@ -280,22 +280,16 @@ class PsychoScene extends AutoResetRingScene {
 class ScreamScene extends AutoResetRingScene {
     constructor(lights: string[]) {
 
-        let showerLight = lights.pop();
-
+        for (let data of lights) {
+            console.log(data)
+        }
         let spookyEvents = lights.map(light => {
             return new Event(light,
-                new OnPattern(RELAX, 13, 4),
-                new PulsePattern(RED, 14, 0.5),
-                new OnPattern(RELAX, 10, 5),
+                new SoundPattern(`${RESOURCES_DIR}/scream/scream_bathroom.mp3`, new OnPattern(RED, 35, 1), 0),
+                new OnPattern(RELAX, 20, 0.5),
+                new OffPattern(10, 0.2),
             );
         });
-
-        spookyEvents.push(new Event(showerLight,
-            // TODO create this sound
-            new SoundPattern(`${RESOURCES_DIR}/scream.mp3`, new FlickerPattern(13.5, BLUE, 110), 0),
-            new PulsePattern(RED, 14, 0.5),
-            new OffPattern(6, 6),
-        ));
 
         super(spookyEvents, false);
     }
@@ -434,5 +428,6 @@ export const SCENES_2023: { [key: string]: Scene; } = {
     "find_bulb_3": new FindBulb(["9", "10", "11", "12", "13"]),
 };
 
-const DEV_SCENE = "welcome_inside"
+
+const DEV_SCENE = "scream"
 SCENES_2023["dev_scene"] = SCENES_2023[DEV_SCENE];
