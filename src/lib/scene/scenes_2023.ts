@@ -276,13 +276,10 @@ class PsychoScene extends AutoResetRingScene {
     }
 }
 
-// TODO
+// Song is 66 seconds long, first 10 sec are silent
 class ScreamScene extends AutoResetRingScene {
     constructor(lights: string[]) {
 
-        for (let data of lights) {
-            console.log(data)
-        }
         let spookyEvents = lights.map(light => {
             return new Event(light,
                 new SoundPattern(`${RESOURCES_DIR}/scream/scream_bathroom.mp3`, new OnPattern(RED, 45, 10), 0),
@@ -296,9 +293,73 @@ class ScreamScene extends AutoResetRingScene {
     }
 }
 
-class CostumeContestScene extends Scene {
-    async run(_spook_yHueBulbPlayer: SpookyHueBulbPlayer, _sensorType: SensorType, _sensorTriggedOn: boolean): Promise<void> {
-        // TODO
+class CostumeContestGatherScene extends AutoResetRingScene {
+    constructor(device_name: string) {
+        let lights = []
+        switch (device_name) {
+          case "bill":
+            lights = ["8", "9", "17", "25"]
+            break;
+
+          case "dale":
+            lights = ["6", "7"]
+            break;
+
+          case "hank":
+            lights = ["1", "2", "3"]
+            break;
+
+          case "boomhauer":
+            lights = ["20", "21", "22"]
+            break;
+
+          default:
+            break;
+        }
+
+        let spookyEvents = lights.map(light => {
+            return new Event(light,
+                new SoundPattern(`${RESOURCES_DIR}/costume_contest/costume_contest_23_gather.mp3`, new FlickerPattern(3), 0),
+                new OnPattern(RELAX, 20, 0.5)
+            );
+        });
+
+        super(spookyEvents, false);
+    }
+}
+
+class CostumeContestVoteScene extends AutoResetRingScene {
+    constructor(device_name: string) {
+        let lights = []
+        switch (device_name) {
+          case "bill":
+            lights = ["8", "9", "17", "25"]
+            break;
+
+          case "dale":
+            lights = ["6", "7"]
+            break;
+
+          case "hank":
+            lights = ["1", "2", "3"]
+            break;
+
+          case "boomhauer":
+            lights = ["20", "21", "22"]
+            break;
+
+          default:
+            break;
+        }
+
+        let spookyEvents = lights.map(light => {
+            return new Event(light,
+                new SoundPattern(`${RESOURCES_DIR}/costume_contest/costume_contest_23_vote.mp3`, new FlickerPattern(3), 0),
+                new OnPattern(RELAX, 20, 0.5)
+            );
+        });
+
+        super(spookyEvents, false);
     }
 }
 
@@ -402,7 +463,8 @@ export function getScenes(device_name: string): { [key: string]: Scene; } {
         // Scenes for the party
         // Main server's scenes
         "photobooth_spooks": get_photobooth_scene(),
-        "costume_contest": new CostumeContestScene(),
+        "costume_contest_gather": new CostumeContestGatherScene(device_name),
+        "costume_contest_vote": new CostumeContestVoteScene(device_name),
         // Hank's scenes
         "down_bath_random": get_downstairs_bathroom_scene(getLights("downstairs_bathroom")),
         // Bill's scenes
