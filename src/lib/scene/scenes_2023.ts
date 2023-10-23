@@ -414,8 +414,8 @@ class ChromecastGhosts extends ChromecastScene {
 
 function get_photobooth_scene(): RandomMultiScene {
     const spookyScenes = [
-        new WerewolfDoorJiggleScene(),
-        new LookItsWafflesScene([""]),
+        // new WerewolfDoorJiggleScene(),
+        new ThunderScene(getLights("half_bathroom"))
     ];
     return new RandomMultiScene(spookyScenes, []);
 }
