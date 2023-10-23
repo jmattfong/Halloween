@@ -288,6 +288,7 @@ class ScreamScene extends AutoResetRingScene {
                 new SoundPattern(`${RESOURCES_DIR}/scream/scream_bathroom.mp3`, new OnPattern(RED, 35, 1), 0),
                 new OnPattern(RELAX, 20, 0.5),
                 new OffPattern(10, 0.2),
+                new OnPattern(RELAX, 1, 1)
             );
         });
 

@@ -39,7 +39,7 @@
         },
         {
             "name": "scream",
-            "sensorId": "Guest Bathroom",
+            "sensorId": "Garage Door",
             "sensorType": "ring"
         },
         {
