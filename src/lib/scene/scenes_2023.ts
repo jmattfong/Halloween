@@ -108,13 +108,13 @@ class ThunderScene extends MultiPartScene {
         let events: Event[] = lights.map(light => {
             return new Event(light,
                 new RandomSoundPattern([`${RESOURCES_DIR}/thunder/david_thunder_and_clowns.mp3`,
-                                        `${RESOURCES_DIR}/thunder/david_thunder.mp3`,
-                                        `${RESOURCES_DIR}/thunder/lightning_bolt.mp3`,
-                                        `${RESOURCES_DIR}/thunder/lightning_bolt_2.mp3`,
-                                        `${RESOURCES_DIR}/thunder/thunder_sound_1.mp3`,
-                                        `${RESOURCES_DIR}/thunder/thunder_sound_2.mp3`], 
-                                    new FlickerPattern(3)),
-                                    DEFAULT_LIGHTING);
+                `${RESOURCES_DIR}/thunder/david_thunder.mp3`,
+                `${RESOURCES_DIR}/thunder/lightning_bolt.mp3`,
+                `${RESOURCES_DIR}/thunder/lightning_bolt_2.mp3`,
+                `${RESOURCES_DIR}/thunder/thunder_sound_1.mp3`,
+                `${RESOURCES_DIR}/thunder/thunder_sound_2.mp3`],
+                    new FlickerPattern(3)),
+                DEFAULT_LIGHTING);
         });
         super(events, getUnspookyEvents(lights));
     }
@@ -343,24 +343,24 @@ class CostumeContestGatherScene extends AutoResetRingScene {
     constructor(device_name: string) {
         let lights = []
         switch (device_name) {
-          case "bill":
-            lights = ["8", "9", "17", "25"]
-            break;
+            case "bill":
+                lights = ["8", "9", "17", "25"]
+                break;
 
-          case "dale":
-            lights = ["6", "7"]
-            break;
+            case "dale":
+                lights = ["6", "7"]
+                break;
 
-          case "hank":
-            lights = ["1", "2", "3"]
-            break;
+            case "hank":
+                lights = ["1", "2", "3"]
+                break;
 
-          case "boomhauer":
-            lights = ["20", "21", "22"]
-            break;
+            case "boomhauer":
+                lights = ["20", "21", "22"]
+                break;
 
-          default:
-            break;
+            default:
+                break;
         }
 
         let spookyEvents = lights.map(light => {
@@ -378,24 +378,24 @@ class CostumeContestVoteScene extends AutoResetRingScene {
     constructor(device_name: string) {
         let lights = []
         switch (device_name) {
-          case "bill":
-            lights = ["8", "9", "17", "25"]
-            break;
+            case "bill":
+                lights = ["8", "9", "17", "25"]
+                break;
 
-          case "dale":
-            lights = ["6", "7"]
-            break;
+            case "dale":
+                lights = ["6", "7"]
+                break;
 
-          case "hank":
-            lights = ["1", "2", "3"]
-            break;
+            case "hank":
+                lights = ["1", "2", "3"]
+                break;
 
-          case "boomhauer":
-            lights = ["20", "21", "22"]
-            break;
+            case "boomhauer":
+                lights = ["20", "21", "22"]
+                break;
 
-          default:
-            break;
+            default:
+                break;
         }
 
         let spookyEvents = lights.map(light => {
@@ -461,7 +461,7 @@ class ChromecastGhosts extends ChromecastScene {
 function get_photobooth_scene(): RandomMultiScene {
     const spookyScenes = [
         // new WerewolfDoorJiggleScene(),
-        new ThunderScene(getLights("half_bathroom"))
+        new ThunderScene(getLights("guest_bedroom"))
     ];
     return new RandomMultiScene(spookyScenes, []);
 }
@@ -497,7 +497,7 @@ const LIGHTS = {
         "20", "21", "22"
     ],
     "guest_bedroom": [
-
+        "23", "31"
     ],
 } as const
 

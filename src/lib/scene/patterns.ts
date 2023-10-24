@@ -127,7 +127,9 @@ export class RandomSoundPattern extends SoundPattern {
   }
 
   getSoundFile(): string {
-    return this.soundFiles[Math.floor(Math.random() * this.soundFiles.length)];
+    const index = Math.floor(Math.random() * this.soundFiles.length);
+    log.debug(`random sound #: ${index + 1} / ${this.soundFiles.length}`)
+    return this.soundFiles[index];
   }
 }
 
