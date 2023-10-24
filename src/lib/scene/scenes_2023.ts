@@ -235,7 +235,7 @@ class CalmingCockroachesScene extends MultiPartScene {
     constructor(lights: string[]) {
         let spookyEvents = [
             new Event(lights[0],
-                new SoundPattern(`${RESOURCES_DIR}/calming_cockroaches/enya_bugs.mp3`, new OnPattern(PURP, 150, 11), 0),
+                new SoundPattern(`${RESOURCES_DIR}/calming_cockroaches/enya_bugs.mp3`, new OnPattern(PURP, 150, 11), 0, 1, true),
                 new OffPattern(6, 6),
             ),
             new Event(lights[1],
