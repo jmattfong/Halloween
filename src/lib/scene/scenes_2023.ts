@@ -234,19 +234,17 @@ class LookItsWafflesScene extends AutoResetRingScene {
 class CalmingCockroachesScene extends MultiPartScene {
     constructor(lights: string[]) {
 
-        let showerLight = lights.pop();
 
-        let spookyEvents = lights.map(light => {
-            return new Event(light,
+        let spookyEvents = [
+            new Event(lights[0],
+                new SoundPattern(`${RESOURCES_DIR}/calming_cockroaches/enya_bugs.mp3`, new OnPattern(PURP, 150, 11), 0),
+                new OffPattern(6, 6),
+            ),
+            new Event(lights[1],
                 new OnPattern(RELAX, 13, 4),
                 new OnPattern(RELAX, 10, 5),
-            );
-        });
-
-        spookyEvents.push(new Event(showerLight,
-            new SoundPattern(`${RESOURCES_DIR}/calming_cockroaches/enya_bugs.mp3`, new OnPattern(PURP, 150, 11), 0),
-            new OffPattern(6, 6),
-        ));
+            ),
+        ];
 
         const unspookyEvents = getUnspookyEvents(lights);
 
