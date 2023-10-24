@@ -127,7 +127,7 @@ class ElectricLady extends MultiPartScene {
         var events: Event[] = lights.slice(0, -1).map(light => {
             log.info(`my LIGHT: ${light}`)
             return new Event(light,
-                new FlickerPattern(4),
+                new FlickerPattern(3),
                 new OffPattern(1),
                 new StableColourPattern(RED, 60, 30, 0),
                 DEFAULT_LIGHTING
@@ -135,7 +135,7 @@ class ElectricLady extends MultiPartScene {
         });
         log.info(`other LIGHT: ${lights[lights.length - 1]}`)
         events.push(new Event(lights[lights.length - 1],
-            new SoundPattern(`${RESOURCES_DIR}/electric_lady/sparks.mp3`, new FlickerPattern(5), 0),
+            new SoundPattern(`${RESOURCES_DIR}/electric_lady/sparks.mp3`, new FlickerPattern(4), 0),
             new SoundPattern(`${RESOURCES_DIR}/electric_lady/woman_screaming.mp3`, new StableColourPattern(RED, 15, 30, 0), 0.5),
             DEFAULT_LIGHTING
         ));
