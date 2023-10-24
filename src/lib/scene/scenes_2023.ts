@@ -470,10 +470,10 @@ function get_downstairs_bathroom_scene(lights: string[]): RandomMultiScene {
 
     const spookyScenes = [
         new HellBathroomCostumeScene(Object.assign([],lights)),
-        // new HellBathroomFeedingScene(Object.assign([],lights)),
-        // new HellBathroomWolfScene(Object.assign([],lights)),
-        // new DownstairsBathCreepyClownShowerScene(Object.assign([],lights)),
-        // new ElectricLady(Object.assign([],lights)),
+        new HellBathroomFeedingScene(Object.assign([],lights)),
+        new HellBathroomWolfScene(Object.assign([],lights)),
+        new DownstairsBathCreepyClownShowerScene(Object.assign([],lights)),
+        new ElectricLady(Object.assign([],lights)),
         new PsychoScene(Object.assign([],lights)),
     ];
 
