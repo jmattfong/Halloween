@@ -38,9 +38,13 @@ export class SoundPlayer {
     }
 
     public stop() {
-        if (this.controller != undefined) {
-            this.controller.abort();
-        }
+        if (platform() === 'darwin') {
+            if (this.controller != undefined) {
+                this.controller.abort();
+            }
+        } else {
+            exec(`pgrep mpg321 | xargs kill -9`, (_error) => {
+                log.info(`error: ${_error}`)
+                log.info(`Canceled sound playback`);
+            }
     }
-
-}
