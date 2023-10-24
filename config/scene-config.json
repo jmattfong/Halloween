@@ -9,13 +9,7 @@
 
         {
             "name": "photobooth_spooks",
-            "sensorId": "Guest Bathroom",
-            "sensorType": "ring"
-        },
-        {
-            "name": "costume_contest",
-            "sensorId": "Guest Bathroom",
-            "sensorType": "ring"
+            "sensorType": "manual"
         },
         {
             "name": "down_bath_random",
@@ -48,8 +42,16 @@
         },
         {
             "name": "chromecast_ghosts",
-            "sensorId": "59",
+            "sensorId": "9",
             "sensorType": "hue"
+        },
+        {
+            "name": "costume_contest_gather",
+            "sensorType": "manual"
+        },
+        {
+            "name": "costume_contest_vote",
+            "sensorType": "manual"
         },
 
         {
