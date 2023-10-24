@@ -231,10 +231,8 @@ class LookItsWafflesScene extends AutoResetRingScene {
 }
 
 // Song is 161 seconds long
-class CalmingCockroachesScene extends MultiPartScene {
+class CalmingCockroachesScene extends AutoResetRingScene {
     constructor(lights: string[]) {
-
-
         let spookyEvents = [
             new Event(lights[0],
                 new SoundPattern(`${RESOURCES_DIR}/calming_cockroaches/enya_bugs.mp3`, new OnPattern(PURP, 150, 11), 0),
@@ -246,9 +244,9 @@ class CalmingCockroachesScene extends MultiPartScene {
             ),
         ];
 
-        const unspookyEvents = getUnspookyEvents(lights);
+        // const unspookyEvents = getUnspookyEvents(lights);
 
-        super(spookyEvents, unspookyEvents, false);
+        super(spookyEvents, false);
     }
 }
 
