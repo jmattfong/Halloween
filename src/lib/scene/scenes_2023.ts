@@ -463,8 +463,8 @@ export function getScenes(device_name: string): { [key: string]: Scene; } {
         // Scenes for the party
         // Main server's scenes
         "photobooth_spooks": get_photobooth_scene(),
-        "costume_contest_gather": new CostumeContestGatherScene(device_name),
-        "costume_contest_vote": new CostumeContestVoteScene(device_name),
+        "chromecast_portal_to_hell": new ChromecastPortalToHell("Chromecast-HD-36a10199048bd09c03c63e7f05c555c2"),
+        "chromecast_ghosts": new ChromecastGhosts("Chromecast-70c4c8babee87879b01e6d819b6b5e97"),
         // Hank's scenes
         "down_bath_random": get_downstairs_bathroom_scene(getLights("downstairs_bathroom")),
         // Bill's scenes
@@ -474,8 +474,9 @@ export function getScenes(device_name: string): { [key: string]: Scene; } {
         "calming_cockroaches": new CalmingCockroachesScene(getLights("half_bathroom")),
         // Boomhaur's scenes
         "scream": new ScreamScene(getLights("guest_bathroom")),
-        "chromecast_portal_to_hell": new ChromecastPortalToHell("Chromecast-HD-36a10199048bd09c03c63e7f05c555c2"),
-        "chromecast_ghosts": new ChromecastGhosts("Chromecast-70c4c8babee87879b01e6d819b6b5e97"),
+        // Global scenes
+        "costume_contest_gather": new CostumeContestGatherScene(device_name),
+        "costume_contest_vote": new CostumeContestVoteScene(device_name),
 
         // Test individual scenes
         "creepy_clown_shower": new DownstairsBathCreepyClownShowerScene(getLights("half_bathroom")),
