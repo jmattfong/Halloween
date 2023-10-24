@@ -474,7 +474,7 @@ function get_downstairs_bathroom_scene(lights: string[]): RandomMultiScene {
         // new HellBathroomWolfScene(Object.assign([],lights)),
         // new DownstairsBathCreepyClownShowerScene(Object.assign([],lights)),
         // new ElectricLady(Object.assign([],lights)),
-        // new PsychoScene(Object.assign([],lights)),
+        new PsychoScene(Object.assign([],lights)),
     ];
 
     return new RandomMultiScene(spookyScenes, []);
