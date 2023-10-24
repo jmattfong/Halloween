@@ -244,7 +244,9 @@ class CalmingCockroachesScene extends MultiPartScene {
             ),
         ];
 
-        const unspookyEvents = getUnspookyEvents(lights);
+        const unspookyEvents = lights.map(light => {
+            return new Event(light, new OnPattern(PURP, 150, 11));
+        });
 
         super(spookyEvents, unspookyEvents, false);
     }
