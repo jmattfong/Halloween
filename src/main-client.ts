@@ -131,6 +131,12 @@ async function main() {
   );
   const spookyHueBulbPlayer = new SpookyHueBulbPlayer(spookHue);
 
+
+  if (args.scene.indexOf("list") > -1) {
+    scenes["list"].run(spookyHueBulbPlayer, null, null);
+    return
+  }
+
   const server = new ClientWebServer(args.webserverPort,
     (sensorId: string, sensorType: SensorType, data: boolean) => {
       log.info(`callback called on ${sensorId} -> ${sensorType} `);
