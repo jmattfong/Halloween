@@ -41,8 +41,13 @@ export class AutoResetRingScene extends Scene {
       this.spookyEvents.forEach((event) => {
         spookyHueBulbPlayer.playPattern(event);
       });
+      return
     }
 
+    // otherwise, we need to cancel the spooky events as the event is over (ie. the door is closed)
+    this.spookyEvents.forEach((event) => {
+      event.cancel();
+    });
   }
 }
 
