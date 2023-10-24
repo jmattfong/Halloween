@@ -134,11 +134,11 @@ class ElectricLady extends MultiPartScene {
             )
         });
         log.info(`other LIGHT: ${lights[lights.length - 1]}`)
-        // events.push(new Event(lights[lights.length - 1],
-        //     new SoundPattern(`${RESOURCES_DIR}/electric_lady/sparks.mp3`, new FlickerPattern(5), 0),
-        //     new SoundPattern(`${RESOURCES_DIR}/electric_lady/woman_screaming.mp3`, new StableColourPattern(RED, 15, 30, 0), 0.5),
-        //     defaultLighting
-        // ));
+        events.push(new Event(lights[lights.length - 1],
+            new SoundPattern(`${RESOURCES_DIR}/electric_lady/sparks.mp3`, new FlickerPattern(5), 0),
+            new SoundPattern(`${RESOURCES_DIR}/electric_lady/woman_screaming.mp3`, new StableColourPattern(RED, 15, 30, 0), 0.5),
+            DEFAULT_LIGHTING
+        ));
 
         super(events, getUnspookyEvents(lights));
     }
@@ -269,6 +269,7 @@ class PsychoScene extends AutoResetRingScene {
             new SoundPattern(`${RESOURCES_DIR}/david_psycho.mp3`, new FlickerPattern(13.5, BLUE, 110), 0),
             new PulsePattern(RED, 14, 0.5),
             new OffPattern(6, 6),
+            new OnPattern(RELAX, 10, 5)
         ));
 
 
@@ -285,6 +286,51 @@ class ScreamScene extends AutoResetRingScene {
                 new SoundPattern(`${RESOURCES_DIR}/scream/scream_bathroom.mp3`, new OnPattern(RED, 45, 10), 0),
                 new OnPattern(RELAX, 20, 0.5),
                 new OffPattern(10, 0.2),
+                new OnPattern(RELAX, 1, 1)
+            );
+        });
+
+        super(spookyEvents, false);
+    }
+}
+
+class HellBathroomCostumeScene extends AutoResetRingScene {
+    constructor(lights: string[]) {
+
+        let spookyEvents = lights.map(light => {
+            return new Event(light,
+                new SoundPattern(`${RESOURCES_DIR}/david_demon/david_rooftop_costume_contest.mp3`, new FlickerPattern(2), 0),
+                new OnPattern(RED, 35, 0.5),
+                new OnPattern(RELAX, 1, 1)
+            );
+        });
+
+        super(spookyEvents, false);
+    }
+}
+
+class HellBathroomFeedingScene extends AutoResetRingScene {
+    constructor(lights: string[]) {
+
+        let spookyEvents = lights.map(light => {
+            return new Event(light,
+                new SoundPattern(`${RESOURCES_DIR}/david_demon/david_rooftop_feeding.mp3`, new FlickerPattern(2), 0),
+                new OnPattern(RED, 35, 0.5),
+                new OnPattern(RELAX, 1, 1)
+            );
+        });
+
+        super(spookyEvents, false);
+    }
+}
+
+class HellBathroomWolfScene extends AutoResetRingScene {
+    constructor(lights: string[]) {
+
+        let spookyEvents = lights.map(light => {
+            return new Event(light,
+                new SoundPattern(`${RESOURCES_DIR}/david_demon/david_rooftop_werewolf.mp3`, new FlickerPattern(2), 0),
+                new OnPattern(RED, 35, 0.5),
                 new OnPattern(RELAX, 1, 1)
             );
         });
@@ -421,15 +467,16 @@ function get_photobooth_scene(): RandomMultiScene {
 }
 
 function get_downstairs_bathroom_scene(lights: string[]): RandomMultiScene {
-    let mirror_light_1 = lights[0];
-    let mirror_light_2 = lights[1];
-    let shower_light = lights[2];
 
     const spookyScenes = [
-        new DownstairsBathCreepyClownShowerScene([mirror_light_1, mirror_light_2, shower_light]),
-        new ElectricLady([mirror_light_1, mirror_light_2, shower_light]),
-        new PsychoScene([mirror_light_1, mirror_light_2, shower_light]),
+        new HellBathroomCostumeScene(Object.assign([],lights)),
+        new HellBathroomFeedingScene(Object.assign([],lights)),
+        new HellBathroomWolfScene(Object.assign([],lights)),
+        new DownstairsBathCreepyClownShowerScene(Object.assign([],lights)),
+        new ElectricLady(Object.assign([],lights)),
+        new PsychoScene(Object.assign([],lights)),
     ];
+
     return new RandomMultiScene(spookyScenes, []);
 }
 
@@ -493,7 +540,7 @@ export function getScenes(device_name: string): { [key: string]: Scene; } {
         "find_bulb_3": new FindBulb(["9", "10", "11", "12", "13"]),
     }
 
-    main_scenes["dev_scene"] = main_scenes["scream"];
+    main_scenes["dev_scene"] = main_scenes["down_bath_random"];
 
     return main_scenes;
 };

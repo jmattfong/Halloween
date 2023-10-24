@@ -183,9 +183,10 @@ export class RandomMultiScene extends Scene {
     if (sensorTriggedOn || this.currentScene == null) {
       // We switch scenes when the sensor is on
       const sceneIndex = Math.floor(Math.random() * this.spookyEventChoices.length);
-      log.debug(`choosing pattern #${sceneIndex}`);
+      log.info(`Choice num options: ${this.spookyEventChoices.length}`)
+      log.info(`choosing pattern #${sceneIndex}`);
       this.currentScene = this.spookyEventChoices[sceneIndex];
-      log.debug(`Choice: ${this.currentScene}`);
+      log.info(`Choice: ${this.currentScene}`);
     }
 
     this.currentScene.run(spookyHueBulbPlayer, sensorType, sensorTriggedOn);

@@ -13,7 +13,7 @@
         },
         {
             "name": "down_bath_random",
-            "sensorId": "Waffles' Room",
+            "sensorId": "Guest Bathroom",
             "sensorType": "ring"
         },
         {
