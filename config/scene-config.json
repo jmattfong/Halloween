@@ -28,7 +28,7 @@
         },
         {
             "name": "calming_cockroaches",
-            "sensorId": "Guest Bathroom",
+            "sensorId": "Front Gate",
             "sensorType": "ring"
         },
         {
