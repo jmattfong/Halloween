@@ -38,6 +38,7 @@ export class SoundPlayer {
     }
 
     public stop() {
+        log.info(`attempting to stop sound`);
         if (platform() === 'darwin') {
             if (this.controller != undefined) {
                 this.controller.abort();
