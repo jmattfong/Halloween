@@ -145,14 +145,14 @@ class ElectricLady extends MultiPartScene {
 }
 
 
-class FrontLightFlickerScene extends MultiPartScene {
+class FrontLightFlickerScene extends AutoResetRingScene {
     constructor(lights: string[]) {
         let events: Event[] = lights.map(light => {
             return new Event(light,
-                new FlickerPattern(7),
+                new FlickerPattern(7, {bri: 50}),
                 DEFAULT_LIGHTING);
         });
-        super(events, getUnspookyEvents(lights));
+        super(events);
     }
 }
 
@@ -481,7 +481,7 @@ function get_downstairs_bathroom_scene(lights: string[]): RandomMultiScene {
 
 const LIGHTS = {
     "front_walkway": [
-        "8", "9"
+        "24", "17"
     ],
     "downstairs_entry": [
         "17", "25"

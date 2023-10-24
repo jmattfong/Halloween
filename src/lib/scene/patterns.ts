@@ -46,17 +46,21 @@ function createLightState(
   } else if (brightness < 1) {
     brightness = 1;
   }
-  return (
-    new LightState()
+  let state: LightState = new LightState()
       .on(true)
-      .xy(color.xy[0], color.xy[1])
-      .hue(color.hue)
-      .sat(color.sat)
-      //.ct(color.ct)
       .bri(brightness)
       // Weird, but this is in increments of 100ms
-      .transitiontime(transitionSeconds * 10)
-  );
+      .transitiontime(transitionSeconds * 10);
+  if (color.xy) {
+    state = state.xy(color.xy[0], color.xy[1])
+  }
+  if (color.hue) {
+    state = state.hue(color.hue)
+  }
+  if (color.sat) {
+    state = state.sat(color.sat)
+  }
+  return state;
 }
 
 // Lol this is highly functional code

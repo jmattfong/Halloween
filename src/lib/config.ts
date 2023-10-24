@@ -17,10 +17,10 @@ export const ORANGE: Color = CONFIG.colors.orange
 
 export type Color = {
     bri: number
-    hue: number,
-    sat: number,
-    xy: number[],
-    ct: number
+    hue?: number,
+    sat?: number,
+    xy?: number[],
+    ct?: number
 }
 
 export type Light = {
