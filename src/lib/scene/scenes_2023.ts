@@ -231,7 +231,7 @@ class LookItsWafflesScene extends AutoResetRingScene {
 }
 
 // Song is 161 seconds long
-class CalmingCockroachesScene extends AutoResetRingScene {
+class CalmingCockroachesScene extends MultiPartScene {
     constructor(lights: string[]) {
 
         let showerLight = lights.pop();
@@ -248,8 +248,9 @@ class CalmingCockroachesScene extends AutoResetRingScene {
             new OffPattern(6, 6),
         ));
 
+        const unspookyEvents = getUnspookyEvents(lights);
 
-        super(spookyEvents, false);
+        super(spookyEvents, unspookyEvents, false);
     }
 }
 
@@ -469,12 +470,12 @@ function get_photobooth_scene(): RandomMultiScene {
 function get_downstairs_bathroom_scene(lights: string[]): RandomMultiScene {
 
     const spookyScenes = [
-        new HellBathroomCostumeScene(Object.assign([],lights)),
-        new HellBathroomFeedingScene(Object.assign([],lights)),
-        new HellBathroomWolfScene(Object.assign([],lights)),
-        new DownstairsBathCreepyClownShowerScene(Object.assign([],lights)),
-        new ElectricLady(Object.assign([],lights)),
-        new PsychoScene(Object.assign([],lights)),
+        new HellBathroomCostumeScene(Object.assign([], lights)),
+        new HellBathroomFeedingScene(Object.assign([], lights)),
+        new HellBathroomWolfScene(Object.assign([], lights)),
+        new DownstairsBathCreepyClownShowerScene(Object.assign([], lights)),
+        new ElectricLady(Object.assign([], lights)),
+        new PsychoScene(Object.assign([], lights)),
     ];
 
     return new RandomMultiScene(spookyScenes, []);
