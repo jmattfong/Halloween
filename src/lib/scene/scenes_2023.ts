@@ -373,6 +373,46 @@ class CostumeContestGatherScene extends AutoResetRingScene {
     }
 }
 
+// song is 140 seconds
+class SpookyScaryScene extends AutoResetRingScene {
+    constructor(device_name: string) {
+        let lights = []
+        switch (device_name) {
+            case "bill":
+                lights = ["8", "9", "17", "25"]
+                break;
+
+            case "dale":
+                lights = ["6", "7"]
+                break;
+
+            case "hank":
+                lights = ["1", "2", "3"]
+                break;
+
+            case "boomhauer":
+                lights = ["20", "21", "22"]
+                break;
+
+            default:
+                break;
+        }
+
+        let spookyEvents = lights.map(light => {
+            return new Event(light,
+                new SoundPattern(`${RESOURCES_DIR}/spooky/spooky_scary.mp3`, new OnPattern(RED, 12, 0.5), 0),
+                new OnPattern(RELAX, 12, 0.5),
+                new OnPattern(RED, 13, 0.5),
+                new OnPattern(RELAX, 13, 0.5),
+                new OnPattern(RED, 12, 0.5),
+
+            );
+        });
+
+        super(spookyEvents, false);
+    }
+}
+
 class CostumeContestVoteScene extends AutoResetRingScene {
     constructor(device_name: string) {
         let lights = []
@@ -529,7 +569,7 @@ export function getScenes(device_name: string): { [key: string]: Scene; } {
         // Global scenes
         "costume_contest_gather": new CostumeContestGatherScene(device_name),
         "costume_contest_vote": new CostumeContestVoteScene(device_name),
-
+        "spooky_scary": new SpookyScaryScene(device_name),
         // Test individual scenes
         "creepy_clown_shower": new DownstairsBathCreepyClownShowerScene(getLights("half_bathroom")),
         "psycho": new PsychoScene(getLights("half_bathroom")),

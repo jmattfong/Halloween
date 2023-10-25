@@ -53,6 +53,10 @@
             "name": "costume_contest_vote",
             "sensorType": "manual"
         },
+        {
+            "name": "spooky_scary",
+            "sensorType": "manual"
+        },
 
         {
             "name": "creepy_clown_shower",
