@@ -130,14 +130,14 @@ class ElectricLady extends MultiPartScene {
                 new FlickerPattern(3),
                 new OffPattern(1),
                 new StableColourPattern(RED, 60, 30, 0),
-                DEFAULT_LIGHTING
+                new OnPattern(SOFT_RED, 10)
             )
         });
         log.info(`other LIGHT: ${lights[lights.length - 1]}`)
         events.push(new Event(lights[lights.length - 1],
             new SoundPattern(`${RESOURCES_DIR}/electric_lady/sparks.mp3`, new FlickerPattern(4), 0),
             new SoundPattern(`${RESOURCES_DIR}/electric_lady/woman_screaming.mp3`, new StableColourPattern(RED, 15, 30, 0), 0.5),
-            DEFAULT_LIGHTING
+            new OnPattern(SOFT_RED, 10)
         ));
 
         super(events, getUnspookyEvents(lights));
@@ -168,7 +168,7 @@ class DownstairsBathCreepyClownShowerScene extends AutoResetRingScene {
                 new OffPattern(1, 5),
                 new SleepPattern(13),
                 new FlickerPattern(3),
-                new OnPattern(RELAX, 1, 10));
+                new OnPattern(SOFT_RED, 1, 10));
         });
 
         spookyEvents.push(new Event(showerLight,
@@ -258,9 +258,9 @@ class PsychoScene extends AutoResetRingScene {
 
         let spookyEvents = lights.map(light => {
             return new Event(light,
-                new OnPattern(RELAX, 13, 4),
+                new StableColourPattern(RELAX, 40, 13, 4),
                 new PulsePattern(RED, 14, 0.5),
-                new OnPattern(RELAX, 10, 5),
+                new OnPattern(SOFT_RED, 10, 5),
             );
         });
 
@@ -268,7 +268,7 @@ class PsychoScene extends AutoResetRingScene {
             new SoundPattern(`${RESOURCES_DIR}/david_psycho.mp3`, new FlickerPattern(13.5, BLUE, 110), 0),
             new PulsePattern(RED, 14, 0.5),
             new OffPattern(6, 6),
-            new OnPattern(RELAX, 10, 5)
+            new OnPattern(SOFT_RED, 10, 5)
         ));
 
 
@@ -300,7 +300,7 @@ class HellBathroomCostumeScene extends AutoResetRingScene {
             return new Event(light,
                 new SoundPattern(`${RESOURCES_DIR}/david_demon/david_rooftop_costume_contest.mp3`, new FlickerPattern(2), 0),
                 new OnPattern(RED, 35, 0.5),
-                new OnPattern(RELAX, 1, 1)
+                new OnPattern(SOFT_RED, 1, 1)
             );
         });
 
@@ -315,7 +315,7 @@ class HellBathroomFeedingScene extends AutoResetRingScene {
             return new Event(light,
                 new SoundPattern(`${RESOURCES_DIR}/david_demon/david_rooftop_feeding.mp3`, new FlickerPattern(2), 0),
                 new OnPattern(RED, 35, 0.5),
-                new OnPattern(RELAX, 1, 1)
+                new OnPattern(SOFT_RED, 1, 1)
             );
         });
 
@@ -330,7 +330,7 @@ class HellBathroomWolfScene extends AutoResetRingScene {
             return new Event(light,
                 new SoundPattern(`${RESOURCES_DIR}/david_demon/david_rooftop_werewolf.mp3`, new FlickerPattern(2), 0),
                 new OnPattern(RED, 35, 0.5),
-                new OnPattern(RELAX, 1, 1)
+                new OnPattern(SOFT_RED, 1, 1)
             );
         });
 
