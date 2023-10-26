@@ -530,7 +530,7 @@ const LIGHTS = {
         "24", "17"
     ],
     "downstairs_entry": [
-        "17", "25"
+        "8", "9"
     ],
     "downstairs_bathroom": [
         "1", "2", "3"
