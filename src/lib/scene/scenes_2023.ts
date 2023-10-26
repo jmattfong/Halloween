@@ -539,7 +539,7 @@ const LIGHTS = {
         "6", "7"
     ],
     "guest_bathroom": [
-        "20", "21", "22"
+        "20", "32", "22"
     ],
     "guest_bedroom": [
         "23", "31"
