@@ -1,1 +1,1 @@
-*/20 * * * * /home/roryjacob/develop/Halloween/cron/nanny.sh
+*/45 * * * * /path/to/script/random_spook.sh
