@@ -727,7 +727,7 @@ export function getScenes(device_name: string): { [key: string]: Scene; } {
         // Hank's scenes
         "down_bath_random": get_downstairs_bathroom_scene(getLights("downstairs_bathroom")),
         // Bill's scenes
-        "welcome_inside": new ThunderScene(getLights("half_bathroom")),
+        "welcome_inside": new ThunderScene(getLights("downstairs_entry")),
         "front_light_flicker": new FrontLightFlickerScene(getLights("front_walkway")),
         // Dale's scene
         "calming_cockroaches": new CalmingCockroachesScene(getLights("half_bathroom")),
