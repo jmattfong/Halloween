@@ -14,7 +14,7 @@ DELAY=$((RANDOM % 300))
 echo "Waiting $DELAY seconds"
 
 # Wait for the random delay
-# sleep $DELAY
+sleep $DELAY
 
 # Create a json payload with the scene and setting the scope to global
 JSON="{\"scene\": \"$SCENE\", \"scope\": \"global\"}"
