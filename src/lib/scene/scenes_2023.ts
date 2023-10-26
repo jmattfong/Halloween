@@ -284,8 +284,8 @@ class ScreamScene extends AutoResetRingScene {
             return new Event(light,
                 new SoundPattern(`${RESOURCES_DIR}/scream/scream_bathroom.mp3`, new OnPattern(RED, 45, 10), 0),
                 new OnPattern(RELAX, 20, 0.5),
-                new OffPattern(10, 0.2),
-                new OnPattern(RELAX, 1, 1)
+                new OffPattern(4, 0.2),
+                new OnPattern(SOFT_RED, 1, 1)
             );
         });
 
