@@ -400,12 +400,156 @@ class SpookyScaryScene extends AutoResetRingScene {
 
         let spookyEvents = lights.map(light => {
             return new Event(light,
-                new SoundPattern(`${RESOURCES_DIR}/spooky/spooky_scary.mp3`, new OnPattern(RED, 12, 0.5), 0),
+                new SoundPattern(`${RESOURCES_DIR}/global/spooky_scary.mp3`, new OnPattern(RED, 12, 0.5), 0),
                 new OnPattern(RELAX, 12, 0.5),
                 new OnPattern(RED, 13, 0.5),
                 new OnPattern(RELAX, 13, 0.5),
                 new OnPattern(RED, 12, 0.5),
 
+            );
+        });
+
+        super(spookyEvents, false);
+    }
+}
+
+// 25 sec
+class FloatScene extends AutoResetRingScene {
+    constructor(device_name: string) {
+        let lights = []
+        switch (device_name) {
+            case "bill":
+                lights = ["8", "9", "17", "25"]
+                break;
+
+            case "dale":
+                lights = ["6", "7"]
+                break;
+
+            case "hank":
+                lights = ["1", "2", "3"]
+                break;
+
+            case "boomhauer":
+                lights = ["20", "21", "22"]
+                break;
+
+            default:
+                break;
+        }
+
+        let spookyEvents = lights.map(light => {
+            return new Event(light,
+                new SoundPattern(`${RESOURCES_DIR}/global/float_too.mp3`, new OnPattern(BLUE, 25, 5), 0),
+                new OnPattern(RED, 1, 0.5),
+            );
+        });
+
+        super(spookyEvents, false);
+    }
+}
+
+// 4 sec
+class DeadPeopleScene extends AutoResetRingScene {
+    constructor(device_name: string) {
+        let lights = []
+        switch (device_name) {
+            case "bill":
+                lights = ["8", "9", "17", "25"]
+                break;
+
+            case "dale":
+                lights = ["6", "7"]
+                break;
+
+            case "hank":
+                lights = ["1", "2", "3"]
+                break;
+
+            case "boomhauer":
+                lights = ["20", "21", "22"]
+                break;
+
+            default:
+                break;
+        }
+
+        let spookyEvents = lights.map(light => {
+            return new Event(light,
+                new SoundPattern(`${RESOURCES_DIR}/global/dead_people.mp3`, new OnPattern(ORANGE, 4, 1), 0),
+                new OnPattern(RED, 1, 0.5),
+            );
+        });
+
+        super(spookyEvents, false);
+    }
+}
+
+// 8 sec
+class NoSleepScene extends AutoResetRingScene {
+    constructor(device_name: string) {
+        let lights = []
+        switch (device_name) {
+            case "bill":
+                lights = ["8", "9", "17", "25"]
+                break;
+
+            case "dale":
+                lights = ["6", "7"]
+                break;
+
+            case "hank":
+                lights = ["1", "2", "3"]
+                break;
+
+            case "boomhauer":
+                lights = ["20", "21", "22"]
+                break;
+
+            default:
+                break;
+        }
+
+        let spookyEvents = lights.map(light => {
+            return new Event(light,
+                new SoundPattern(`${RESOURCES_DIR}/global/no_sleep.mp3`, new OnPattern(RED, 8, 0.5), 0),
+                new OnPattern(BLUE, 1, 0.5),
+            );
+        });
+
+        super(spookyEvents, false);
+    }
+}
+
+// 28 sec
+class AliveScene extends AutoResetRingScene {
+    constructor(device_name: string) {
+        let lights = []
+        switch (device_name) {
+            case "bill":
+                lights = ["8", "9", "17", "25"]
+                break;
+
+            case "dale":
+                lights = ["6", "7"]
+                break;
+
+            case "hank":
+                lights = ["1", "2", "3"]
+                break;
+
+            case "boomhauer":
+                lights = ["20", "21", "22"]
+                break;
+
+            default:
+                break;
+        }
+
+        let spookyEvents = lights.map(light => {
+            return new Event(light,
+                new SoundPattern(`${RESOURCES_DIR}/global/alive.mp3`, new FlickerPattern(5), 0),
+                new OnPattern(RED, 23, 0.5),
             );
         });
 
@@ -589,6 +733,11 @@ export function getScenes(device_name: string): { [key: string]: Scene; } {
         "costume_contest_gather": new CostumeContestGatherScene(device_name),
         "costume_contest_vote": new CostumeContestVoteScene(device_name),
         "spooky_scary": new SpookyScaryScene(device_name),
+        "float": new FloatScene(device_name),
+        "alive": new AliveScene(device_name),
+        "sleep": new NoSleepScene(device_name),
+        "dead_people": new DeadPeopleScene(device_name),
+
         // Test individual scenes
         "creepy_clown_shower": new DownstairsBathCreepyClownShowerScene(getLights("half_bathroom")),
         "psycho": new PsychoScene(getLights("half_bathroom")),

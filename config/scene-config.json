@@ -57,7 +57,22 @@
             "name": "spooky_scary",
             "sensorType": "manual"
         },
-
+        {
+            "name": "float",
+            "sensorType": "manual"
+        },
+        {
+            "name": "sleep",
+            "sensorType": "manual"
+        },
+        {
+            "name": "alive",
+            "sensorType": "manual"
+        },
+        {
+            "name": "dead_people",
+            "sensorType": "manual"
+        },
         {
             "name": "creepy_clown_shower",
             "sensorId": "Guest Bathroom",
