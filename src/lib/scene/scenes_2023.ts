@@ -544,6 +544,12 @@ const LIGHTS = {
     "guest_bedroom": [
         "23", "31"
     ],
+    "upstairs_hall": [
+        "4", "5", "15"
+    ],
+    "switch": [
+        "33"
+    ],
 } as const
 
 function getLights(roomName: string): string[] {
