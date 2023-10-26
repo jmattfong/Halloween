@@ -27,6 +27,11 @@
             "sensorType": "hue"
         },
         {
+            "name": "black_light_hallway",
+            "sensorId": "59",
+            "sensorType": "hue"
+        },
+        {
             "name": "calming_cockroaches",
             "sensorId": "Front Gate",
             "sensorType": "ring"

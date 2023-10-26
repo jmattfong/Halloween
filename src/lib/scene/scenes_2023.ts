@@ -641,15 +641,16 @@ class ChromecastGhosts extends ChromecastScene {
     }
 }
 
-class SpookyWritingScene extends MultiPartScene {
-    constructor(switch_id: string) {
+class BlackLightHallwayScene extends AutoResetRingScene {
+    constructor(switch_id: string, hallway_lights: string[]) {
 
-        const spookyEvents = [new Event(switch_id,
-            new OffPattern(10),
-            new OnPattern(RELAX, 1, 1)
-        )];
+        let spookyEvents = hallway_lights.map(light => {
+            return new Event(light, new FlickerPattern(4), new OffPattern(10), new OnPattern(SOFT_RED, 1))
+        });
 
-        super(spookyEvents, [], true);
+        spookyEvents.push(new Event(switch_id, new OffPattern(4), new OnPattern(RELAX, 10), new OffPattern(1)));
+
+        super(spookyEvents, true);
     }
 
 }
@@ -751,7 +752,7 @@ export function getScenes(device_name: string): { [key: string]: Scene; } {
         "find_bulb": new FindBulb(["0", "1", "2", "3", "4"]),
         "find_bulb_2": new FindBulb(["5", "6", "7", "8"]),
         "find_bulb_3": new FindBulb(["9", "10", "11", "12", "13"]),
-        "turn_on_off": new SpookyWritingScene(getLights("switch")[0])
+        "black_light_hallway": new BlackLightHallwayScene(getLights("switch")[0], getLights("upstairs_hall"))
     }
 
     main_scenes["dev_scene"] = main_scenes["down_bath_random"];
