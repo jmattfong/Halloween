@@ -149,7 +149,7 @@ class FrontLightFlickerScene extends AutoResetRingScene {
     constructor(lights: string[]) {
         let events: Event[] = lights.map(light => {
             return new Event(light,
-                new FlickerPattern(7, {bri: 50}),
+                new FlickerPattern(7, { bri: 50 }),
                 DEFAULT_LIGHTING);
         });
         super(events);
@@ -497,6 +497,19 @@ class ChromecastGhosts extends ChromecastScene {
     }
 }
 
+class SpookyWritingScene extends MultiPartScene {
+    constructor(switch_id: string) {
+
+        const spookyEvents = [new Event(switch_id,
+            new OffPattern(10),
+            new OnPattern(RELAX, 1, 1)
+        )];
+
+        super(spookyEvents, [], true);
+    }
+
+}
+
 function get_photobooth_scene(): RandomMultiScene {
     const spookyScenes = [
         // new WerewolfDoorJiggleScene(),
@@ -585,10 +598,11 @@ export function getScenes(device_name: string): { [key: string]: Scene; } {
 
         // Test and Utility scenes
         "list": new ListOnLightsScene(),
-        "get_light": new GetLight(21), // Change this to get the state of different lights by ID
+        "get_light": new GetLight(33), // Change this to get the state of different lights by ID
         "find_bulb": new FindBulb(["0", "1", "2", "3", "4"]),
         "find_bulb_2": new FindBulb(["5", "6", "7", "8"]),
         "find_bulb_3": new FindBulb(["9", "10", "11", "12", "13"]),
+        "turn_on_off": new SpookyWritingScene(getLights("switch")[0])
     }
 
     main_scenes["dev_scene"] = main_scenes["down_bath_random"];

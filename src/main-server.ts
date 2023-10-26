@@ -140,6 +140,8 @@ async function main() {
     await spookHue.connectUsingIP(CONFIG.hue_bridge_ip);
     log.debug(`all hue sensors: ${await spookHue.getSensors()} `);
 
+    log.debug(`all lights, bitch: ${await spookHue.getLights()}`)
+
     setupHueListeners(registeredClients, spookHue);
 
     log.info("Hue sensors set up");
