@@ -644,11 +644,14 @@ class ChromecastGhosts extends ChromecastScene {
 class BlackLightHallwayScene extends AutoResetRingScene {
     constructor(switch_id: string, hallway_lights: string[]) {
 
-        let spookyEvents = hallway_lights.map(light => {
-            return new Event(light, new FlickerPattern(4), new OffPattern(10), new OnPattern(SOFT_RED, 1))
-        });
+        // this is pulling out 15, which is the stairwell light that is not a colour light
+        const white_light = hallway_lights.pop();
 
-        spookyEvents.push(new Event(switch_id, new OffPattern(4), new OnPattern(RELAX, 10), new OffPattern(1)));
+        let spookyEvents = hallway_lights.map(light => {
+            return new Event(light, new FlickerPattern(4), new OffPattern(30), new OnPattern(SOFT_RED, 1))
+        });
+        spookyEvents.push(new Event(white_light, new FlickerPattern(4), new OffPattern(30)));
+        spookyEvents.push(new Event(switch_id, new OffPattern(4), new OnPattern(RELAX, 30), new OffPattern(1)));
 
         super(spookyEvents, true);
     }
