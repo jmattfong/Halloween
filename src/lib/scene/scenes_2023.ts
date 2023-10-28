@@ -364,10 +364,18 @@ class CostumeContestGatherScene extends AutoResetRingScene {
         }
 
         let spookyEvents = lights.map(light => {
-            return new Event(light,
-                new SoundPattern(`${RESOURCES_DIR}/costume_contest/costume_contest_23_gather.mp3`, new FlickerPattern(3), 0),
-                new OnPattern(RELAX, 20, 0.5)
-            );
+            if (light == "16" || light == "19") {
+                return new Event(light,
+                    new SoundPattern(`${RESOURCES_DIR}/costume_contest/costume_contest_23_gather.mp3`, new FlickerPattern(3), 0),
+                    new OnPattern(RELAX, 20, 0.5),
+                    new OffPattern(1)
+                );                
+            } else {            
+                return new Event(light,
+                    new SoundPattern(`${RESOURCES_DIR}/costume_contest/costume_contest_23_gather.mp3`, new FlickerPattern(3), 0),
+                    new OnPattern(RED, 20, 0.5)
+                );
+            }
         });
 
         super(spookyEvents, false);
@@ -442,10 +450,18 @@ class FloatScene extends AutoResetRingScene {
         }
 
         let spookyEvents = lights.map(light => {
-            return new Event(light,
-                new SoundPattern(`${RESOURCES_DIR}/global/float_too.mp3`, new OnPattern(BLUE, 25, 5), 0),
-                new OnPattern(RED, 1, 0.5),
-            );
+            if (light == "16" || light == "19") {
+                return new Event(light,
+                    new SoundPattern(`${RESOURCES_DIR}/global/float_too.mp3`, new OnPattern(BLUE, 25, 5), 0),
+                    new OnPattern(RED, 1, 0.5),
+                    new OffPattern(1)
+                );                
+            } else {            
+                return new Event(light,
+                    new SoundPattern(`${RESOURCES_DIR}/global/float_too.mp3`, new OnPattern(BLUE, 25, 5), 0),
+                    new OnPattern(RED, 1, 0.5),
+                );
+            }
         });
 
         super(spookyEvents, false);
@@ -479,10 +495,18 @@ class DeadPeopleScene extends AutoResetRingScene {
         }
 
         let spookyEvents = lights.map(light => {
-            return new Event(light,
-                new SoundPattern(`${RESOURCES_DIR}/global/dead_people.mp3`, new OnPattern(ORANGE, 4, 1), 0),
-                new OnPattern(RED, 1, 0.5),
-            );
+            if (light == "16" || light == "19") {
+                return new Event(light,
+                    new SoundPattern(`${RESOURCES_DIR}/global/dead_people.mp3`, new OnPattern(ORANGE, 4, 1), 0),
+                    new OnPattern(RED, 1, 0.5),
+                    new OffPattern(1)
+                );                
+            } else {            
+                return new Event(light,
+                    new SoundPattern(`${RESOURCES_DIR}/global/dead_people.mp3`, new OnPattern(ORANGE, 4, 1), 0),
+                    new OnPattern(RED, 1, 0.5),
+                );
+            }
         });
 
         super(spookyEvents, false);
@@ -516,10 +540,18 @@ class NoSleepScene extends AutoResetRingScene {
         }
 
         let spookyEvents = lights.map(light => {
-            return new Event(light,
-                new SoundPattern(`${RESOURCES_DIR}/global/no_sleep.mp3`, new OnPattern(RED, 8, 0.5), 0),
-                new OnPattern(BLUE, 1, 0.5),
-            );
+            if (light == "16" || light == "19") {   
+                return new Event(light,
+                    new SoundPattern(`${RESOURCES_DIR}/global/no_sleep.mp3`, new OnPattern(RED, 8, 0.5), 0),
+                    new OnPattern(BLUE, 1, 0.5),
+                    new OffPattern(1)
+                );         
+            } else {
+                return new Event(light,
+                    new SoundPattern(`${RESOURCES_DIR}/global/no_sleep.mp3`, new OnPattern(RED, 8, 0.5), 0),
+                    new OnPattern(BLUE, 1, 0.5),
+                );
+            }
         });
 
         super(spookyEvents, false);
@@ -553,10 +585,18 @@ class AliveScene extends AutoResetRingScene {
         }
 
         let spookyEvents = lights.map(light => {
-            return new Event(light,
-                new SoundPattern(`${RESOURCES_DIR}/global/alive.mp3`, new FlickerPattern(5), 0),
-                new OnPattern(RED, 23, 0.5),
-            );
+            if (light == "16" || light == "19") {
+                return new Event(light,
+                    new SoundPattern(`${RESOURCES_DIR}/global/alive.mp3`, new FlickerPattern(5), 0),
+                    new OnPattern(RED, 23, 0.5),
+                    new OffPattern(1)
+                );                
+            } else {            
+                return new Event(light,
+                    new SoundPattern(`${RESOURCES_DIR}/global/alive.mp3`, new FlickerPattern(5), 0),
+                    new OnPattern(RED, 23, 0.5),
+                );
+            }
         });
 
         super(spookyEvents, false);
@@ -590,10 +630,18 @@ class MoanScene extends AutoResetRingScene {
         }
 
         let spookyEvents = lights.map(light => {
-            return new Event(light,
-                new SoundPattern(`${RESOURCES_DIR}/global/moan.mp3`, new OnPattern(SOFT_RED, 9, 3, ), 0),
-                new OnPattern(BLUE, 9, 3),
-            );
+            if (light == "16" || light == "19") {
+                return new Event(light,
+                    new SoundPattern(`${RESOURCES_DIR}/global/moan.mp3`, new OnPattern(SOFT_RED, 9, 3, ), 0),
+                    new OnPattern(BLUE, 9, 3),
+                    new OffPattern(1)
+                );                
+            } else {
+                return new Event(light,
+                    new SoundPattern(`${RESOURCES_DIR}/global/moan.mp3`, new OnPattern(SOFT_RED, 9, 3, ), 0),
+                    new OnPattern(BLUE, 9, 3),
+                );
+            }
         });
 
         super(spookyEvents, false);
@@ -627,10 +675,18 @@ class BustinGoodScene extends AutoResetRingScene {
         }
 
         let spookyEvents = lights.map(light => {
-            return new Event(light,
-                new SoundPattern(`${RESOURCES_DIR}/global/bustin_good.mp3`, new OnPattern(GREEN, 2, 0.5), 0),
-                new PulsePattern(GREEN, 4, 0.5),
-            );
+            if (light == "16" || light == "19") {   
+                return new Event(light,
+                    new SoundPattern(`${RESOURCES_DIR}/global/bustin_good.mp3`, new OnPattern(GREEN, 2, 0.5), 0),
+                    new PulsePattern(GREEN, 4, 0.5),
+                    new OffPattern(1)
+                ); 
+            } else {        
+                return new Event(light,
+                    new SoundPattern(`${RESOURCES_DIR}/global/bustin_good.mp3`, new OnPattern(GREEN, 2, 0.5), 0),
+                    new PulsePattern(GREEN, 4, 0.5),
+                );
+            }
         });
 
         super(spookyEvents, false);
@@ -664,10 +720,18 @@ class WereGlobScene extends AutoResetRingScene {
         }
 
         let spookyEvents = lights.map(light => {
-            return new Event(light,
-                new SoundPattern(`${RESOURCES_DIR}/global/werewolf_glob.mp3`, new FlickerPattern(3), 0),
-                new OnPattern(RED, 17, 0.5),
-            );
+            if (light == "16" || light == "19") {
+                return new Event(light,
+                    new SoundPattern(`${RESOURCES_DIR}/global/werewolf_glob.mp3`, new FlickerPattern(3), 0),
+                    new OnPattern(RED, 17, 0.5),
+                    new OffPattern(1),
+                );            
+            } else {
+                return new Event(light,
+                    new SoundPattern(`${RESOURCES_DIR}/global/werewolf_glob.mp3`, new FlickerPattern(3), 0),
+                    new OnPattern(RED, 17, 0.5),
+                );
+            }
         });
 
         super(spookyEvents, false);
@@ -700,10 +764,18 @@ class CostumeContestVoteScene extends AutoResetRingScene {
         }
 
         let spookyEvents = lights.map(light => {
-            return new Event(light,
-                new SoundPattern(`${RESOURCES_DIR}/costume_contest/costume_contest_23_vote.mp3`, new FlickerPattern(3), 0),
-                new OnPattern(RELAX, 20, 0.5)
-            );
+            if (light == "16" || light == "19") {
+                return new Event(light,
+                    new SoundPattern(`${RESOURCES_DIR}/costume_contest/costume_contest_23_vote.mp3`, new FlickerPattern(3), 0),
+                    new OnPattern(RED, 20, 0.5),                    
+                    new OffPattern(1)
+                );
+            } else {
+                return new Event(light,
+                    new SoundPattern(`${RESOURCES_DIR}/costume_contest/costume_contest_23_vote.mp3`, new FlickerPattern(3), 0),
+                    new OnPattern(RED, 20, 0.5)
+                );
+            }
         });
 
         super(spookyEvents, false);
