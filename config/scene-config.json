@@ -79,6 +79,18 @@
             "sensorType": "manual"
         },
         {
+            "name": "were_glob",
+            "sensorType": "manual"
+        },
+        {
+            "name": "moan",
+            "sensorType": "manual"
+        },
+        {
+            "name": "bustin_good",
+            "sensorType": "manual"
+        },
+        {
             "name": "creepy_clown_shower",
             "sensorId": "Guest Bathroom",
             "sensorType": "ring"

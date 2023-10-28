@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # a list of global scenes to send out
-SCENES=("float" "alive" "sleep" "dead_people")
+SCENES=("float" "alive" "sleep" "dead_people" "moan" "were_glob" "bustin_good")
 
 # pick a random item from the scenes array
 SCENE=${SCENES[$RANDOM % ${#SCENES[@]} ]}

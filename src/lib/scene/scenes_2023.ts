@@ -557,6 +557,111 @@ class AliveScene extends AutoResetRingScene {
     }
 }
 
+class MoanScene extends AutoResetRingScene {
+    constructor(device_name: string) {
+        let lights = []
+        switch (device_name) {
+            case "bill":
+                lights = ["8", "9", "17", "25"]
+                break;
+
+            case "dale":
+                lights = ["6", "7", "16", "19"]
+                break;
+
+            case "hank":
+                lights = ["1", "2", "3"]
+                break;
+
+            case "boomhauer":
+                lights = ["20", "21", "22"]
+                break;
+
+            default:
+                break;
+        }
+
+        let spookyEvents = lights.map(light => {
+            return new Event(light,
+                new SoundPattern(`${RESOURCES_DIR}/global/moan.mp3`, new FlickerPattern(5), 0),
+                new OnPattern(RED, 23, 0.5),
+            );
+        });
+
+        super(spookyEvents, false);
+    }
+}
+
+class BustinGoodScene extends AutoResetRingScene {
+    constructor(device_name: string) {
+        let lights = []
+        switch (device_name) {
+            case "bill":
+                lights = ["8", "9", "17", "25"]
+                break;
+
+            case "dale":
+                lights = ["6", "7", "16", "19"]
+                break;
+
+            case "hank":
+                lights = ["1", "2", "3"]
+                break;
+
+            case "boomhauer":
+                lights = ["20", "21", "22"]
+                break;
+
+            default:
+                break;
+        }
+
+        let spookyEvents = lights.map(light => {
+            return new Event(light,
+                new SoundPattern(`${RESOURCES_DIR}/global/bustin_good.mp3`, new FlickerPattern(5), 0),
+                new OnPattern(RED, 23, 0.5),
+            );
+        });
+
+        super(spookyEvents, false);
+    }
+}
+
+class WereGlobScene extends AutoResetRingScene {
+    constructor(device_name: string) {
+        let lights = []
+        switch (device_name) {
+            case "bill":
+                lights = ["8", "9", "17", "25"]
+                break;
+
+            case "dale":
+                lights = ["6", "7", "16", "19"]
+                break;
+
+            case "hank":
+                lights = ["1", "2", "3"]
+                break;
+
+            case "boomhauer":
+                lights = ["20", "21", "22"]
+                break;
+
+            default:
+                break;
+        }
+
+        let spookyEvents = lights.map(light => {
+            return new Event(light,
+                new SoundPattern(`${RESOURCES_DIR}/global/werewolf_glob.mp3`, new FlickerPattern(5), 0),
+                new OnPattern(RED, 23, 0.5),
+            );
+        });
+
+        super(spookyEvents, false);
+    }
+}
+
 class CostumeContestVoteScene extends AutoResetRingScene {
     constructor(device_name: string) {
         let lights = []
@@ -687,6 +792,9 @@ function get_downstairs_bathroom_scene(lights: string[]): RandomMultiScene {
 }
 
 const LIGHTS = {
+    "living_room": [
+        "16", "19"
+    ],
     "front_walkway": [
         "24", "17"
     ],
@@ -741,6 +849,11 @@ export function getScenes(device_name: string): { [key: string]: Scene; } {
         "alive": new AliveScene(device_name),
         "sleep": new NoSleepScene(device_name),
         "dead_people": new DeadPeopleScene(device_name),
+        "were_glob": new WereGlobScene(device_name),
+        "moan": new MoanScene(device_name),
+        "bustin_good": new BustinGoodScene(device_name),
+
+
 
         // Test individual scenes
         "creepy_clown_shower": new DownstairsBathCreepyClownShowerScene(getLights("half_bathroom")),
