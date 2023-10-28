@@ -114,7 +114,7 @@ class ThunderScene extends MultiPartScene {
                 `${RESOURCES_DIR}/thunder/thunder_sound_1.mp3`,
                 `${RESOURCES_DIR}/thunder/thunder_sound_2.mp3`],
                     new FlickerPattern(3)),
-                DEFAULT_LIGHTING);
+                new StableColourPattern(RELAX, 30, 13, 4));
         });
         super(events, getUnspookyEvents(lights));
     }
