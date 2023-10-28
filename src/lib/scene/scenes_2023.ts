@@ -656,8 +656,8 @@ class WereGlobScene extends AutoResetRingScene {
 
         let spookyEvents = lights.map(light => {
             return new Event(light,
-                new SoundPattern(`${RESOURCES_DIR}/global/werewolf_glob.mp3`, new FlickerPattern(15), 0),
-                new OnPattern(RED, 5, 0.5),
+                new SoundPattern(`${RESOURCES_DIR}/global/werewolf_glob.mp3`, new FlickerPattern(3), 0),
+                new OnPattern(RED, 17, 0.5),
             );
         });
 
