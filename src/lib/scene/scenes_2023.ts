@@ -104,7 +104,7 @@ class FindBulb extends MultiPartScene {
 }
 
 class ThunderScene extends MultiPartScene {
-    constructor(lights: string[]) {
+    constructor(lights: string[], spookOnFaulted: boolean) {
         let events: Event[] = lights.map(light => {
             return new Event(light,
                 new RandomSoundPattern([`${RESOURCES_DIR}/thunder/david_thunder_and_clowns.mp3`,
@@ -116,7 +116,7 @@ class ThunderScene extends MultiPartScene {
                     new FlickerPattern(3)),
                 DEFAULT_LIGHTING);
         });
-        super(events, getUnspookyEvents(lights));
+        super(events, getUnspookyEvents(lights), spookOnFaulted);
     }
 }
 
@@ -175,7 +175,7 @@ class DownstairsBathCreepyClownShowerScene extends AutoResetRingScene {
             new SoundPattern(`${RESOURCES_DIR}/david_bathroom_clowns_pop.mp3`, new OnPattern(RED, 10, 5), 10),
             new OffPattern(1)));
 
-        super(spookyEvents);
+        super(spookyEvents, true);
     }
 }
 
@@ -661,7 +661,7 @@ class BlackLightHallwayScene extends AutoResetRingScene {
 function get_photobooth_scene(): RandomMultiScene {
     const spookyScenes = [
         // new WerewolfDoorJiggleScene(),
-        new ThunderScene(getLights("guest_bedroom"))
+        new ThunderScene(getLights("guest_bedroom"), false)
     ];
     return new RandomMultiScene(spookyScenes, []);
 }
@@ -727,7 +727,7 @@ export function getScenes(device_name: string): { [key: string]: Scene; } {
         // Hank's scenes
         "down_bath_random": get_downstairs_bathroom_scene(getLights("downstairs_bathroom")),
         // Bill's scenes
-        "welcome_inside": new ThunderScene(getLights("downstairs_entry")),
+        "welcome_inside": new ThunderScene(getLights("downstairs_entry"), true),
         "front_light_flicker": new FrontLightFlickerScene(getLights("front_walkway")),
         // Dale's scene
         "calming_cockroaches": new CalmingCockroachesScene(getLights("half_bathroom")),
