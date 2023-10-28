@@ -139,7 +139,7 @@ async function main() {
 
   const server = new ClientWebServer(args.webserverPort,
     (sensorId: string, sensorType: SensorType, data: boolean) => {
-      log.info(`callback called on ${sensorId} -> ${sensorType} `);
+      log.info(`callback called on ${sensorId} -> ${sensorType} [${data}]`);
 
       var sceneName = null;
 
