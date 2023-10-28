@@ -6,7 +6,7 @@ import { SoundPattern, RandomSoundPattern, FlickerPattern, OffPattern, SleepPatt
 import { Event } from "./events";
 import { Scene, RandomMultiScene, MultiPartScene, AutoResetRingScene, RepeatingScene } from './scenes';
 import { VIDEOS_2023, PORTAL_TO_HELL } from '../videos';
-import { RED, PURP, SOFT_RED, RELAX, ORANGE, BLUE, CONCENTRATE } from '../config';
+import { GREEN, RED, PURP, SOFT_RED, RELAX, ORANGE, BLUE, CONCENTRATE } from '../config';
 import { SensorType } from "../web_listener/webserver";
 
 const log: CategoryLogger = getLogger("scenes_2023");
@@ -557,6 +557,7 @@ class AliveScene extends AutoResetRingScene {
     }
 }
 
+// 18 sec
 class MoanScene extends AutoResetRingScene {
     constructor(device_name: string) {
         let lights = []
@@ -583,8 +584,8 @@ class MoanScene extends AutoResetRingScene {
 
         let spookyEvents = lights.map(light => {
             return new Event(light,
-                new SoundPattern(`${RESOURCES_DIR}/global/moan.mp3`, new FlickerPattern(5), 0),
-                new OnPattern(RED, 23, 0.5),
+                new SoundPattern(`${RESOURCES_DIR}/global/moan.mp3`, new OnPattern(SOFT_RED, 9, 3, ), 0),
+                new OnPattern(BLUE, 9, 3),
             );
         });
 
@@ -592,6 +593,7 @@ class MoanScene extends AutoResetRingScene {
     }
 }
 
+// 6 sec
 class BustinGoodScene extends AutoResetRingScene {
     constructor(device_name: string) {
         let lights = []
@@ -618,8 +620,8 @@ class BustinGoodScene extends AutoResetRingScene {
 
         let spookyEvents = lights.map(light => {
             return new Event(light,
-                new SoundPattern(`${RESOURCES_DIR}/global/bustin_good.mp3`, new FlickerPattern(5), 0),
-                new OnPattern(RED, 23, 0.5),
+                new SoundPattern(`${RESOURCES_DIR}/global/bustin_good.mp3`, new OnPattern(GREEN, 2, 0.5), 0),
+                new PulsePattern(GREEN, 4, 0.5),
             );
         });
 
@@ -627,6 +629,7 @@ class BustinGoodScene extends AutoResetRingScene {
     }
 }
 
+// 20 sec
 class WereGlobScene extends AutoResetRingScene {
     constructor(device_name: string) {
         let lights = []
@@ -653,8 +656,8 @@ class WereGlobScene extends AutoResetRingScene {
 
         let spookyEvents = lights.map(light => {
             return new Event(light,
-                new SoundPattern(`${RESOURCES_DIR}/global/werewolf_glob.mp3`, new FlickerPattern(5), 0),
-                new OnPattern(RED, 23, 0.5),
+                new SoundPattern(`${RESOURCES_DIR}/global/werewolf_glob.mp3`, new FlickerPattern(15), 0),
+                new OnPattern(RED, 5, 0.5),
             );
         });
 

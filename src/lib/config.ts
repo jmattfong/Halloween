@@ -5,6 +5,7 @@ export const CONFIG = JSON.parse(configContents);
 
 export const RED: Color = CONFIG.colors.red
 export const BLUE: Color = CONFIG.colors.blue
+export const GREEN: Color = CONFIG.colors.green
 export const PURP: Color = CONFIG.colors.purp
 const SOFT = { bri: 25 }
 export const SOFT_RED: Color = { ...RED, ...SOFT }
