@@ -1,1 +1,1 @@
-*/40 * * * * /path/to/script/random_spook.sh
+*/20 * * * * ~/workspace/Halloween-2022/cron/random_spook.sh >> /tmp/cron.log 2>/tmp/cron-error.log
