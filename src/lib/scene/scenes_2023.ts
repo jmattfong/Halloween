@@ -347,7 +347,7 @@ class CostumeContestGatherScene extends AutoResetRingScene {
                 break;
 
             case "dale":
-                lights = ["6", "7"]
+                lights = ["6", "7", "16", "19"]
                 break;
 
             case "hank":
@@ -383,7 +383,7 @@ class SpookyScaryScene extends AutoResetRingScene {
                 break;
 
             case "dale":
-                lights = ["6", "7"]
+                lights = ["6", "7", "16", "19"]
                 break;
 
             case "hank":
@@ -423,7 +423,7 @@ class FloatScene extends AutoResetRingScene {
                 break;
 
             case "dale":
-                lights = ["6", "7"]
+                lights = ["6", "7", "16", "19"]
                 break;
 
             case "hank":
@@ -459,7 +459,7 @@ class DeadPeopleScene extends AutoResetRingScene {
                 break;
 
             case "dale":
-                lights = ["6", "7"]
+                lights = ["6", "7", "16", "19"]
                 break;
 
             case "hank":
@@ -495,7 +495,7 @@ class NoSleepScene extends AutoResetRingScene {
                 break;
 
             case "dale":
-                lights = ["6", "7"]
+                lights = ["6", "7", "16", "19"]
                 break;
 
             case "hank":
@@ -531,7 +531,7 @@ class AliveScene extends AutoResetRingScene {
                 break;
 
             case "dale":
-                lights = ["6", "7"]
+                lights = ["6", "7", "16", "19"]
                 break;
 
             case "hank":
@@ -674,7 +674,7 @@ class CostumeContestVoteScene extends AutoResetRingScene {
                 break;
 
             case "dale":
-                lights = ["6", "7"]
+                lights = ["6", "7", "16", "19"]
                 break;
 
             case "hank":
