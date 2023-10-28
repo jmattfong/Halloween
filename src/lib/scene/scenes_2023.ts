@@ -359,6 +359,7 @@ class CostumeContestGatherScene extends AutoResetRingScene {
                 break;
 
             default:
+                lights = ["666"]
                 break;
         }
 
@@ -395,6 +396,7 @@ class SpookyScaryScene extends AutoResetRingScene {
                 break;
 
             default:
+                lights = ["666"]
                 break;
         }
 
@@ -435,6 +437,7 @@ class FloatScene extends AutoResetRingScene {
                 break;
 
             default:
+                lights = ["666"]
                 break;
         }
 
@@ -471,6 +474,7 @@ class DeadPeopleScene extends AutoResetRingScene {
                 break;
 
             default:
+                lights = ["666"]
                 break;
         }
 
@@ -507,6 +511,7 @@ class NoSleepScene extends AutoResetRingScene {
                 break;
 
             default:
+                lights = ["666"]
                 break;
         }
 
@@ -543,6 +548,7 @@ class AliveScene extends AutoResetRingScene {
                 break;
 
             default:
+                lights = ["666"]
                 break;
         }
 
@@ -579,6 +585,7 @@ class MoanScene extends AutoResetRingScene {
                 break;
 
             default:
+                lights = ["666"]
                 break;
         }
 
@@ -615,6 +622,7 @@ class BustinGoodScene extends AutoResetRingScene {
                 break;
 
             default:
+                lights = ["666"]
                 break;
         }
 
@@ -651,6 +659,7 @@ class WereGlobScene extends AutoResetRingScene {
                 break;
 
             default:
+                lights = ["666"]
                 break;
         }
 
@@ -686,6 +695,7 @@ class CostumeContestVoteScene extends AutoResetRingScene {
                 break;
 
             default:
+                lights = ["666"]
                 break;
         }
 
