@@ -3,6 +3,10 @@
 # a list of global scenes to send out
 SCENES=("float" "alive" "sleep" "dead_people" "moan" "were_glob" "bustin_good")
 
+TIMESTAMP=$(date)
+
+echo "Running random spook @ $TIMESTAMP"
+
 # pick a random item from the scenes array
 SCENE=${SCENES[$RANDOM % ${#SCENES[@]} ]}
 
@@ -14,7 +18,7 @@ DELAY=$((RANDOM % 300))
 echo "Waiting $DELAY seconds"
 
 # Wait for the random delay
-#sleep $DELAY
+sleep $DELAY
 
 # Create a json payload with the scene and setting the scope to global
 JSON="{\"scene\": \"$SCENE\", \"scope\": \"global\"}"
