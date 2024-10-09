@@ -4,12 +4,12 @@ import { CategoryLogger } from "typescript-logging";
 import { SpookyHueBulbPlayer } from "../hue/spooky_bulb_player";
 import { Event } from "./events";
 import { Color, ENERGIZE } from "../config";
-import LightState = require("node-hue-api/lib/model/lightstate/LightState");
+import * as LightState from "node-hue-api/lib/model/lightstate/LightState";
+
 import { SoundPlayer } from "../sound/sound";
 
 const log: CategoryLogger = getLogger("hue-pattern");
 
-const v3 = require("node-hue-api").v3;
 
 export abstract class Pattern {
   protected durationMs: number;
