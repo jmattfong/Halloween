@@ -1,14 +1,17 @@
-import { HueSensorUpdate, HueSensor } from './lib/hue/sensor';
+import { HueSensorUpdate, HueSensor } from "./lib/hue/sensor";
 import { RingEnhancedSpookinatorV2 } from "./lib/ring";
 import { SpookyHueApi } from "./lib/hue/hue";
 import { parse } from "ts-command-line-args";
 import { getLogger, setLogLevel } from "./lib/logging";
 import { CategoryLogger, LogLevel } from "typescript-logging";
 import { CONFIG } from "./lib/config";
-import { SensorType, OrchestratorWebServer, TriggerScope } from "./lib/web_listener/webserver";
+import {
+  SensorType,
+  OrchestratorWebServer,
+  TriggerScope,
+} from "./lib/web_listener/webserver";
 import { RingDeviceData, RingDevice } from "ring-client-api";
-import { sendSensorEvent } from './lib/web_listener/requests';
-
+import { sendSensorEvent } from "./lib/web_listener/requests";
 
 const log: CategoryLogger = getLogger("main");
 
@@ -22,7 +25,6 @@ interface IHalloweenServerArgs {
 }
 
 async function main() {
-
   const args = parse<IHalloweenServerArgs>(
     {
       startRingListener: {
@@ -62,10 +64,11 @@ async function main() {
       headerContentSections: [
         {
           header: "Halloween Spooktacular Main Server",
-          content: "Get ready to spook and be spooked. This is the main server that runs the show. All sensors are connected from this server, which sends all notifications to the connected clients",
+          content:
+            "Get ready to spook and be spooked. This is the main server that runs the show. All sensors are connected from this server, which sends all notifications to the connected clients",
         },
       ],
-    }
+    },
   );
 
   const logLevel = args.debug ? LogLevel.Debug : LogLevel.Info;
@@ -79,9 +82,10 @@ async function main() {
   let registeredClients = new Map<string, Set<string>>();
   let allClients = new Set<string>();
 
-  const server = new OrchestratorWebServer(args.port,
+  const server = new OrchestratorWebServer(
+    args.port,
     (clientUri: URL, sensors: string[]) => {
-      log.info(`registering client ${clientUri} for sensor(s) ${sensors}`)
+      log.info(`registering client ${clientUri} for sensor(s) ${sensors}`);
       sensors.forEach((sensorId) => {
         let clients = registeredClients.get(sensorId);
         if (clients == null) {
@@ -93,32 +97,34 @@ async function main() {
       });
     },
     (name: string, scope: TriggerScope, clientEndpoint?: string) => {
-
-      log.info(`triggering ${name} with scope ${scope} (endpoint? ${clientEndpoint})`);
+      log.info(
+        `triggering ${name} with scope ${scope} (endpoint? ${clientEndpoint})`,
+      );
 
       if (scope == TriggerScope.GLOBAL) {
         log.info(`sending trigger to all clients`);
         allClients.forEach((clientUri: string) => {
-          log.info(`sending trigger to client @${clientUri} `)
+          log.info(`sending trigger to client @${clientUri} `);
           try {
             sendSensorEvent(clientUri, name, SensorType.MANUAL, true);
           } catch (e) {
-            log.warn(`error sending trigger to client @${clientUri}: ${e} `)
+            log.warn(`error sending trigger to client @${clientUri}: ${e} `);
           }
         });
-        return
+        return;
       }
 
       if (scope == TriggerScope.DIRECT) {
-        log.info(`sending trigger to client @${clientEndpoint} `)
+        log.info(`sending trigger to client @${clientEndpoint} `);
         try {
           sendSensorEvent(clientEndpoint!, name, SensorType.MANUAL, true);
         } catch (e) {
-          log.warn(`error sending trigger to client @${clientEndpoint}: ${e} `)
+          log.warn(`error sending trigger to client @${clientEndpoint}: ${e} `);
         }
-        return
+        return;
       }
-    });
+    },
+  );
 
   if (args.startRingListener) {
     log.info("Setting up Ring");
@@ -138,7 +144,7 @@ async function main() {
     await spookHue.connectUsingIP(CONFIG.hue_bridge_ip);
     log.debug(`all hue sensors: ${await spookHue.getSensors()} `);
 
-    log.debug(`all lights, bitch: ${await spookHue.getLights()}`)
+    log.debug(`all lights, bitch: ${await spookHue.getLights()}`);
 
     setupHueListeners(registeredClients, spookHue);
 
@@ -148,24 +154,26 @@ async function main() {
   }
 
   await server.listen();
-
 }
 
 // Sets up the ring listeners and callbacks for the ring sensors
-async function setupRingListener(registeredClients: Map<string, Set<string>>, ringSpook: RingEnhancedSpookinatorV2) {
+async function setupRingListener(
+  registeredClients: Map<string, Set<string>>,
+  ringSpook: RingEnhancedSpookinatorV2,
+) {
   const ringSensors: RingDevice[] = await ringSpook.getSensors();
 
   const ringCallback = (data: RingDeviceData) => {
     const sensorId = data.name;
     log.info(`ring callback called on ${sensorId} `);
     registeredClients.get(sensorId)?.forEach(async (clientUri: string) => {
-      log.info(`sending ring callback to client @${clientUri} `)
+      log.info(`sending ring callback to client @${clientUri} `);
       try {
         sendSensorEvent(clientUri, sensorId, SensorType.RING, data.faulted);
       } catch (e) {
-        log.warn(`error sending ring callback to client @${clientUri}: ${e} `)
+        log.warn(`error sending ring callback to client @${clientUri}: ${e} `);
       }
-    })
+    });
   };
 
   ringSensors.forEach((ringSensor: RingDevice) => {
@@ -173,29 +181,34 @@ async function setupRingListener(registeredClients: Map<string, Set<string>>, ri
   });
 }
 
-
 // Sets up the hue sensors and callbacks for the hue sensors
-async function setupHueListeners(registeredClients: Map<string, Set<string>>, spookHue: SpookyHueApi) {
-
+async function setupHueListeners(
+  registeredClients: Map<string, Set<string>>,
+  spookHue: SpookyHueApi,
+) {
   const hueSensors = await spookHue.getSensors();
   hueSensors.forEach((hueSensor: HueSensor) => {
     const hueCallback = (update: HueSensorUpdate) => {
       const sensorId = `${hueSensor.getId()}`;
       log.info(`hue callback called on ${sensorId} `);
       registeredClients.get(sensorId)?.forEach(async (clientUri: string) => {
-        log.info(`sending hue callback to client @${clientUri} `)
+        log.info(`sending hue callback to client @${clientUri} `);
         try {
-          sendSensorEvent(clientUri, sensorId, SensorType.HUE, update.getPresence());
+          sendSensorEvent(
+            clientUri,
+            sensorId,
+            SensorType.HUE,
+            update.getPresence(),
+          );
         } catch (e) {
-          log.warn(`error sending hue callback to client @${clientUri}: ${e} `)
+          log.warn(`error sending hue callback to client @${clientUri}: ${e} `);
         }
-      })
+      });
     };
 
     hueSensor.addCallback(hueCallback);
     hueSensor.start();
   });
-
 }
 
 main();

@@ -40,8 +40,8 @@ export const util_scenes: SceneCollection = {
 
           log.info(
             `Light config for ON and REACHABLE lights:\n ${JSON.stringify(
-              lights
-            )}`
+              lights,
+            )}`,
           );
         },
       }),

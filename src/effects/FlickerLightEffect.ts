@@ -4,7 +4,6 @@ import { PatternLightEffect } from "../lib/scene/effects/PatternLightEffect";
 import { createLightState } from "../lib/hue/light";
 import { getRandomInt } from "../lib/random";
 
-
 export namespace FlickerLightEffect {
   export type Params = {
     lightNames: string[];

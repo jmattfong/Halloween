@@ -32,15 +32,15 @@ export class StableLightEffect extends LightEffect {
         if (this.on) {
           await this.lightApi.setLightState(
             lightName,
-            createLightState(this.color, this.transitionMs / 10)
+            createLightState(this.color, this.transitionMs / 10),
           );
         } else {
           await this.lightApi.setLightState(
             lightName,
-            new LightState().on(false).transitiontime(this.transitionMs / 10)
+            new LightState().on(false).transitiontime(this.transitionMs / 10),
           );
         }
-      })
+      }),
     );
   }
 }

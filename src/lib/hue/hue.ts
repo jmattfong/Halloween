@@ -34,7 +34,7 @@ export class SpookyHueApi {
     }
     let searchResults = await v3.discovery.nupnpSearch();
     log.info(
-      `found ${searchResults.length} hubs. Connecting to the first one cuz #yolo`
+      `found ${searchResults.length} hubs. Connecting to the first one cuz #yolo`,
     );
     const host = searchResults[0].ipaddress;
     this.connectUsingIP(host);
@@ -95,7 +95,7 @@ export class SpookyHueApi {
     return sensors
       .filter((sensor: any) => {
         log.info(
-          `Checking sensor ${sensor.name} -> ${sensor.type} -> ${sensor.id}}`
+          `Checking sensor ${sensor.name} -> ${sensor.type} -> ${sensor.id}}`,
         );
         // currently we are only returning presence sensors, but we can also update this
         // to get temperature, ambient light, and other spooky sensors
@@ -103,7 +103,7 @@ export class SpookyHueApi {
       })
       .map((sensor: any) => {
         log.debug(
-          `Adding sensor ${sensor.name} -> ${sensor.type} -> ${sensor.id}}`
+          `Adding sensor ${sensor.name} -> ${sensor.type} -> ${sensor.id}}`,
         );
         return new HueSensor(this.hueApi.sensors, sensor.id);
       });

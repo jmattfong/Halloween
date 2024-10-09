@@ -1,22 +1,28 @@
-import { Color } from "../config"
+import { Color } from "../config";
 import * as LightState from "node-hue-api/lib/model/lightstate/LightState";
 
-export function createLightState(color: Color, transitionSeconds: number, brightness?: number): LightState {
-    if (brightness == null) {
-        brightness = color.bri
-    }
-    if (brightness > 254) {
-        brightness = 254
-    } else if (brightness < 1) {
-        brightness = 1
-    }
-    return new LightState()
-        .on(true)
-        .xy(color.xy[0], color.xy[1])
-        .hue(color.hue)
-        .sat(color.sat)
-        //.ct(color.ct)
-        .bri(brightness)
-        // Weird, but this is in increments of 100ms
-        .transitiontime(transitionSeconds * 10);
+export function createLightState(
+  color: Color,
+  transitionSeconds: number,
+  brightness?: number,
+): LightState {
+  if (brightness == null) {
+    brightness = color.bri;
+  }
+  if (brightness > 254) {
+    brightness = 254;
+  } else if (brightness < 1) {
+    brightness = 1;
+  }
+  return (
+    new LightState()
+      .on(true)
+      .xy(color.xy[0], color.xy[1])
+      .hue(color.hue)
+      .sat(color.sat)
+      //.ct(color.ct)
+      .bri(brightness)
+      // Weird, but this is in increments of 100ms
+      .transitiontime(transitionSeconds * 10)
+  );
 }

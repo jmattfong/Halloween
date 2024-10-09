@@ -1,5 +1,9 @@
 import { SpookyHueApi } from "./lib/hue/hue";
-import { ClientWebServer, SensorType, getIPAddress } from "./lib/web_listener/webserver";
+import {
+  ClientWebServer,
+  SensorType,
+  getIPAddress,
+} from "./lib/web_listener/webserver";
 import { parse } from "ts-command-line-args";
 import { getLogger, setLogLevel } from "./lib/logging";
 import { CategoryLogger, LogLevel } from "typescript-logging";
@@ -82,9 +86,8 @@ async function main() {
           content: "Get ready to spook and be spooked",
         },
       ],
-    }
+    },
   );
-
 
   const logLevel = args.debug ? LogLevel.Debug : LogLevel.Info;
   setLogLevel(logLevel);
@@ -94,23 +97,27 @@ async function main() {
   const scenes = getScenes(args.name);
 
   if (args.scene == null || args.scene.length == 0) {
-    log.warn(`no scenes were specified. Please specify at least one scene to run. Choose from: ${Object.keys(scenes)}`);
+    log.warn(
+      `no scenes were specified. Please specify at least one scene to run. Choose from: ${Object.keys(scenes)}`,
+    );
     return;
   }
 
   log.info(`Welcome to the Halloween Spooktacular. Client: ${args.name}`);
 
-  const sceneConfig: SceneConfig = getSceneConfigFromFile('./config/scene-config.json');
-  log.debug(`WHOLE CONFIG: ${JSON.stringify(sceneConfig)}`)
+  const sceneConfig: SceneConfig = getSceneConfigFromFile(
+    "./config/scene-config.json",
+  );
+  log.debug(`WHOLE CONFIG: ${JSON.stringify(sceneConfig)}`);
 
   const myScenes = sceneConfig.scenes.filter((s, index, array) => {
     return args.scene.includes(s.name);
   });
 
-  const mySensors = myScenes.map(s => s.sensorId);
+  const mySensors = myScenes.map((s) => s.sensorId);
 
-  log.info(`scenes to run: ${myScenes.map(s => s.name)}`)
-  log.info(`sensor to register for: ${mySensors}`)
+  log.info(`scenes to run: ${myScenes.map((s) => s.name)}`);
+  log.info(`sensor to register for: ${mySensors}`);
 
   // first we need to get our ip address
   const clientIp = getIPAddress();
@@ -118,25 +125,31 @@ async function main() {
 
   // now we have our IP address, we need to register ourselves with the orchestrator to tell it
   // what sensors we want to listen for updates on
-  sendRegisterEvent(args.orchestratorIp, args.orchestratorPort, clientIp, args.webserverPort, mySensors);
+  sendRegisterEvent(
+    args.orchestratorIp,
+    args.orchestratorPort,
+    clientIp,
+    args.webserverPort,
+    mySensors,
+  );
 
   log.info(`starting up the spooky hue api`);
   const spookHue = new SpookyHueApi(CONFIG.secretPath, CONFIG);
   await spookHue.connectUsingIP(CONFIG.hue_bridge_ip);
   log.debug(
     `get all lights: ${(await spookHue.getLights()).map((l: any) =>
-      l.toStringDetailed()
-    )} `
+      l.toStringDetailed(),
+    )} `,
   );
   const spookyHueBulbPlayer = new SpookyHueBulbPlayer(spookHue);
 
-
   if (args.scene.indexOf("list") > -1) {
     scenes["list"].run(spookyHueBulbPlayer, null, null);
-    return
+    return;
   }
 
-  const server = new ClientWebServer(args.webserverPort,
+  const server = new ClientWebServer(
+    args.webserverPort,
     (sensorId: string, sensorType: SensorType, data: boolean) => {
       log.info(`callback called on ${sensorId} -> ${sensorType} [${data}]`);
 
@@ -148,26 +161,31 @@ async function main() {
       } else {
         log.info(`sensor is not manual, looking for scene to run`);
 
-        sceneName = myScenes.find((s) =>
-          (s.sensorId == sensorId && sensorType == s.sensorType)
+        sceneName = myScenes.find(
+          (s) => s.sensorId == sensorId && sensorType == s.sensorType,
         )?.name;
       }
 
       if (sceneName == null) {
-        log.warn(`could not find scene to run for sensor ${sensorId} -> ${sensorType} `);
-        return
+        log.warn(
+          `could not find scene to run for sensor ${sensorId} -> ${sensorType} `,
+        );
+        return;
       }
 
       if (!(sceneName in scenes)) {
-        log.warn(`could not find scene to run for sensor ${sensorId} -> ${sensorType} `);
-        return
+        log.warn(
+          `could not find scene to run for sensor ${sensorId} -> ${sensorType} `,
+        );
+        return;
       }
 
-      log.info(`found scene to run ${sceneName} `)
+      log.info(`found scene to run ${sceneName} `);
       const sceneToRun = scenes[sceneName];
 
-      sceneToRun.run(spookyHueBulbPlayer, sensorType, data)
-    });
+      sceneToRun.run(spookyHueBulbPlayer, sensorType, data);
+    },
+  );
 
   server.listen();
 }
