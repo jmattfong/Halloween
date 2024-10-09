@@ -1,5 +1,4 @@
 import { HueSensorUpdate, HueSensor } from './lib/hue/sensor';
-import "dotenv/config";
 import { RingEnhancedSpookinatorV2 } from "./lib/ring";
 import { SpookyHueApi } from "./lib/hue/hue";
 import { parse } from "ts-command-line-args";
@@ -23,7 +22,6 @@ interface IHalloweenServerArgs {
 }
 
 async function main() {
-  const { env } = process;
 
   const args = parse<IHalloweenServerArgs>(
     {

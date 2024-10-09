@@ -1,4 +1,3 @@
-import "dotenv/config";
 import { SpookyHueApi } from "./lib/hue/hue";
 import { ClientWebServer, SensorType, getIPAddress } from "./lib/web_listener/webserver";
 import { parse } from "ts-command-line-args";
