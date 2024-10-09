@@ -27,6 +27,7 @@
     "typescript-logging": "^1.0.0"
   },
   "devDependencies": {
+    "prettier": "3",
     "@types/node": "^22.7",
     "tslib": "^2.7",
     "typescript": "^5.6"
