@@ -23,7 +23,7 @@ sudo apt-get install libavahi-compat-libdnssd-dev
 - npm dependencies:
 
 ```
-npm install
+npm install --dev
 ```
 
 ### Get a Ring refresh token
