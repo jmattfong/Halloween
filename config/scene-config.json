@@ -145,6 +145,16 @@
             "name": "find_bulb_3",
             "sensorId": "Waffles' Room",
             "sensorType": "ring"
+        },
+        {
+            "name": "set_light_color",
+            "sensorId": "Waffles' Room",
+            "sensorType": "ring"
+        },
+        {
+            "name": "cycle_colors",
+            "sensorId": "Waffles' Room",
+            "sensorType": "ring"
         }
     ]
 }

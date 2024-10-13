@@ -23,11 +23,16 @@ import {
 } from "./scenes";
 import { VIDEOS_2023, PORTAL_TO_HELL } from "../videos";
 import {
+  Color,
+  GREEN,
   RED,
   PURP,
   SOFT_RED,
   RELAX,
   BLUE,
+  ORANGE,
+  PURPLE,
+  YELLOW,
 } from "../config";
 import { SensorType } from "../web_listener/webserver";
 
@@ -131,6 +136,20 @@ class LoopThroughAllLights extends Scene {
   }
 }
 
+class SetLightColor extends MultiPartScene {
+    constructor(light: string, color: Color) {
+        let lights = [light]
+        let events: Event[] = lights.map((light) => {
+          return new Event(
+            light,
+            new OnPattern(color, 15),
+            DEFAULT_LIGHTING,
+          );
+        });
+        super(events, getUnspookyEvents(lights));
+      }
+}
+
 class FindBulb extends MultiPartScene {
   constructor(lights: string[]) {
     let events: Event[] = lights.map((light) => {
@@ -159,6 +178,24 @@ class FindBulb extends MultiPartScene {
     super(events, getUnspookyEvents(lights));
   }
 }
+
+class CycleColors extends MultiPartScene {
+    constructor(lights: string[]) {
+      let events: Event[] = lights.map((light) => {
+        return new Event(
+          light,
+          new OnPattern(RED, 2),
+          new OnPattern(ORANGE, 2),
+          new OnPattern(YELLOW, 2),
+          new OnPattern(GREEN, 2),
+          new OnPattern(BLUE, 2),
+          new OnPattern(PURPLE, 2),
+        );
+      });
+      super(events, getUnspookyEvents(lights));
+    }
+  }
+  
 
 class ThunderScene extends MultiPartScene {
   constructor(lights: string[]) {
@@ -762,8 +799,10 @@ export function getScenes(device_name: string): { [key: string]: Scene } {
 
     // Test and Utility scenes
     list: new ListOnLightsScene(),
+    set_light_color: new SetLightColor("26", PURP),
     flash_lights: new LoopThroughAllLights(),
-    get_light: new GetLight(33), // Change this to get the state of different lights by ID
+    cycle_colors: new CycleColors(["26", "6"]),
+    get_light: new GetLight(26), // Change this to get the state of different lights by ID
     find_bulb: new FindBulb(getLights("downstairs_office")),
     find_bulb_2: new FindBulb(getLights("downstairs_bathroom")),
     find_bulb_3: new FindBulb(getLights("downstairs_office")),
