@@ -13,6 +13,11 @@
             "sensorType": "ring"
         },
         {
+            "name": "clown_laugh",
+            "sensorId": "Waffles' Room",
+            "sensorType": "ring"
+        },
+        {
             "name": "photobooth_spooks",
             "sensorType": "manual"
         },
