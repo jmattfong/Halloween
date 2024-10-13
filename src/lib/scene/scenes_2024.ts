@@ -444,6 +444,8 @@ class CreepyCarnivalScene extends AutoResetRingScene {
           GREEN,
           LAVENDER,
           SOFT_RED,
+          PURPLE,
+          YELLOW,
         ),
       );
     });

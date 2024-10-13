@@ -203,6 +203,7 @@ export class RandomColourPattern extends Pattern {
     super(durationSeconds);
     this.colours = colours;
     this.colourDurationMs = 400;
+    this.isCancelled = false;
   }
 
   public cancel() {
@@ -213,6 +214,8 @@ export class RandomColourPattern extends Pattern {
     lightName: string,
     lightApi: SpookyHueApi,
   ): Promise<boolean> {
+    const start = new Date();
+
     // get the total numbers we chose between
     const numColours = this.colours.length;
 
@@ -220,11 +223,10 @@ export class RandomColourPattern extends Pattern {
     // avoid doing the same colour twice in a row
     let previousColourIndex = -1;
 
-    // set the even to cancel after the duration
-    // TODO: this should be built into the pattern
-    setInterval(() => (this.isCancelled = true), this.getDurationMs());
+    log.debug("running this pattern");
+    log.debug(`my state is: ${this.isCancelled}`);
 
-    while (true) {
+    while (!this.isCancelled) {
       // get a random index
       let colourIndex = Math.floor(Math.random() * numColours);
 
@@ -241,10 +243,17 @@ export class RandomColourPattern extends Pattern {
 
       await sleep(this.colourDurationMs);
 
-      if (this.isCancelled) {
-        return true;
+      const now = new Date();
+
+      if (now.getTime() - start.getTime() > this.durationMs) {
+        return false;
       }
+
     }
+
+    this.isCancelled = false;
+    log.debug(`my state is: ${this.isCancelled}`);
+    return true;
   }
 }
 
