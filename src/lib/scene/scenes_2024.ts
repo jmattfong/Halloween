@@ -129,8 +129,8 @@ class LoopThroughAllLights extends Scene {
         new OffPattern(1),
         new OnPattern(RED, 1),
         new OffPattern(1),
-        new OnPattern(RED, 1)
-      )
+        new OnPattern(RED, 1),
+      );
 
       await spookyHueBulbPlayer.playPattern(flashEvent);
     }
@@ -139,13 +139,9 @@ class LoopThroughAllLights extends Scene {
 
 class SetLightColor extends MultiPartScene {
   constructor(light: string, color: Color) {
-    let lights = [light]
+    let lights = [light];
     let events: Event[] = lights.map((light) => {
-      return new Event(
-        light,
-        new OnPattern(color, 15),
-        DEFAULT_LIGHTING,
-      );
+      return new Event(light, new OnPattern(color, 15), DEFAULT_LIGHTING);
     });
     super(events, getUnspookyEvents(lights));
   }
@@ -196,7 +192,6 @@ class CycleColors extends MultiPartScene {
     super(events, getUnspookyEvents(lights));
   }
 }
-
 
 class ThunderScene extends MultiPartScene {
   constructor(lights: string[]) {
@@ -436,7 +431,6 @@ class CalmingCockroachesScene extends MultiPartScene {
 
 class CreepyCarnivalScene extends AutoResetRingScene {
   constructor(lights: string[]) {
-
     let spookyEvents = lights.map((light) => {
       return new Event(
         light,
@@ -683,7 +677,7 @@ function get_downstairs_bathroom_scene(lights: string[]): RandomMultiScene {
         new FlickerPattern(3),
       ),
       new StableColourPattern(RELAX, 30, 13, 4),
-    )
+    );
   });
 
   return new RandomMultiScene(spookyScenes, stillSpookyClownLaughEvents);
@@ -696,33 +690,15 @@ function get_bedroom_murder_scene(lights: string[]): RandomMultiScene {
 }
 
 const LIGHTS = {
-  "front_walkway": [
-    "29", "30",
-  ],
-  "downstairs_entry": [
-    "17", "24",
-  ],
-  "downstairs_bathroom": [
-    "7", "8", "9",
-  ],
-  "downstairs_office": [
-    "3", "6", "26",
-  ],
-  "half_bathroom": [
-    "1", "2",
-  ],
-  "guest_bathroom": [
-    "20", "32", "22",
-  ],
-  "guest_bedroom": [
-    "23", "31",
-  ],
-  "upstairs_hall": [
-    "15", "4", "5", "27"
-  ],
-  "switch": [
-    "33",
-  ],
+  front_walkway: ["29", "30"],
+  downstairs_entry: ["17", "24"],
+  downstairs_bathroom: ["7", "8", "9"],
+  downstairs_office: ["3", "6", "26"],
+  half_bathroom: ["1", "2"],
+  guest_bathroom: ["20", "32", "22"],
+  guest_bedroom: ["23", "31"],
+  upstairs_hall: ["15", "4", "5", "27"],
+  switch: ["33"],
 } as const;
 
 function getLights(roomName: string): string[] {
@@ -745,9 +721,7 @@ export function getScenes(device_name: string): { [key: string]: Scene } {
     ),
 
     // Scenes for The Beast
-    creepy_carnival: new CreepyCarnivalScene(
-      getLights("downstairs_office"),
-    ),
+    creepy_carnival: new CreepyCarnivalScene(getLights("downstairs_office")),
 
     // Hank's scenes
     down_bath_random: get_downstairs_bathroom_scene(

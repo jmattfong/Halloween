@@ -1,5 +1,5 @@
 import LightState = require("node-hue-api/lib/model/lightstate/LightState");
-import { Color } from "../config"
+import { Color } from "../config";
 
 export function createLightState(
   color: Color,

@@ -190,10 +190,10 @@ export class FlickerPattern extends Pattern {
  */
 export class RandomColourPattern extends Pattern {
   // The list of colours to choose between
-  private colours: Color[]
+  private colours: Color[];
 
   // How long to wait between each colour change
-  private colourDurationMs: number
+  private colourDurationMs: number;
 
   // Whether the pattern has been cancelled
   // TODO: this should probably be in the base Pattern type
@@ -213,7 +213,6 @@ export class RandomColourPattern extends Pattern {
     lightName: string,
     lightApi: SpookyHueApi,
   ): Promise<boolean> {
-
     // get the total numbers we chose between
     const numColours = this.colours.length;
 
@@ -223,7 +222,7 @@ export class RandomColourPattern extends Pattern {
 
     // set the even to cancel after the duration
     // TODO: this should be built into the pattern
-    setInterval(() => this.isCancelled = true, this.getDurationMs());
+    setInterval(() => (this.isCancelled = true), this.getDurationMs());
 
     while (true) {
       // get a random index
@@ -243,7 +242,7 @@ export class RandomColourPattern extends Pattern {
       await sleep(this.colourDurationMs);
 
       if (this.isCancelled) {
-        return true
+        return true;
       }
     }
   }

@@ -19,26 +19,20 @@ export const NIGHTLIGHT: Color = CONFIG.colors.nightlight;
 export const ORANGE: Color = CONFIG.colors.orange;
 
 export const PURPLE: Color = {
-  "bri": 160,
-  "hue": 49766,
-  "sat": 254,
-  "xy": [
-      0.2624,
-      0.1005
-  ],
-  "ct": 366,
+  bri: 160,
+  hue: 49766,
+  sat: 254,
+  xy: [0.2624, 0.1005],
+  ct: 366,
 };
 
 export const YELLOW: Color = {
-  "bri": 254,
-  "hue": 10540,
-  "sat": 254,
-  "xy": [
-      0.4871,
-      0.4618
-  ],
-  "ct": 366,
-}
+  bri: 254,
+  hue: 10540,
+  sat: 254,
+  xy: [0.4871, 0.4618],
+  ct: 366,
+};
 
 export type Color = {
   bri: number;
