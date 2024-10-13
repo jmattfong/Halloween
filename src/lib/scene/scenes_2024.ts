@@ -397,36 +397,38 @@ class CalmingCockroachesScene extends MultiPartScene {
 }
 
 /**
- * TODO, currently just a copy of CalmingCockroachesScene
+ * TODO, currently just a copy of PsychoScene
  */
-class CreepyCarnivalScene extends MultiPartScene {
+class CreepyCarnivalScene extends AutoResetRingScene {
     constructor(lights: string[]) {
-        let spookyEvents = [
-          new Event(
-            lights[0],
-            new SoundPattern(
-              `${RESOURCES_DIR}/calming_cockroaches/enya_bugs.mp3`,
-              new OnPattern(PURP, 150, 11),
-              0,
-              1,
-              true,
-            ),
-            new OffPattern(6, 6),
+      let showerLight = lights.pop();
+
+      let spookyEvents = lights.map((light) => {
+        return new Event(
+          light,
+          new StableColourPattern(RELAX, 40, 13, 4),
+          new PulsePattern(RED, 14, 0.5),
+          new OnPattern(SOFT_RED, 10, 5),
+        );
+      });
+
+      spookyEvents.push(
+        new Event(
+          showerLight,
+          new SoundPattern(
+            `${RESOURCES_DIR}/david_psycho.mp3`,
+            new FlickerPattern(13.5, BLUE, 110),
+            0,
           ),
-          new Event(
-            lights[1],
-            new OnPattern(RELAX, 13, 4),
-            new OnPattern(RELAX, 10, 5),
-          ),
-        ];
-    
-        const unspookyEvents = lights.map((light) => {
-          return new Event(light, new OnPattern(PURP, 150, 11));
-        });
-    
-        super(spookyEvents, unspookyEvents, true);
+          new PulsePattern(RED, 14, 0.5),
+          new OffPattern(6, 6),
+          new OnPattern(SOFT_RED, 10, 5),
+        ),
+      );
+
+      super(spookyEvents, true);
     }
-}
+  }
 
 class PsychoScene extends AutoResetRingScene {
   constructor(lights: string[]) {
@@ -652,7 +654,21 @@ function get_downstairs_bathroom_scene(lights: string[]): RandomMultiScene {
     new PsychoScene(Object.assign([], lights)),
   ];
 
-  return new RandomMultiScene(spookyScenes, []);
+  const stillSpookyClownLaughEvents = lights.map((light) => {
+    return new Event(
+        light,
+        new RandomSoundPattern(
+          [
+            `${RESOURCES_DIR}/thunder/thunder_sound_1.mp3`,
+            `${RESOURCES_DIR}/thunder/thunder_sound_2.mp3`,
+          ],
+          new FlickerPattern(3),
+        ),
+        new StableColourPattern(RELAX, 30, 13, 4),
+    )
+  });
+
+  return new RandomMultiScene(spookyScenes, stillSpookyClownLaughEvents);
 }
 
 function get_bedroom_murder_scene(lights: string[]): RandomMultiScene {
@@ -719,9 +735,6 @@ export function getScenes(device_name: string): { [key: string]: Scene } {
     down_bath_random: get_downstairs_bathroom_scene(
         getLights("downstairs_bathroom"),
     ),
-    clown_laugh: new ClownLaughScene(
-        getLights("downstairs_bathroom"),
-    ),
 
     // Bill's scenes
     master_bedroom: get_bedroom_murder_scene(getLights("upstairs_hall")), // TODO
@@ -751,7 +764,7 @@ export function getScenes(device_name: string): { [key: string]: Scene } {
     list: new ListOnLightsScene(),
     flash_lights: new LoopThroughAllLights(),
     get_light: new GetLight(33), // Change this to get the state of different lights by ID
-    find_bulb: new FindBulb(getLights("downstairs_entry")),
+    find_bulb: new FindBulb(getLights("downstairs_office")),
     find_bulb_2: new FindBulb(getLights("downstairs_bathroom")),
     find_bulb_3: new FindBulb(getLights("downstairs_office")),
   };

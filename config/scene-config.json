@@ -13,11 +13,6 @@
             "sensorType": "ring"
         },
         {
-            "name": "clown_laugh",
-            "sensorId": "Waffles' Room",
-            "sensorType": "ring"
-        },
-        {
             "name": "photobooth_spooks",
             "sensorType": "manual"
         },
@@ -138,17 +133,17 @@
         },
         {
             "name": "find_bulb",
-            "sensorId": "Guest Bathroom",
+            "sensorId": "Waffles' Room",
             "sensorType": "ring"
         },
         {
             "name": "find_bulb_2",
-            "sensorId": "Guest Bathroom",
+            "sensorId": "Waffles' Room",
             "sensorType": "ring"
         },
         {
             "name": "find_bulb_3",
-            "sensorId": "Guest Bathroom",
+            "sensorId": "Waffles' Room",
             "sensorType": "ring"
         }
     ]

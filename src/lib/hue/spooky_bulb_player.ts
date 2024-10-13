@@ -25,7 +25,7 @@ export class SpookyHueBulbPlayer {
       log.info("interrupt current pattern");
       let bulb = this.currPatternMap.get(lightName);
       if (bulb) {
-        log.info(`cancelling bulb: ${bulb}`);
+        log.info(`cancelling bulb: ${lightName}`);
         bulb.cancel();
       }
     }
