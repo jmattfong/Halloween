@@ -20,18 +20,14 @@ import {
   RandomMultiScene,
   MultiPartScene,
   AutoResetRingScene,
-  RepeatingScene,
 } from "./scenes";
 import { VIDEOS_2023, PORTAL_TO_HELL } from "../videos";
 import {
-  GREEN,
   RED,
   PURP,
   SOFT_RED,
   RELAX,
-  ORANGE,
   BLUE,
-  CONCENTRATE,
 } from "../config";
 import { SensorType } from "../web_listener/webserver";
 
@@ -109,6 +105,32 @@ class GetLight extends Scene {
   }
 }
 
+class LoopThroughAllLights extends Scene {
+  async run(
+    spookyHueBulbPlayer: SpookyHueBulbPlayer,
+    sensorType: SensorType,
+    sensorTriggedOn: boolean,
+  ): Promise<void> {
+    const allLights = await spookyHueBulbPlayer.api.getLights();
+
+    for (let i = 0; i < allLights.length; i++) {
+      let light = allLights[i];
+      let id = light["_data"]["id"];
+
+      log.info(`Flashing light #{id}`);
+      const flashEvent = new Event(
+        id,
+        new OffPattern(1),
+        new OnPattern(RED, 1),
+        new OffPattern(1),
+        new OnPattern(RED, 1)
+      )
+
+      await spookyHueBulbPlayer.playPattern(flashEvent);
+    }
+  }
+}
+
 class FindBulb extends MultiPartScene {
   constructor(lights: string[]) {
     let events: Event[] = lights.map((light) => {
@@ -116,24 +138,22 @@ class FindBulb extends MultiPartScene {
         light,
         new OnPattern(RED, 10),
         DEFAULT_LIGHTING,
+        new OffPattern(4),
         new OnPattern(RED, 10),
         DEFAULT_LIGHTING,
+        new OffPattern(4),
         new OnPattern(RED, 10),
         DEFAULT_LIGHTING,
+        new OffPattern(4),
         new OnPattern(RED, 10),
         DEFAULT_LIGHTING,
+        new OffPattern(4),
         new OnPattern(RED, 10),
         DEFAULT_LIGHTING,
+        new OffPattern(4),
         new OnPattern(RED, 10),
         DEFAULT_LIGHTING,
-        new OnPattern(RED, 10),
-        DEFAULT_LIGHTING,
-        new OnPattern(RED, 10),
-        DEFAULT_LIGHTING,
-        new OnPattern(RED, 10),
-        DEFAULT_LIGHTING,
-        new OnPattern(RED, 10),
-        DEFAULT_LIGHTING,
+        new OffPattern(4),
       );
     });
     super(events, getUnspookyEvents(lights));
@@ -659,6 +679,7 @@ export function getScenes(device_name: string): { [key: string]: Scene } {
 
     // Test and Utility scenes
     list: new ListOnLightsScene(),
+    flash_lights: new LoopThroughAllLights(),
     get_light: new GetLight(33), // Change this to get the state of different lights by ID
     find_bulb: new FindBulb(getLights("downstairs_entry")),
     find_bulb_2: new FindBulb(getLights("downstairs_bathroom")),
