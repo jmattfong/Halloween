@@ -398,7 +398,7 @@ class CreepyCarnivalScene extends MultiPartScene {
           return new Event(light, new OnPattern(PURP, 150, 11));
         });
     
-        super(spookyEvents, unspookyEvents, false);
+        super(spookyEvents, unspookyEvents, true);
     }
 }
 

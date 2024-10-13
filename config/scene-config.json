@@ -8,6 +8,11 @@
         },
 
         {
+            "name": "creepy_carnival",
+            "sensorId": "Waffles' Room",
+            "sensorType": "ring"
+        },
+        {
             "name": "photobooth_spooks",
             "sensorType": "manual"
         },
