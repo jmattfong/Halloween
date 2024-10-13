@@ -583,15 +583,33 @@ function get_bedroom_murder_scene(lights: string[]): RandomMultiScene {
 }
 
 const LIGHTS = {
-  living_room: ["16", "19"],
-  front_walkway: ["24", "17"],
-  downstairs_entry: ["8", "9"],
-  downstairs_bathroom: ["1", "2", "3"],
-  half_bathroom: ["6", "7"],
-  guest_bathroom: ["20", "32", "22"],
-  guest_bedroom: ["23", "31"],
-  upstairs_hall: ["12", "13", "15"],
-  switch: ["33"],
+    "front_walkway": [
+        "TODO", "TODO", // TODO which bulbs?
+    ],
+    "downstairs_entry": [
+        "8", "9", // TODO verify
+    ],
+    "downstairs_bathroom": [
+        "7", "8", "9",
+    ],
+    "downstairs_office": [
+        "3", "6", "TODO", // TODO what is the last bulb?
+    ],
+    "half_bathroom": [
+        "1", "2",
+    ],
+    "guest_bathroom": [
+        "20", "21", "22",
+    ],
+    "guest_bedroom": [
+        "23", "31", // TODO verify
+    ],
+    "upstairs_hall": [
+        "12", "13", "15", // TODO verify
+    ],
+    "switch": [
+        "33", // TODO verify
+    ],
 } as const;
 
 function getLights(roomName: string): string[] {
