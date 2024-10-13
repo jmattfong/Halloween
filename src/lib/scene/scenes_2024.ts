@@ -27,7 +27,7 @@ import {
   Color,
   GREEN,
   RED,
-  PURP,
+  LAVENDER,
   SOFT_RED,
   RELAX,
   BLUE,
@@ -187,6 +187,8 @@ class CycleColors extends MultiPartScene {
         new OnPattern(GREEN, 2),
         new OnPattern(BLUE, 2),
         new OnPattern(PURPLE, 2),
+        new OnPattern(LAVENDER, 2),
+        new OnPattern(SOFT_RED, 2),
       );
     });
     super(events, getUnspookyEvents(lights));
@@ -407,7 +409,7 @@ class CalmingCockroachesScene extends MultiPartScene {
         lights[0],
         new SoundPattern(
           `${RESOURCES_DIR}/calming_cockroaches/enya_bugs.mp3`,
-          new OnPattern(PURP, 150, 11),
+          new OnPattern(LAVENDER, 150, 11),
           0,
           1,
           true,
@@ -422,7 +424,7 @@ class CalmingCockroachesScene extends MultiPartScene {
     ];
 
     const unspookyEvents = lights.map((light) => {
-      return new Event(light, new OnPattern(PURP, 150, 11));
+      return new Event(light, new OnPattern(LAVENDER, 150, 11));
     });
 
     super(spookyEvents, unspookyEvents, false);
@@ -434,7 +436,15 @@ class CreepyCarnivalScene extends AutoResetRingScene {
     let spookyEvents = lights.map((light) => {
       return new Event(
         light,
-        new RandomColourPattern(20, RED, ORANGE, BLUE, GREEN, PURP, SOFT_RED),
+        new RandomColourPattern(
+          20,
+          RED,
+          ORANGE,
+          BLUE,
+          GREEN,
+          LAVENDER,
+          SOFT_RED,
+        ),
       );
     });
 
@@ -754,7 +764,7 @@ export function getScenes(device_name: string): { [key: string]: Scene } {
 
     // Test and Utility scenes
     list: new ListOnLightsScene(),
-    set_light_color: new SetLightColor("26", PURP),
+    set_light_color: new SetLightColor("26", PURPLE),
     flash_lights: new LoopThroughAllLights(),
     cycle_colors: new CycleColors(["26", "6"]),
     get_light: new GetLight(26), // Change this to get the state of different lights by ID
