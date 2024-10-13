@@ -248,7 +248,6 @@ export class RandomColourPattern extends Pattern {
       if (now.getTime() - start.getTime() > this.durationMs) {
         return false;
       }
-
     }
 
     this.isCancelled = false;
