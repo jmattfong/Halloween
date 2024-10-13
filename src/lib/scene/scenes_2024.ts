@@ -35,7 +35,7 @@ import {
 } from "../config";
 import { SensorType } from "../web_listener/webserver";
 
-const log: CategoryLogger = getLogger("scenes_2023");
+const log: CategoryLogger = getLogger("scenes_2024");
 
 const RESOURCES_DIR: String = "resources/2023_sounds";
 
@@ -660,9 +660,9 @@ export function getScenes(device_name: string): { [key: string]: Scene } {
     // Test and Utility scenes
     list: new ListOnLightsScene(),
     get_light: new GetLight(33), // Change this to get the state of different lights by ID
-    find_bulb: new FindBulb(["0", "1", "2", "3", "4"]),
-    find_bulb_2: new FindBulb(["5", "6", "7", "8"]),
-    find_bulb_3: new FindBulb(["9", "10", "11", "12", "13"]),
+    find_bulb: new FindBulb(getLights("downstairs_entry")),
+    find_bulb_2: new FindBulb(getLights("downstairs_bathroom")),
+    find_bulb_3: new FindBulb(getLights("downstairs_office")),
   };
 
   main_scenes["dev_scene"] = main_scenes["down_bath_random"];

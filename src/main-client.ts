@@ -9,7 +9,7 @@ import { getLogger, setLogLevel } from "./lib/logging";
 import { CategoryLogger, LogLevel } from "typescript-logging";
 import { CONFIG } from "./lib/config";
 
-import { getScenes } from "./lib/scene/scenes_2023";
+import { getScenes } from "./lib/scene/scenes_2024";
 import { sendRegisterEvent } from "./lib/web_listener/requests";
 import { SpookyHueBulbPlayer } from "./lib/hue/spooky_bulb_player";
 import { SceneConfig, getSceneConfigFromFile } from "./lib/scene/scene_config";
