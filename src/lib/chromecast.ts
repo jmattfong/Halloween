@@ -62,11 +62,7 @@ export class Chromecaster {
   ) {
     chromecast.on("serviceUp", function (service: any) {
       log.info(
-        'found device "%s" at %s:%d',
-        service.name,
-        service.addresses[0],
-        service.port,
-      );
+        `found device "${service.name}" at ${service.addresses[0]}:${service.port}`);
 
       if (service.name !== deviceName) {
         log.info(
