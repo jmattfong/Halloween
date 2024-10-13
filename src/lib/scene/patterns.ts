@@ -185,6 +185,70 @@ export class FlickerPattern extends Pattern {
   }
 }
 
+/**
+ * Creates a pattern where the lights colour randomly changes over the duration
+ */
+export class RandomColourPattern extends Pattern {
+  // The list of colours to choose between
+  private colours: Color[]
+
+  // How long to wait between each colour change
+  private colourDurationMs: number
+
+  // Whether the pattern has been cancelled
+  // TODO: this should probably be in the base Pattern type
+  private isCancelled;
+
+  constructor(durationSeconds: number, ...colours: Color[]) {
+    super(durationSeconds);
+    this.colours = colours;
+    this.colourDurationMs = 400;
+  }
+
+  public cancel() {
+    this.isCancelled = true;
+  }
+
+  public async run(
+    lightName: string,
+    lightApi: SpookyHueApi,
+  ): Promise<boolean> {
+
+    // get the total numbers we chose between
+    const numColours = this.colours.length;
+
+    // we also keep track of the last colour index we used, to best effort
+    // avoid doing the same colour twice in a row
+    let previousColourIndex = -1;
+
+    // set the even to cancel after the duration
+    // TODO: this should be built into the pattern
+    setInterval(() => this.isCancelled = true, this.getDurationMs());
+
+    while (true) {
+      // get a random index
+      let colourIndex = Math.floor(Math.random() * numColours);
+
+      // make sure we didn't just use that index
+      if (colourIndex == previousColourIndex) {
+        colourIndex = (colourIndex + 1) % numColours;
+        previousColourIndex = colourIndex;
+      }
+
+      // get the colour and write it
+      let selectedColour = this.colours[colourIndex];
+      const state = createLightState(selectedColour, 0, 255);
+      await lightApi.setLightState(lightName, state);
+
+      await sleep(this.colourDurationMs);
+
+      if (this.isCancelled) {
+        return true
+      }
+    }
+  }
+}
+
 export class SleepPattern extends Pattern {
   constructor(durationSeconds: number) {
     super(durationSeconds);
