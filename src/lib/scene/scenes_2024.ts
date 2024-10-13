@@ -33,7 +33,7 @@ import { SensorType } from "../web_listener/webserver";
 
 const log: CategoryLogger = getLogger("scenes_2024");
 
-const RESOURCES_DIR: String = "resources/2023_sounds";
+const RESOURCES_DIR: String = "resources/2024_sounds";
 
 const DEFAULT_LIGHTING: Pattern = new OnPattern(RELAX, 3);
 
@@ -370,6 +370,38 @@ class CalmingCockroachesScene extends MultiPartScene {
   }
 }
 
+/**
+ * TODO, currently just a copy of CalmingCockroachesScene
+ */
+class CreepyCarnivalScene extends MultiPartScene {
+    constructor(lights: string[]) {
+        let spookyEvents = [
+          new Event(
+            lights[0],
+            new SoundPattern(
+              `${RESOURCES_DIR}/calming_cockroaches/enya_bugs.mp3`,
+              new OnPattern(PURP, 150, 11),
+              0,
+              1,
+              true,
+            ),
+            new OffPattern(6, 6),
+          ),
+          new Event(
+            lights[1],
+            new OnPattern(RELAX, 13, 4),
+            new OnPattern(RELAX, 10, 5),
+          ),
+        ];
+    
+        const unspookyEvents = lights.map((light) => {
+          return new Event(light, new OnPattern(PURP, 150, 11));
+        });
+    
+        super(spookyEvents, unspookyEvents, false);
+    }
+}
+
 class PsychoScene extends AutoResetRingScene {
   constructor(lights: string[]) {
     let showerLight = lights.pop();
@@ -486,8 +518,6 @@ class ChromecastScene extends Scene {
 
   constructor(deviceId: string) {
     super();
-    // this should probably be instantiated outside of this method here
-    // TODO figure out device name for new Chromecast
     this.started = false;
     this.deviceId = deviceId;
   }
@@ -569,6 +599,9 @@ class BlackLightHallwayScene extends AutoResetRingScene {
   }
 }
 
+/**
+ * TODO
+ */
 function get_photobooth_scene(): RandomMultiScene {
   const spookyScenes = [
     // new WerewolfDoorJiggleScene(),
@@ -640,7 +673,7 @@ export function getScenes(device_name: string): { [key: string]: Scene } {
   let main_scenes = {
     // Scenes for the party
     // Main server's scenes
-    photobooth_spooks: get_photobooth_scene(), // TODO
+    photobooth_spooks: get_photobooth_scene(),
     chromecast_portal_to_hell: new ChromecastPortalToHell(
       "Chromecast-HD-36a10199048bd09c03c63e7f05c555c2",
     ),
@@ -651,22 +684,30 @@ export function getScenes(device_name: string): { [key: string]: Scene } {
       getLights("front_walkway").concat(getLights("downstairs_entry")),
     ),
 
+    // Scenes for The Beast
+    creepy_carnival: new CreepyCarnivalScene(
+        getLights("downstairs_office"),
+    ),
+
     // Hank's scenes
     down_bath_random: get_downstairs_bathroom_scene(
       getLights("downstairs_bathroom"),
     ), // TODO
+
     // Bill's scenes
     master_bedroom: get_bedroom_murder_scene(getLights("upstairs_hall")), // TODO
-    black_light_hallway: new BlackLightHallwayScene(
-      getLights("switch")[0],
-      getLights("upstairs_hall"),
-    ),
+
     // Dale's scene
     calming_cockroaches: new CalmingCockroachesScene(
       getLights("half_bathroom"),
     ),
+
     // Boomhaur's scenes
     scream: new ScreamScene(getLights("guest_bathroom")), // TODO
+    black_light_hallway: new BlackLightHallwayScene(
+        getLights("switch")[0],
+        getLights("upstairs_hall"),
+      ),
 
     // Test individual scenes
     creepy_clown_shower: new DownstairsBathCreepyClownShowerScene(
