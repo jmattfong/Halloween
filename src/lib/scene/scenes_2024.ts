@@ -117,7 +117,7 @@ class LoopThroughAllLights extends Scene {
       let light = allLights[i];
       let id = light["_data"]["id"];
 
-      log.info(`Flashing light #{id}`);
+      log.info(`Flashing light #${id}`);
       const flashEvent = new Event(
         id,
         new OffPattern(1),
