@@ -4,8 +4,7 @@
     "rootDir": "./src",
     "sourceMap": true,
     "moduleResolution": "node",
-    "target": "es6",
-    "allowSyntheticDefaultImports": true
+    "target": "es6"
   },
   "include": ["src/**/*.ts"]
 }
