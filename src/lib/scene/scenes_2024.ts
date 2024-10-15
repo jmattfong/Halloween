@@ -729,11 +729,13 @@ export function getScenes(device_name: string): { [key: string]: Scene } {
       "Chromecast-70c4c8babee87879b01e6d819b6b5e97",
     ),
     front_light_flicker: new FrontLightFlickerScene(
-      getLights("front_walkway").concat(getLights("downstairs_entry")),
+      getLights("front_walkway"),
     ),
 
     // Scenes for The Beast
-    creepy_carnival: new CreepyCarnivalScene(getLights("downstairs_office")),
+    creepy_carnival: new CreepyCarnivalScene(
+      getLights("downstairs_office"),
+    ),
 
     // Hank's scenes
     down_bath_random: get_downstairs_bathroom_scene(
@@ -741,7 +743,9 @@ export function getScenes(device_name: string): { [key: string]: Scene } {
     ),
 
     // Bill's scenes
-    master_bedroom: get_bedroom_murder_scene(getLights("upstairs_hall")), // TODO
+    master_bedroom: get_bedroom_murder_scene(
+      getLights("upstairs_hall"),
+    ), // TODO
 
     // Dale's scene
     calming_cockroaches: new CalmingCockroachesScene(
@@ -756,9 +760,7 @@ export function getScenes(device_name: string): { [key: string]: Scene } {
     ),
 
     // Test individual scenes
-    creepy_clown_shower: new DownstairsBathCreepyClownShowerScene(
-      getLights("half_bathroom"),
-    ),
+    creepy_clown_shower: new DownstairsBathCreepyClownShowerScene(getLights("half_bathroom")),
     psycho: new PsychoScene(getLights("half_bathroom")),
     electric_lady: new ElectricLady(getLights("half_bathroom")),
     werewolf_door_jiggle: new WerewolfDoorJiggleScene(),
