@@ -24,8 +24,6 @@ export class SpookyHueApi {
     const fileContents = readFileSync(secretsPath, { encoding: "utf-8" });
     const secrets: HueSecrets = JSON.parse(fileContents);
     this.username = secrets.hueUsername;
-    this.lights = config["lights"];
-    log.info("got lights " + JSON.stringify(this.lights));
   }
 
   public async connect() {
@@ -67,7 +65,7 @@ export class SpookyHueApi {
   }
 
   public getLightId(name: string): number {
-    return this.lights[name];
+    return +name;
   }
 
   public async getLights(): Promise<any> {

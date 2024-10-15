@@ -135,7 +135,7 @@ async function main() {
 
   log.info(`starting up the spooky hue api`);
   const spookHue = new SpookyHueApi(CONFIG.secretPath, CONFIG);
-  await spookHue.connectUsingIP(CONFIG.hue_bridge_ip);
+  await spookHue.connectUsingIP(CONFIG.hueBridgeIp);
   log.debug(
     `get all lights: ${(await spookHue.getLights()).map((l: any) =>
       l.toStringDetailed(),

@@ -141,7 +141,7 @@ async function main() {
   if (args.startHueListener) {
     log.info("Setting up connection to the Hue API");
     const spookHue: SpookyHueApi = new SpookyHueApi(CONFIG.secretPath, CONFIG);
-    await spookHue.connectUsingIP(CONFIG.hue_bridge_ip);
+    await spookHue.connectUsingIP(CONFIG.hueBridgeIp);
     log.debug(`all hue sensors: ${await spookHue.getSensors()} `);
 
     log.debug(`all lights, bitch: ${await spookHue.getLights()}`);
