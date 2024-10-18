@@ -197,6 +197,31 @@ class CycleColors extends MultiPartScene {
   }
 }
 
+class ThunderScene extends MultiPartScene {
+  constructor(lights: string[]) {
+    let events: Event[] = lights.map((light) => {
+      return new Event(
+        light,
+        new RandomSoundPattern(
+          [
+            `${RESOURCES_DIR}/thunder/david_thunder_and_clowns.mp3`,
+            `${RESOURCES_DIR}/thunder/david_thunder.mp3`,
+            `${RESOURCES_DIR}/thunder/lightning_bolt.mp3`,
+            `${RESOURCES_DIR}/thunder/lightning_bolt_2.mp3`,
+            `${RESOURCES_DIR}/thunder/thunder_sound_1.mp3`,
+            `${RESOURCES_DIR}/thunder/thunder_sound_2.mp3`,
+          ],
+          new FlickerPattern(3),
+        ),
+        new StableColourPattern(RELAX, 30, 13, 4),
+      );
+    });
+    super(events, getUnspookyEvents(lights));
+  }
+}
+
+
+
 class ElectricLady extends MultiPartScene {
   /// We attach the sound to the last light in the list so only one sound plays
   /// at a time

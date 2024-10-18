@@ -201,7 +201,7 @@ export class RandomMultiScene extends Scene {
       log.info(`Choice num options: ${this.spookyEventChoices.length}`);
       log.info(`choosing pattern #${sceneIndex}`);
       this.currentScene = this.spookyEventChoices[sceneIndex];
-      log.info(`Choice: ${this.currentScene}`);
+      log.info(`Choice: ${this.currentScene.constructor.name}`);
     }
 
     this.currentScene.run(spookyHueBulbPlayer, sensorType, sensorTriggedOn);

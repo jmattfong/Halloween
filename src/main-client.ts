@@ -153,37 +153,43 @@ async function main() {
     (sensorId: string, sensorType: SensorType, data: boolean) => {
       log.info(`callback called on ${sensorId} -> ${sensorType} [${data}]`);
 
-      var sceneName = null;
+      var scenesToTrigger: String[] = [];
 
       if (sensorType == SensorType.MANUAL) {
         log.info(`sensor is manual, using sensor id as scene name`);
-        sceneName = sensorId;
+        scenesToTrigger = [sensorId];
       } else {
         log.info(`sensor is not manual, looking for scene to run`);
 
-        sceneName = myScenes.find(
+        scenesToTrigger = myScenes.filter(
           (s) => s.sensorId == sensorId && sensorType == s.sensorType,
-        )?.name;
+        ).map((s) => s.name);
       }
 
-      if (sceneName == null) {
+      log.debug(`${scenesToTrigger}`)
+
+      if (scenesToTrigger.length == 0) {
         log.warn(
           `could not find scene to run for sensor ${sensorId} -> ${sensorType} `,
         );
         return;
       }
 
-      if (!(sceneName in scenes)) {
-        log.warn(
-          `could not find scene to run for sensor ${sensorId} -> ${sensorType} `,
-        );
-        return;
-      }
+      scenesToTrigger.forEach((scene: string) => {
+        if (!(scene in scenes)) {
+          log.warn(
+            `could not find scene "${scene}" to run for sensor ${sensorId} -> ${sensorType} `,
+          );
+          return;
+        }
 
-      log.info(`found scene to run ${sceneName} `);
-      const sceneToRun = scenes[sceneName];
+        log.info(`found scene to run ${scenesToTrigger} `);
+        const sceneToRun = scenes[scene];
 
-      sceneToRun.run(spookyHueBulbPlayer, sensorType, data);
+        const result = sceneToRun.run(spookyHueBulbPlayer, sensorType, data);
+        result.then((value) => log.info(`Finished playing ${scene} => ${value}`)).catch((e) => { log.error(`Failed to play scene due to error`, e) });
+
+      });
     },
   );
 
