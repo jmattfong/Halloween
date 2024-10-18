@@ -8,22 +8,34 @@ const log: CategoryLogger = getLogger("spooky-bulb-player");
 
 export class SpookyHueBulbPlayer {
   api: SpookyHueApi;
-  private currPatternMap: Map<string, Pattern>;
+  private currPatternMap: { [key: string]: Pattern };
 
   constructor(api: SpookyHueApi) {
     this.api = api;
-    this.currPatternMap = new Map();
+    this.currPatternMap = {};
   }
 
+  /**
+   * Plays all of the patterns in an event
+   *
+   * This class keeps track of all ongoing events that are associated with a given
+   * bulb and uses this information to determine whether we need to cancel any ongoing
+   * events. If a light is playing and a new event for that same light is kicked off, we
+   * attempt to kill the current event to play the new one.
+   *
+   * @param event The event to play
+   */
   public async playPattern(event: Event) {
     if (!this.api.getIsConnected()) {
       throw new Error("not connected to the hue hub");
     }
+    log.debug(`starting to play event: ${event.constructor.name}`)
+    log.debug(`existing ongoing patterns: ${JSON.stringify(this.currPatternMap)}`)
 
     let lightName = event.lightName;
-    if (this.currPatternMap.has(lightName)) {
+    if (lightName in this.currPatternMap) {
       log.info("interrupt current pattern");
-      let bulb = this.currPatternMap.get(lightName);
+      let bulb = this.currPatternMap[lightName];
       if (bulb) {
         log.info(`cancelling bulb: ${lightName}`);
         bulb.cancel();
@@ -37,7 +49,8 @@ export class SpookyHueBulbPlayer {
       log.info(
         `playing pattern: ${pattern.constructor.name} on light #${lightName}`,
       );
-      this.currPatternMap.set(lightName, pattern);
+      this.currPatternMap[lightName] = pattern;
+
       const wasCancelled = await pattern.run(lightName, this.api);
       if (wasCancelled) {
         log.info("canceled pattern");
@@ -45,7 +58,7 @@ export class SpookyHueBulbPlayer {
       }
     }
 
-    this.currPatternMap.delete(lightName);
+    delete this.currPatternMap[lightName];
   }
 
   public async playRepeatingEvent(event: Event): Promise<NodeJS.Timeout> {
