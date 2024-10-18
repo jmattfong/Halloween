@@ -97,7 +97,7 @@ export class SoundPattern extends Pattern {
     this.lightPattern.cancel();
     if (this.stopSoundOnCancel) {
       log.info(`stopping sound: ${this.soundFile}`);
-      this.soundPlayer.stop();
+      this.soundPlayer.stop(this.soundFile);
     }
   }
 

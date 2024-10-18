@@ -40,14 +40,14 @@ export class SoundPlayer {
     });
   }
 
-  public stop() {
+  public stop(soundFile: string) {
     log.info(`attempting to stop sound`);
     if (platform() === "darwin") {
       if (this.controller != undefined) {
         this.controller.abort();
       }
     } else {
-      exec(`pgrep mpg321 | xargs kill -9`, (_error) => {
+      exec(`ps aux | grep "[m]pg321 ${soundFile}" | awk '{print $2}' | xargs kill -9`, (_error) => {
         log.info(`error: ${_error}`);
         log.info(`Canceled sound playback`);
       });

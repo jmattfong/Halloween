@@ -1,5 +1,5 @@
 import { SpookyHueApi } from "./hue";
-import { Pattern } from "../scene/patterns";
+import { Pattern, SoundPattern } from "../scene/patterns";
 import { Event } from "../scene/events";
 import { getLogger } from "../logging";
 import { CategoryLogger } from "typescript-logging";
@@ -9,10 +9,12 @@ const log: CategoryLogger = getLogger("spooky-bulb-player");
 export class SpookyHueBulbPlayer {
   api: SpookyHueApi;
   private currPatternMap: Map<string, Pattern>;
+  private currSoundPatternMap: Map<string, SoundPattern>;
 
   constructor(api: SpookyHueApi) {
     this.api = api;
     this.currPatternMap = new Map();
+    this.currSoundPatternMap = new Map();
   }
 
   public async playPattern(event: Event) {
@@ -38,6 +40,11 @@ export class SpookyHueBulbPlayer {
     log.debug(`pattern playing: ${patterns}`);
     for (let i = 0; i < patterns.length; i++) {
       const pattern = patterns[i];
+      if (pattern instanceof SoundPattern) {
+        let soundPattern: SoundPattern = pattern as SoundPattern;
+        log.debug(`We've got a sound pattern! Sound: ${soundPattern.getSoundFile()}`);
+        this.currSoundPatternMap.set(lightName, soundPattern);
+      }
       log.info(
         `playing pattern: ${pattern.constructor.name} on light #${lightName}`,
       );
