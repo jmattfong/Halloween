@@ -249,6 +249,8 @@ class ElectricLady extends MultiPartScene {
           `${RESOURCES_DIR}/electric_lady/woman_screaming.mp3`,
           new StableColourPattern(RED, 15, 30, 0),
           0.5,
+          1,
+          true
         ),
         new OnPattern(SOFT_RED, 10),
       ),
@@ -295,6 +297,8 @@ class DownstairsBathCreepyClownShowerScene extends AutoResetRingScene {
           `${RESOURCES_DIR}/david_bathroom_clowns_pop.mp3`,
           new OnPattern(RED, 10, 5),
           10,
+          1,
+          true
         ),
         new OffPattern(1),
       ),
@@ -394,6 +398,8 @@ class PsychoScene extends AutoResetRingScene {
           `${RESOURCES_DIR}/david_psycho.mp3`,
           new FlickerPattern(13.5, BLUE, 110),
           0,
+          1,
+          true
         ),
         new PulsePattern(RED, 14, 0.5),
         new OffPattern(6, 6),
@@ -425,6 +431,8 @@ class ScreamScene extends AutoResetRingScene {
         `${RESOURCES_DIR}/scream/scream_bathroom.mp3`,
         new OnPattern(RED, 45, 10),
         0,
+        1,
+        true
       ),
       new OnPattern(RELAX, 20, 0.5),
       new OffPattern(4, 0.2),
@@ -453,6 +461,8 @@ class HellBathroomCostumeScene extends AutoResetRingScene {
         `${RESOURCES_DIR}/david_demon/david_rooftop_costume_contest.mp3`,
         new FlickerPattern(2),
         0,
+        1,
+        true
       ),
       new OnPattern(RED, 35, 0.5),
       new OnPattern(SOFT_RED, 1, 1),
@@ -481,6 +491,8 @@ class HellBathroomFeedingScene extends AutoResetRingScene {
         `${RESOURCES_DIR}/david_demon/david_rooftop_feeding.mp3`,
         new FlickerPattern(2),
         0,
+        1,
+        true
       ),
       new OnPattern(RED, 35, 0.5),
       new OnPattern(SOFT_RED, 1, 1),
@@ -501,6 +513,8 @@ class HellBathroomWolfScene extends AutoResetRingScene {
           `${RESOURCES_DIR}/david_demon/david_rooftop_werewolf.mp3`,
           new FlickerPattern(2),
           0,
+          1,
+          true
         ),
         new OnPattern(RED, 35, 0.5),
         new OnPattern(SOFT_RED, 1, 1),
@@ -512,6 +526,8 @@ class HellBathroomWolfScene extends AutoResetRingScene {
         `${RESOURCES_DIR}/david_demon/david_rooftop_werewolf.mp3`,
         new FlickerPattern(2),
         0,
+        1,
+        true
       ),
       new OnPattern(RED, 35, 0.5),
       new OnPattern(SOFT_RED, 1, 1),
@@ -539,6 +555,8 @@ class DownstairsBathClownGoodbye extends AutoResetRingScene {
         `${RESOURCES_DIR}/clowns/Bathroom-Clown-Laugh.mp3`,
         new FlickerPattern(3),
         0,
+        1,
+        true
       ),
       new OnPattern(RED, 35, 0.5),
       new OnPattern(SOFT_RED, 1, 1),
