@@ -18,8 +18,8 @@ export abstract class Scene {
 }
 
 /**
- * This is a scene that is triggered by a ring event, and does not need
- * unspooky patterns b/c the spooky events reset them at the end.
+ * This is a scene that does not need unspooky patterns b/c the spooky
+ * events reset them at the end.
  *
  * For this type of scene, the spooky scenes will always finish playing.
  */

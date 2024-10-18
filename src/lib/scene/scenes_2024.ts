@@ -707,7 +707,7 @@ const LIGHTS = {
   front_walkway: ["29", "30"],
   downstairs_entry: ["17", "24"],
   downstairs_bathroom: ["7", "8", "9"],
-  downstairs_office: ["3", "6", "26"],
+  downstairs_office: ["3", "16", "19", "26"],
   half_bathroom: ["1", "2"],
   guest_bathroom: ["20", "32", "22"],
   guest_bedroom: ["23", "31"],
