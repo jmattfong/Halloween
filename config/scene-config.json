@@ -6,9 +6,13 @@
             "sensorId": "Guest Bathroom",
             "sensorType": "ring"
         },
-
         {
             "name": "creepy_carnival",
+            "sensorId": "Waffles' Room",
+            "sensorType": "ring"
+        },
+        {
+            "name": "down_bath_leaving",
             "sensorId": "Waffles' Room",
             "sensorType": "ring"
         },
