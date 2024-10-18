@@ -9,7 +9,7 @@ export class SceneDetails {
   name: string;
   sensorId: string;
   sensorType: string;
-  onFault: boolean;
+  onFault?: boolean;
 }
 
 export function getSceneConfigFromFile(configPath: PathLike = "./ config / scene - config.json"): SceneConfig {

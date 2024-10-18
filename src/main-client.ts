@@ -161,8 +161,11 @@ async function main() {
       } else {
         log.info(`sensor is not manual, looking for scene to run`);
 
+        // we are now trying to find the scenes where the id match, the sensor match, and the current sensor
+        // event matches whether we should trigger this event (e.g. should we trigger the scenes when the door is
+        // open (faulted) or closed (not faulted))
         scenesToTrigger = myScenes.filter(
-          (s) => s.sensorId == sensorId && sensorType == s.sensorType && s.onFault == data
+          (s) => s.sensorId == sensorId && sensorType == s.sensorType && (s.onFault == null || s.onFault == data)
         ).map((s) => s.name);
       }
 
