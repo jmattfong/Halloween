@@ -409,22 +409,22 @@ class CalmingCockroachesScene extends MultiPartScene {
         lights[0],
         new SoundPattern(
           `${RESOURCES_DIR}/calming_cockroaches/enya_bugs.mp3`,
-          new OnPattern(LAVENDER, 150, 11),
+          new OnPattern(LAVENDER, 6, 5),
           0,
           1,
           true,
         ),
-        new OffPattern(6, 6),
+        new OnPattern(GREEN, 32, 30),
       ),
       new Event(
         lights[1],
-        new OnPattern(RELAX, 13, 4),
-        new OnPattern(RELAX, 10, 5),
+        new OnPattern(LAVENDER, 6, 5),
+        new OnPattern(GREEN, 32, 30),
       ),
     ];
 
     const unspookyEvents = lights.map((light) => {
-      return new Event(light, new OnPattern(LAVENDER, 150, 11));
+      return new Event(light, new OnPattern(LAVENDER, 6, 5));
     });
 
     super(spookyEvents, unspookyEvents, false);
