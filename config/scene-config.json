@@ -39,22 +39,25 @@
             "name": "front_light_flicker",
             "sensorId": "9",
             "sensorType": "hue",
-            "onFault": false
+            "onFault": true
         },
         {
             "name": "black_light_hallway",
             "sensorId": "59",
-            "sensorType": "hue"
+            "sensorType": "hue",
+            "onFault": true
         },
         {
             "name": "calming_cockroaches",
             "sensorId": "Front Gate",
-            "sensorType": "ring"
+            "sensorType": "ring",
+            "onFault": false
         },
         {
             "name": "scream",
             "sensorId": "Garage Door",
-            "sensorType": "ring"
+            "sensorType": "ring",
+            "onFault": false
         },
         {
             "name": "chromecast_portal_to_hell",
@@ -107,64 +110,43 @@
         },
         {
             "name": "creepy_clown_shower",
-            "sensorId": "Guest Bathroom",
-            "sensorType": "ring"
+            "sensorType": "manual"
         },
         {
             "name": "psycho",
-            "sensorId": "Guest Bathroom",
-            "sensorType": "ring"
+            "sensorType": "manual"
         },
         {
             "name": "electric_lady",
-            "sensorId": "Guest Bathroom",
-            "sensorType": "ring"
+            "sensorType": "manual"
         },
-        {
-            "name": "werewolf_door_jiggle",
-            "sensorId": "Guest Bathroom",
-            "sensorType": "ring"
-        },
-        {
-            "name": "look_its_waffles",
-            "sensorId": "Guest Bathroom",
-            "sensorType": "ring"
-        },
-
         {
             "name": "list",
-            "sensorId": "Guest Bathroom",
-            "sensorType": "ring"
+            "sensorType": "manual"
         },
         {
             "name": "get_light",
-            "sensorId": "Guest Bathroom",
-            "sensorType": "ring"
+            "sensorType": "manual"
         },
         {
             "name": "find_bulb",
-            "sensorId": "Waffles' Room",
-            "sensorType": "ring"
+            "sensorType": "manual"
         },
         {
             "name": "find_bulb_2",
-            "sensorId": "Waffles' Room",
-            "sensorType": "ring"
+            "sensorType": "manual"
         },
         {
             "name": "find_bulb_3",
-            "sensorId": "Waffles' Room",
-            "sensorType": "ring"
+            "sensorType": "manual"
         },
         {
             "name": "set_light_color",
-            "sensorId": "Waffles' Room",
-            "sensorType": "ring"
+            "sensorType": "manual"
         },
         {
             "name": "cycle_colors",
-            "sensorId": "Waffles' Room",
-            "sensorType": "ring"
+            "sensorType": "manual"
         }
     ]
 }
