@@ -336,24 +336,39 @@ class CalmingCockroachesScene extends MultiPartScene {
 
 class CreepyCarnivalScene extends AutoResetRingScene {
   constructor(lights: string[]) {
-    let spookyEvents = lights.map((light) => {
+    let soundLight = lights.slice(-1).pop();
+    let spookyEvents = lights.slice(0, -1).map((light) => {
       return new Event(
         light,
-        new SoundPattern(
-          `${RESOURCES_DIR}/2024_sounds/david_creepy_clowns.wav`,
-          new RandomColourPattern(
-            20,
-            RED,
-            ORANGE,
-            BLUE,
-            GREEN,
-            LAVENDER,
-            SOFT_RED,
-            PURPLE,
-            YELLOW,
-          ), 0, 1, true),
+        new RandomColourPattern(
+          20,
+          RED,
+          ORANGE,
+          BLUE,
+          GREEN,
+          LAVENDER,
+          SOFT_RED,
+          PURPLE,
+          YELLOW,
+        ),
       );
     });
+
+    spookyEvents.push(new Event(soundLight,
+      new SoundPattern(
+        `${RESOURCES_DIR}/2024_sounds/david_creepy_clowns.wav`,
+        new RandomColourPattern(
+          20,
+          RED,
+          ORANGE,
+          BLUE,
+          GREEN,
+          LAVENDER,
+          SOFT_RED,
+          PURPLE,
+          YELLOW,
+        ), 0, 1, true),
+    ));
 
     super(spookyEvents, true);
   }
@@ -361,9 +376,9 @@ class CreepyCarnivalScene extends AutoResetRingScene {
 
 class PsychoScene extends AutoResetRingScene {
   constructor(lights: string[]) {
-    let showerLight = lights.pop();
+    let showerLight = lights.slice(-1).pop();
 
-    let spookyEvents = lights.map((light) => {
+    let spookyEvents = lights.slice(0, -1).map((light) => {
       return new Event(
         light,
         new StableColourPattern(RELAX, 40, 13, 4),
@@ -393,19 +408,28 @@ class PsychoScene extends AutoResetRingScene {
 // Song is 66 seconds long, first 10 sec are silent
 class ScreamScene extends AutoResetRingScene {
   constructor(lights: string[]) {
+    let soundLight = lights.slice(-1).pop();
+
     let spookyEvents = lights.map((light) => {
       return new Event(
         light,
-        new SoundPattern(
-          `${RESOURCES_DIR}/scream/scream_bathroom.mp3`,
-          new OnPattern(RED, 45, 10),
-          0,
-        ),
+        new OnPattern(RED, 45, 10),
         new OnPattern(RELAX, 20, 0.5),
         new OffPattern(4, 0.2),
         new OnPattern(SOFT_RED, 1, 1),
       );
     });
+
+    spookyEvents.push(new Event(soundLight,
+      new SoundPattern(
+        `${RESOURCES_DIR}/scream/scream_bathroom.mp3`,
+        new OnPattern(RED, 45, 10),
+        0,
+      ),
+      new OnPattern(RELAX, 20, 0.5),
+      new OffPattern(4, 0.2),
+      new OnPattern(SOFT_RED, 1, 1),
+    ));
 
     super(spookyEvents, false);
   }
@@ -413,18 +437,26 @@ class ScreamScene extends AutoResetRingScene {
 
 class HellBathroomCostumeScene extends AutoResetRingScene {
   constructor(lights: string[]) {
-    let spookyEvents = lights.map((light) => {
+    let soundLight = lights.slice(-1).pop();
+
+    let spookyEvents = lights.slice(0, -1).map((light) => {
       return new Event(
         light,
-        new SoundPattern(
-          `${RESOURCES_DIR}/david_demon/david_rooftop_costume_contest.mp3`,
-          new FlickerPattern(2),
-          0,
-        ),
+        new FlickerPattern(2),
         new OnPattern(RED, 35, 0.5),
         new OnPattern(SOFT_RED, 1, 1),
       );
     });
+
+    spookyEvents.push(new Event(soundLight,
+      new SoundPattern(
+        `${RESOURCES_DIR}/david_demon/david_rooftop_costume_contest.mp3`,
+        new FlickerPattern(2),
+        0,
+      ),
+      new OnPattern(RED, 35, 0.5),
+      new OnPattern(SOFT_RED, 1, 1),
+    ));
 
     super(spookyEvents, false);
   }
@@ -432,18 +464,27 @@ class HellBathroomCostumeScene extends AutoResetRingScene {
 
 class HellBathroomFeedingScene extends AutoResetRingScene {
   constructor(lights: string[]) {
-    let spookyEvents = lights.map((light) => {
+    let soundLight = lights.slice(-1).pop();
+
+    let spookyEvents = lights.slice(0, -1).map((light) => {
       return new Event(
         light,
-        new SoundPattern(
-          `${RESOURCES_DIR}/david_demon/david_rooftop_feeding.mp3`,
-          new FlickerPattern(2),
-          0,
-        ),
+        new FlickerPattern(2),
         new OnPattern(RED, 35, 0.5),
         new OnPattern(SOFT_RED, 1, 1),
       );
     });
+
+    spookyEvents.push(new Event(
+      soundLight,
+      new SoundPattern(
+        `${RESOURCES_DIR}/david_demon/david_rooftop_feeding.mp3`,
+        new FlickerPattern(2),
+        0,
+      ),
+      new OnPattern(RED, 35, 0.5),
+      new OnPattern(SOFT_RED, 1, 1),
+    ));
 
     super(spookyEvents, false);
   }
@@ -451,7 +492,9 @@ class HellBathroomFeedingScene extends AutoResetRingScene {
 
 class HellBathroomWolfScene extends AutoResetRingScene {
   constructor(lights: string[]) {
-    let spookyEvents = lights.map((light) => {
+    let soundLight = lights.slice(-1).pop();
+
+    let spookyEvents = lights.slice(0, -1).map((light) => {
       return new Event(
         light,
         new SoundPattern(
@@ -464,13 +507,34 @@ class HellBathroomWolfScene extends AutoResetRingScene {
       );
     });
 
+    spookyEvents.push(new Event(soundLight,
+      new SoundPattern(
+        `${RESOURCES_DIR}/david_demon/david_rooftop_werewolf.mp3`,
+        new FlickerPattern(2),
+        0,
+      ),
+      new OnPattern(RED, 35, 0.5),
+      new OnPattern(SOFT_RED, 1, 1),
+    ));
+
     super(spookyEvents, false);
   }
 }
 
 class DownstairsBathClownGoodbye extends AutoResetRingScene {
   constructor(lights: string[]) {
-    let spookyEvents = [new Event(lights[0],
+    let soundLight = lights.slice(-1).pop();
+
+    let spookyEvents = lights.slice(0, -1).map((light) => {
+      return new Event(
+        light,
+        new FlickerPattern(3),
+        new OnPattern(RED, 35, 0.5),
+        new OnPattern(SOFT_RED, 1, 1),
+      );
+    });
+
+    spookyEvents.push(new Event(soundLight,
       new SoundPattern(
         `${RESOURCES_DIR}/clowns/Bathroom-Clown-Laugh.mp3`,
         new FlickerPattern(3),
@@ -478,20 +542,7 @@ class DownstairsBathClownGoodbye extends AutoResetRingScene {
       ),
       new OnPattern(RED, 35, 0.5),
       new OnPattern(SOFT_RED, 1, 1),
-    )];
-
-    spookyEvents.concat(lights.slice(1).map((light) => {
-      return new Event(
-        light,
-        new SoundPattern(
-          `${RESOURCES_DIR}/clowns/Bathroom-Clown-Laugh.mp3`,
-          new FlickerPattern(3),
-          0,
-        ),
-        new OnPattern(RED, 35, 0.5),
-        new OnPattern(SOFT_RED, 1, 1),
-      );
-    }));
+    ));
 
     super(spookyEvents, true);
   }
