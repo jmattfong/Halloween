@@ -468,6 +468,35 @@ class HellBathroomWolfScene extends AutoResetRingScene {
   }
 }
 
+class DownstairsBathClownGoodbye extends AutoResetRingScene {
+  constructor(lights: string[]) {
+    let spookyEvents = [new Event(lights[0],
+      new SoundPattern(
+        `${RESOURCES_DIR}/clowns/Bathroom-Clown-Laugh.mp3`,
+        new FlickerPattern(3),
+        0,
+      ),
+      new OnPattern(RED, 35, 0.5),
+      new OnPattern(SOFT_RED, 1, 1),
+    )];
+
+    spookyEvents.concat(lights.slice(1).map((light) => {
+      return new Event(
+        light,
+        new SoundPattern(
+          `${RESOURCES_DIR}/clowns/Bathroom-Clown-Laugh.mp3`,
+          new FlickerPattern(3),
+          0,
+        ),
+        new OnPattern(RED, 35, 0.5),
+        new OnPattern(SOFT_RED, 1, 1),
+      );
+    }));
+
+    super(spookyEvents, true);
+  }
+}
+
 class ChromecastScene extends Scene {
   chromecaster: Chromecaster;
   started: boolean;
@@ -582,21 +611,7 @@ function get_downstairs_bathroom_scene(lights: string[]): RandomMultiScene {
     new PsychoScene(Object.assign([], lights)),
   ];
 
-  const stillSpookyClownLaughEvents = lights.map((light) => {
-    return new Event(
-      light,
-      new RandomSoundPattern(
-        [
-          `${RESOURCES_DIR}/thunder/thunder_sound_1.mp3`,
-          `${RESOURCES_DIR}/thunder/thunder_sound_2.mp3`,
-        ],
-        new FlickerPattern(3),
-      ),
-      new StableColourPattern(RELAX, 30, 13, 4),
-    );
-  });
-
-  return new RandomMultiScene(spookyScenes, stillSpookyClownLaughEvents);
+  return new RandomMultiScene(spookyScenes, []);
 }
 
 function get_bedroom_murder_scene(lights: string[]): RandomMultiScene {
@@ -647,6 +662,7 @@ export function getScenes(device_name: string): { [key: string]: Scene } {
     down_bath_random: get_downstairs_bathroom_scene(
       getLights("downstairs_bathroom"),
     ),
+    down_bath_leaving: new DownstairsBathClownGoodbye(getLights("downstairs_bathroom")),
 
     // Bill's scenes
     master_bedroom: get_bedroom_murder_scene(
