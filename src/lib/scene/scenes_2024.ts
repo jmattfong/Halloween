@@ -14,6 +14,7 @@ import {
   StableColourPattern,
   sleep,
   RandomColourPattern,
+  NoSoundPattern,
 } from "./patterns";
 import { Event } from "./events";
 import {
@@ -425,7 +426,7 @@ class CalmingCockroachesScene extends MultiPartScene {
     ];
 
     const unspookyEvents = lights.map((light) => {
-      return new Event(light, new OnPattern(LAVENDER, 6, 5));
+      return new Event(light, new NoSoundPattern(new OnPattern(LAVENDER, 6, 5)));
     });
 
     super(spookyEvents, unspookyEvents, false);

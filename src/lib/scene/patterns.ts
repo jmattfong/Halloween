@@ -96,8 +96,8 @@ export class SoundPattern extends Pattern {
     log.info(`cancelling sound pattern`);
     this.lightPattern.cancel();
     if (this.stopSoundOnCancel) {
-      log.info(`stopping sound: ${this.soundFile}`);
-      this.soundPlayer.stop(this.soundFile);
+      log.info(`stopping sound: ${this.getSoundFile()}`);
+      this.soundPlayer.stop(this.getSoundFile());
     }
   }
 
@@ -113,6 +113,23 @@ export class SoundPattern extends Pattern {
     await this.soundPlayer.play(soundFile, this.volume);
     await sleep(this.soundToPatternDelayMs);
     return this.lightPattern.run(lightName, lightApi);
+  }
+}
+
+export class NoSoundPattern extends SoundPattern {
+  constructor(
+    lightPattern: Pattern,
+    soundToPatternDelaySeconds: number = 0,
+  ) {
+    super("", lightPattern, soundToPatternDelaySeconds, 0);
+  }
+
+  public async run(
+    lightName: string,
+    lightApi: SpookyHueApi,
+  ): Promise<boolean> {
+    this.cancel();
+    return false;
   }
 }
 
