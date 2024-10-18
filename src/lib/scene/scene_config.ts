@@ -12,8 +12,8 @@ export class SceneDetails {
   onFault: boolean;
 }
 
-export function getSceneConfigFromFile(configPath: PathLike): SceneConfig {
+export function getSceneConfigFromFile(configPath: PathLike = "./ config / scene - config.json"): SceneConfig {
   return JSON.parse(
-    readFileSync("./config/scene-config.json", { encoding: "utf-8" }),
+    readFileSync(configPath, { encoding: "utf-8" }),
   );
 }
