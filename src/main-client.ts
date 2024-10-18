@@ -162,7 +162,7 @@ async function main() {
         log.info(`sensor is not manual, looking for scene to run`);
 
         scenesToTrigger = myScenes.filter(
-          (s) => s.sensorId == sensorId && sensorType == s.sensorType,
+          (s) => s.sensorId == sensorId && sensorType == s.sensorType && s.onFault == data
         ).map((s) => s.name);
       }
 

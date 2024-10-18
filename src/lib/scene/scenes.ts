@@ -193,6 +193,7 @@ export class RandomMultiScene extends Scene {
     // if the data.faulted is true, that means that the door is open and we should resort to the
     // unspooky base pattern
     // otherwise, pick a random pattern and play it!
+    log.debug("getting spooky");
     if (sensorTriggedOn || this.currentScene == null) {
       // We switch scenes when the sensor is on
       const sceneIndex = Math.floor(

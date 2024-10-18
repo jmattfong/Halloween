@@ -4,17 +4,20 @@
         {
             "name": "dev_scene",
             "sensorId": "Guest Bathroom",
-            "sensorType": "ring"
+            "sensorType": "ring",
+            "onFault": true
         },
         {
             "name": "creepy_carnival",
             "sensorId": "Waffles' Room",
-            "sensorType": "ring"
+            "sensorType": "ring",
+            "onFault": true
         },
         {
             "name": "down_bath_leaving",
             "sensorId": "Waffles' Room",
-            "sensorType": "ring"
+            "sensorType": "ring",
+            "onFault": true
         },
         {
             "name": "photobooth_spooks",
@@ -23,17 +26,20 @@
         {
             "name": "down_bath_random",
             "sensorId": "Waffles' Room",
-            "sensorType": "ring"
+            "sensorType": "ring",
+            "onFault": false
         },
         {
             "name": "welcome_inside",
             "sensorId": "Front Door",
-            "sensorType": "ring"
+            "sensorType": "ring",
+            "onFault": false
         },
         {
             "name": "front_light_flicker",
             "sensorId": "9",
-            "sensorType": "hue"
+            "sensorType": "hue",
+            "onFault": false
         },
         {
             "name": "black_light_hallway",
