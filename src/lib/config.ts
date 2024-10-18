@@ -64,6 +64,14 @@ export const LAVENDER: Color = {
 const SOFT = { bri: 25 };
 export const SOFT_RED: Color = { ...RED, ...SOFT };
 
+export const DARK_GREEN: Color = {
+  bri: 92,
+  hue: 22291,
+  sat: 254,
+  xy: [0.2374, 0.6494],
+  ct: 443,
+}
+
 export const RELAX: Color = {
   bri: 144,
   hue: 65472,

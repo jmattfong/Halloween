@@ -26,6 +26,7 @@ import { VIDEOS_2023, PORTAL_TO_HELL } from "../videos";
 import {
   Color,
   GREEN,
+  DARK_GREEN,
   RED,
   LAVENDER,
   SOFT_RED,
@@ -414,12 +415,12 @@ class CalmingCockroachesScene extends MultiPartScene {
           1,
           true,
         ),
-        new OnPattern(GREEN, 32, 30),
+        new OnPattern(DARK_GREEN, 32, 30),
       ),
       new Event(
         lights[1],
         new OnPattern(LAVENDER, 6, 5),
-        new OnPattern(GREEN, 32, 30),
+        new OnPattern(DARK_GREEN, 32, 30),
       ),
     ];
 
