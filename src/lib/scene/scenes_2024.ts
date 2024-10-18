@@ -436,17 +436,19 @@ class CreepyCarnivalScene extends AutoResetRingScene {
     let spookyEvents = lights.map((light) => {
       return new Event(
         light,
-        new RandomColourPattern(
-          20,
-          RED,
-          ORANGE,
-          BLUE,
-          GREEN,
-          LAVENDER,
-          SOFT_RED,
-          PURPLE,
-          YELLOW,
-        ),
+        new SoundPattern(
+          `${RESOURCES_DIR}/2024_sounds/david_creepy_clowns.wav`,
+          new RandomColourPattern(
+            20,
+            RED,
+            ORANGE,
+            BLUE,
+            GREEN,
+            LAVENDER,
+            SOFT_RED,
+            PURPLE,
+            YELLOW,
+          ), 0, 1, true),
       );
     });
 
