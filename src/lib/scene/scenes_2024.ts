@@ -197,55 +197,6 @@ class CycleColors extends MultiPartScene {
   }
 }
 
-class ThunderScene extends MultiPartScene {
-  constructor(lights: string[]) {
-    let events: Event[] = lights.map((light) => {
-      return new Event(
-        light,
-        new RandomSoundPattern(
-          [
-            `${RESOURCES_DIR}/thunder/david_thunder_and_clowns.mp3`,
-            `${RESOURCES_DIR}/thunder/david_thunder.mp3`,
-            `${RESOURCES_DIR}/thunder/lightning_bolt.mp3`,
-            `${RESOURCES_DIR}/thunder/lightning_bolt_2.mp3`,
-            `${RESOURCES_DIR}/thunder/thunder_sound_1.mp3`,
-            `${RESOURCES_DIR}/thunder/thunder_sound_2.mp3`,
-          ],
-          new FlickerPattern(3),
-        ),
-        new StableColourPattern(RELAX, 30, 13, 4),
-      );
-    });
-    super(events, getUnspookyEvents(lights));
-  }
-}
-
-/**
- * TODO make these creepy clown laughs
- */
-class ClownLaughScene extends MultiPartScene {
-  constructor(lights: string[]) {
-    let events: Event[] = lights.map((light) => {
-      return new Event(
-        light,
-        new RandomSoundPattern(
-          [
-            `${RESOURCES_DIR}/thunder/david_thunder_and_clowns.mp3`,
-            `${RESOURCES_DIR}/thunder/david_thunder.mp3`,
-            `${RESOURCES_DIR}/thunder/lightning_bolt.mp3`,
-            `${RESOURCES_DIR}/thunder/lightning_bolt_2.mp3`,
-            `${RESOURCES_DIR}/thunder/thunder_sound_1.mp3`,
-            `${RESOURCES_DIR}/thunder/thunder_sound_2.mp3`,
-          ],
-          new FlickerPattern(3),
-        ),
-        new StableColourPattern(RELAX, 30, 13, 4),
-      );
-    });
-    super(events, getUnspookyEvents(lights), true);
-  }
-}
-
 class ElectricLady extends MultiPartScene {
   /// We attach the sound to the last light in the list so only one sound plays
   /// at a time
@@ -328,87 +279,12 @@ class DownstairsBathCreepyClownShowerScene extends AutoResetRingScene {
   }
 }
 
-class WerewolfDoorJiggleScene extends Scene {
-  spookyEvent: Event;
-  constructor() {
-    super();
-    this.spookyEvent = new Event(
-      "",
-      new SoundPattern(
-        `${RESOURCES_DIR}/david_scratching_dog.mp3`,
-        new SleepPattern(0),
-        0,
-      ),
-    );
-  }
-
-  async run(
-    spookyHueBulbPlayer: SpookyHueBulbPlayer,
-    _sensorType: SensorType,
-    sensorTriggedOn: boolean,
-  ): Promise<void> {
-    log.info(
-      `WerewolfDoorJiggleScene got callback with sensor ${sensorTriggedOn}`,
-    );
-    if (sensorTriggedOn) {
-      spookyHueBulbPlayer.playPattern(this.spookyEvent);
-    }
-  }
-}
-
-class LookItsWafflesScene extends AutoResetRingScene {
-  constructor(lights: string[]) {
-    let events: Event[] = lights.map((light) => {
-      // 0-4 - growl
-      // 5-10 growl
-      // 12-14 LOUD
-      // 15-17 LOUD
-      // 17-19 growl
-      // 21-24 growl
-      // 25-28 growl
-      // 29-31 LOUD
-      // -32 LOUD
-      return new Event(
-        light,
-        new SoundPattern(
-          `${RESOURCES_DIR}/david_the_beast.mp3`,
-          new OnPattern(SOFT_RED, 4),
-          0,
-        ),
-        new SleepPattern(0.1),
-        new OffPattern(1),
-        new OnPattern(SOFT_RED, 5),
-        new OffPattern(2),
-        new OnPattern(RED, 5),
-        new OnPattern(SOFT_RED, 2),
-        new OffPattern(1),
-        new OnPattern(SOFT_RED, 8),
-        new OffPattern(1),
-        new OnPattern(RED, 9),
-        new OffPattern(1, 1),
-      );
-    });
-    super(events, true);
-  }
-
-  async run(
-    spookyHueBulbPlayer: SpookyHueBulbPlayer,
-    sensorType: SensorType,
-    sensorTriggedOn: boolean,
-  ): Promise<void> {
-    log.info(
-      `LookItsWafflesScene got a callback with sensor ${sensorTriggedOn}`,
-    );
-    await super.run(spookyHueBulbPlayer, sensorType, sensorTriggedOn);
-  }
-}
-
 // Song is 161 seconds long
 class CalmingCockroachesScene extends MultiPartScene {
   constructor(lights: string[]) {
     let spookyEvents = [
       new Event(
-        lights[0],
+        lights[1],
         new SoundPattern(
           `${RESOURCES_DIR}/calming_cockroaches/enya_bugs.mp3`,
           new OnPattern(LAVENDER, 6, 5),
@@ -419,7 +295,7 @@ class CalmingCockroachesScene extends MultiPartScene {
         new OnPattern(DARK_GREEN, 6, 30),
       ),
       new Event(
-        lights[1],
+        lights[0],
         new OnPattern(LAVENDER, 6, 5),
         new OnPattern(DARK_GREEN, 6, 30),
       ),
@@ -658,10 +534,9 @@ class BlackLightHallwayScene extends AutoResetRingScene {
 /**
  * TODO
  */
-function get_photobooth_scene(): RandomMultiScene {
+function get_photobooth_scene(lights: string[]): RandomMultiScene {
   const spookyScenes = [
-    // new WerewolfDoorJiggleScene(),
-    new ThunderScene(getLights("guest_bedroom")),
+    new ElectricLady(lights),
   ];
   return new RandomMultiScene(spookyScenes, []);
 }
@@ -725,7 +600,9 @@ export function getScenes(device_name: string): { [key: string]: Scene } {
   let main_scenes = {
     // Scenes for the party
     // Main server's scenes
-    photobooth_spooks: get_photobooth_scene(),
+    photobooth_spooks: get_photobooth_scene(
+      getLights("guest_bedroom")
+    ),
     chromecast_portal_to_hell: new ChromecastPortalToHell(
       "Chromecast-HD-36a10199048bd09c03c63e7f05c555c2",
     ),
@@ -767,8 +644,6 @@ export function getScenes(device_name: string): { [key: string]: Scene } {
     creepy_clown_shower: new DownstairsBathCreepyClownShowerScene(getLights("half_bathroom")),
     psycho: new PsychoScene(getLights("half_bathroom")),
     electric_lady: new ElectricLady(getLights("half_bathroom")),
-    werewolf_door_jiggle: new WerewolfDoorJiggleScene(),
-    look_its_waffles: new LookItsWafflesScene(getLights("half_bathroom")),
 
     // Test and Utility scenes
     list: new ListOnLightsScene(),

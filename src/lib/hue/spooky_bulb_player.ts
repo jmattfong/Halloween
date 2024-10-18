@@ -56,13 +56,13 @@ export class SpookyHueBulbPlayer {
         let soundPattern: SoundPattern = pattern as SoundPattern;
         log.debug(`We've got a sound pattern! Sound: ${soundPattern.getSoundFile()}`);
         if (lightName in this.currSoundPatternMap) {
-          log.info("interrupt current pattern");
+          log.debug("interrupt current SoundPattern");
           let oldPattern = this.currSoundPatternMap[lightName];
           if (oldPattern) {
-            log.info(`cancelling oldPattern: ${lightName}`);
+            log.info(`cancelling old SoundPattern: ${lightName}`);
             oldPattern.cancel();
           } else {
-            log.debug(`got a null oldPattern for ${lightName} from currSoundPatternMap`)
+            log.debug(`got a null old SoundPattern for ${lightName} from currSoundPatternMap`)
           }
         } else {
           log.debug(`Light name ${lightName} is not in currSoundPatternMap`)
