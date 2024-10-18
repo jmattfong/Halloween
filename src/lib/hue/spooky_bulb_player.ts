@@ -27,7 +27,11 @@ export class SpookyHueBulbPlayer {
       if (bulb) {
         log.info(`cancelling bulb: ${lightName}`);
         bulb.cancel();
+      } else {
+        log.debug(`got a null bulb for ${lightName} from currPatternMap`)
       }
+    } else {
+      log.debug(`Light name ${lightName} is not in currPatternMap`)
     }
 
     let patterns = event.patterns;

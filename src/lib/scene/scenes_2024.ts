@@ -415,12 +415,12 @@ class CalmingCockroachesScene extends MultiPartScene {
           1,
           true,
         ),
-        new OnPattern(DARK_GREEN, 32, 30),
+        new OnPattern(DARK_GREEN, 6, 30),
       ),
       new Event(
         lights[1],
         new OnPattern(LAVENDER, 6, 5),
-        new OnPattern(DARK_GREEN, 32, 30),
+        new OnPattern(DARK_GREEN, 6, 30),
       ),
     ];
 
