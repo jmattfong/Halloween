@@ -304,7 +304,7 @@ class DownstairsBathCreepyClownShowerScene extends AutoResetRingScene {
       ),
     );
 
-    super(spookyEvents, true);
+    super(spookyEvents, false);
   }
 }
 
