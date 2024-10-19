@@ -190,20 +190,15 @@ export class RandomMultiScene extends Scene {
     sensorType: SensorType,
     sensorTriggedOn: boolean,
   ): Promise<void> {
-    // if the data.faulted is true, that means that the door is open and we should resort to the
-    // unspooky base pattern
-    // otherwise, pick a random pattern and play it!
-    log.debug("getting spooky");
-    if (sensorTriggedOn || this.currentScene == null) {
-      // We switch scenes when the sensor is on
-      const sceneIndex = Math.floor(
-        Math.random() * this.spookyEventChoices.length,
-      );
-      log.info(`Choice num options: ${this.spookyEventChoices.length}`);
-      log.info(`choosing pattern #${sceneIndex}`);
-      this.currentScene = this.spookyEventChoices[sceneIndex];
-      log.info(`Choice: ${this.currentScene.constructor.name}`);
-    }
+    log.debug("getting random spooky");
+
+    const sceneIndex = Math.floor(
+      Math.random() * this.spookyEventChoices.length,
+    );
+    log.info(`Choice num options: ${this.spookyEventChoices.length}`);
+    log.info(`choosing pattern #${sceneIndex}`);
+    this.currentScene = this.spookyEventChoices[sceneIndex];
+    log.info(`Choice: ${this.currentScene.constructor.name}`);
 
     this.currentScene.run(spookyHueBulbPlayer, sensorType, sensorTriggedOn);
   }
