@@ -30,6 +30,7 @@ import {
   DARK_GREEN,
   RED,
   LAVENDER,
+  SOFT_LAVENDER,
   SOFT_RED,
   RELAX,
   BLUE,
@@ -331,7 +332,7 @@ class CalmingCockroachesScene extends MultiPartScene {
     const unspookyEvents = lights.map((light) => {
       return new Event(
         light,
-        new NoSoundPattern(new OnPattern(LAVENDER, 6, 5)),
+        new NoSoundPattern(new OnPattern(SOFT_LAVENDER, 6, 5)),
       );
     });
 

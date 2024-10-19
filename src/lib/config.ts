@@ -63,6 +63,7 @@ export const LAVENDER: Color = {
 
 const SOFT = { bri: 25 };
 export const SOFT_RED: Color = { ...RED, ...SOFT };
+export const SOFT_LAVENDER: Color = { ...LAVENDER, ...SOFT };
 
 export const DARK_GREEN: Color = {
   bri: 92,
