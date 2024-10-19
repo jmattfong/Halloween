@@ -673,12 +673,9 @@ class BlackLightHallwayScene extends AutoResetRingScene {
 
 class PhotoBoothScream extends AutoResetRingScene {
   constructor(lights: string[]) {
-    let soundLight = lights.slice(-1).pop();
-
-
-    spookyEvents.push(
+    const spookyEvents = [
       new Event(
-        soundLight,
+        lights[0],
         new SoundPattern(
           `${RESOURCES_DIR}/misc/woman_scream_pain.mp3`,
           new OnPattern(RELAX, 30),
@@ -687,7 +684,7 @@ class PhotoBoothScream extends AutoResetRingScene {
           true,
         ),
       ),
-    );
+    ];
 
     super(spookyEvents, true);
   }
