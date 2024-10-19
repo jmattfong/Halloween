@@ -54,7 +54,7 @@
             "onFault": false
         },
         {
-            "name": "scream",
+            "name": "guest_bath",
             "sensorId": "Garage Door",
             "sensorType": "ring",
             "onFault": false

@@ -419,6 +419,28 @@ class PsychoScene extends AutoResetRingScene {
   }
 }
 
+class GuestVibeScene extends AutoResetRingScene {
+  constructor(lights: string[]) {
+
+    let spookyEvents = lights.map((light) => {
+      return new Event(
+        light,
+        new StableColourPattern(RED, 40, 5, 5),
+        new StableColourPattern(SOFT_RED, 15, 5, 5),
+        new StableColourPattern(RED, 40, 5, 5),
+        new StableColourPattern(SOFT_RED, 15, 5, 5),
+        new StableColourPattern(RED, 40, 5, 5),
+        new StableColourPattern(SOFT_RED, 15, 5, 5),
+        new StableColourPattern(RED, 40, 5, 5),
+        new OnPattern(SOFT_RED, 10, 5),
+      );
+    });
+
+    super(spookyEvents, false);
+  }
+
+}
+
 // Song is 66 seconds long, first 10 sec are silent
 class ScreamScene extends AutoResetRingScene {
   constructor(lights: string[]) {
@@ -758,7 +780,7 @@ export function getScenes(device_name: string): { [key: string]: Scene } {
     ),
 
     // Boomhaur's scenes
-    scream: new ScreamScene(getLights("guest_bathroom")), // TODO
+    guest_bath: new GuestVibeScene(getLights("guest_bathroom")),
     black_light_hallway: new BlackLightHallwayScene(
       getLights("switch")[0],
       getLights("upstairs_hall"),
