@@ -363,9 +363,9 @@ class CreepyCarnivalScene extends AutoResetRingScene {
       new Event(
         soundLight,
         new SoundPattern(
-          `${RESOURCES_DIR}/clowns/Bathroom-Creepy-Carousel.mp3`,
+          `${RESOURCES_DIR}/clowns/clown_reverse.mp3`,
           new RandomColourPattern(
-            20,
+            55,
             RED,
             ORANGE,
             BLUE,
