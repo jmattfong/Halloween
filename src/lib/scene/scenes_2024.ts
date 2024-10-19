@@ -755,10 +755,7 @@ export function getScenes(device_name: string): { [key: string]: Scene } {
     ),
     front_light_flicker: new FrontLightFlickerScene(getLights("front_walkway")),
 
-    // Scenes for The Beast
-    creepy_carnival: new CreepyCarnivalScene(getLights("downstairs_office")),
-
-    // Hank's scenes
+    // Hank's scenes (Downstairs bathroom)
     down_bath_random: get_downstairs_bathroom_scene(
       getLights("downstairs_bathroom"),
     ),
@@ -766,15 +763,15 @@ export function getScenes(device_name: string): { [key: string]: Scene } {
       getLights("downstairs_bathroom"),
     ),
 
-    // Bill's scenes
-    master_bedroom: get_bedroom_murder_scene(getLights("upstairs_hall")), // TODO
+    // Bill's scenes (Downstairs office)
+    creepy_carnival: new CreepyCarnivalScene(getLights("downstairs_office")),
 
-    // Dale's scene
+    // Dale's scene (Living room bathroom)
     calming_cockroaches: new CalmingCockroachesScene(
       getLights("half_bathroom"),
     ),
 
-    // Boomhaur's scenes
+    // Boomhauer's scenes (Upstairs bathroom)
     guest_bath: new GuestVibeScene(getLights("guest_bathroom")),
     black_light_hallway: new BlackLightHallwayScene(
       getLights("switch")[0],
@@ -783,10 +780,10 @@ export function getScenes(device_name: string): { [key: string]: Scene } {
 
     // Test individual scenes
     creepy_clown_shower: new DownstairsBathCreepyClownShowerScene(
-      getLights("half_bathroom"),
+      getLights("downstairs_bathroom"),
     ),
-    psycho: new PsychoScene(getLights("half_bathroom")),
-    electric_lady: new ElectricLady(getLights("half_bathroom")),
+    psycho: new PsychoScene(getLights("downstairs_bathroom")),
+    electric_lady: new ElectricLady(getLights("downstairs_bathroom")),
 
     // Test and Utility scenes
     list: new ListOnLightsScene(),
