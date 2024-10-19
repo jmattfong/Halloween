@@ -50,8 +50,7 @@
         {
             "name": "calming_cockroaches",
             "sensorId": "Front Gate",
-            "sensorType": "ring",
-            "onFault": false
+            "sensorType": "ring"
         },
         {
             "name": "guest_bath",
