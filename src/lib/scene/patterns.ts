@@ -67,7 +67,7 @@ export class SoundPattern extends Pattern {
   private soundPlayer: SoundPlayer;
   // The volume you want to play the audio at! Should be between 0 and 1
   private volume: number;
-  private lightPattern: Pattern;
+  protected lightPattern: Pattern;
   private soundToPatternDelayMs: number;
   private stopSoundOnCancel: boolean;
 
@@ -125,8 +125,10 @@ export class NoSoundPattern extends SoundPattern {
     lightName: string,
     lightApi: SpookyHueApi,
   ): Promise<boolean> {
+    // Cancel all sounds running on this client
     this.cancel();
-    return false;
+    // run the light pattern
+    return this.lightPattern.run(lightName, lightApi);
   }
 }
 
