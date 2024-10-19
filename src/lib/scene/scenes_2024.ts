@@ -347,7 +347,7 @@ class CreepyCarnivalScene extends AutoResetRingScene {
       return new Event(
         light,
         new RandomColourPattern(
-          20,
+          55,
           RED,
           ORANGE,
           BLUE,
