@@ -31,8 +31,10 @@ export class SpookyHueBulbPlayer {
     if (!this.api.getIsConnected()) {
       throw new Error("not connected to the hue hub");
     }
-    log.debug(`starting to play event: ${event.constructor.name}`)
-    log.debug(`existing ongoing patterns: ${JSON.stringify(this.currPatternMap)}`)
+    log.debug(`starting to play event: ${event.constructor.name}`);
+    log.debug(
+      `existing ongoing patterns: ${JSON.stringify(this.currPatternMap)}`,
+    );
 
     let lightName = event.lightName;
     if (lightName in this.currPatternMap) {
@@ -42,10 +44,10 @@ export class SpookyHueBulbPlayer {
         log.info(`cancelling bulb: ${lightName}`);
         bulb.cancel();
       } else {
-        log.debug(`got a null bulb for ${lightName} from currPatternMap`)
+        log.debug(`got a null bulb for ${lightName} from currPatternMap`);
       }
     } else {
-      log.debug(`Light name ${lightName} is not in currPatternMap`)
+      log.debug(`Light name ${lightName} is not in currPatternMap`);
     }
 
     let patterns = event.patterns;
@@ -54,7 +56,9 @@ export class SpookyHueBulbPlayer {
       const pattern = patterns[i];
       if (pattern instanceof SoundPattern) {
         let soundPattern: SoundPattern = pattern as SoundPattern;
-        log.debug(`We've got a sound pattern! Sound: ${soundPattern.getSoundFile()}`);
+        log.debug(
+          `We've got a sound pattern! Sound: ${soundPattern.getSoundFile()}`,
+        );
         if (lightName in this.currSoundPatternMap) {
           log.debug("interrupt current SoundPattern");
           let oldPattern = this.currSoundPatternMap[lightName];
@@ -62,10 +66,12 @@ export class SpookyHueBulbPlayer {
             log.info(`cancelling old SoundPattern: ${lightName}`);
             oldPattern.cancel();
           } else {
-            log.debug(`got a null old SoundPattern for ${lightName} from currSoundPatternMap`)
+            log.debug(
+              `got a null old SoundPattern for ${lightName} from currSoundPatternMap`,
+            );
           }
         } else {
-          log.debug(`Light name ${lightName} is not in currSoundPatternMap`)
+          log.debug(`Light name ${lightName} is not in currSoundPatternMap`);
         }
         this.currSoundPatternMap[lightName] = soundPattern;
       }

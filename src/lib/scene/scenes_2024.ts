@@ -220,8 +220,6 @@ class ThunderScene extends MultiPartScene {
   }
 }
 
-
-
 class ElectricLady extends MultiPartScene {
   /// We attach the sound to the last light in the list so only one sound plays
   /// at a time
@@ -250,7 +248,7 @@ class ElectricLady extends MultiPartScene {
           new StableColourPattern(RED, 15, 30, 0),
           0.5,
           1,
-          true
+          true,
         ),
         new OnPattern(SOFT_RED, 10),
       ),
@@ -298,7 +296,7 @@ class DownstairsBathCreepyClownShowerScene extends AutoResetRingScene {
           new OnPattern(RED, 10, 5),
           10,
           1,
-          true
+          true,
         ),
         new OffPattern(1),
       ),
@@ -331,7 +329,10 @@ class CalmingCockroachesScene extends MultiPartScene {
     ];
 
     const unspookyEvents = lights.map((light) => {
-      return new Event(light, new NoSoundPattern(new OnPattern(LAVENDER, 6, 5)));
+      return new Event(
+        light,
+        new NoSoundPattern(new OnPattern(LAVENDER, 6, 5)),
+      );
     });
 
     super(spookyEvents, unspookyEvents, false);
@@ -358,21 +359,28 @@ class CreepyCarnivalScene extends AutoResetRingScene {
       );
     });
 
-    spookyEvents.push(new Event(soundLight,
-      new SoundPattern(
-        `${RESOURCES_DIR}/2024_sounds/david_creepy_clowns.wav`,
-        new RandomColourPattern(
-          20,
-          RED,
-          ORANGE,
-          BLUE,
-          GREEN,
-          LAVENDER,
-          SOFT_RED,
-          PURPLE,
-          YELLOW,
-        ), 0, 1, true),
-    ));
+    spookyEvents.push(
+      new Event(
+        soundLight,
+        new SoundPattern(
+          `${RESOURCES_DIR}/2024_sounds/david_creepy_clowns.wav`,
+          new RandomColourPattern(
+            20,
+            RED,
+            ORANGE,
+            BLUE,
+            GREEN,
+            LAVENDER,
+            SOFT_RED,
+            PURPLE,
+            YELLOW,
+          ),
+          0,
+          1,
+          true,
+        ),
+      ),
+    );
 
     super(spookyEvents, true);
   }
@@ -399,7 +407,7 @@ class PsychoScene extends AutoResetRingScene {
           new FlickerPattern(13.5, BLUE, 110),
           0,
           1,
-          true
+          true,
         ),
         new PulsePattern(RED, 14, 0.5),
         new OffPattern(6, 6),
@@ -426,18 +434,21 @@ class ScreamScene extends AutoResetRingScene {
       );
     });
 
-    spookyEvents.push(new Event(soundLight,
-      new SoundPattern(
-        `${RESOURCES_DIR}/scream/scream_bathroom.mp3`,
-        new OnPattern(RED, 45, 10),
-        0,
-        1,
-        true
+    spookyEvents.push(
+      new Event(
+        soundLight,
+        new SoundPattern(
+          `${RESOURCES_DIR}/scream/scream_bathroom.mp3`,
+          new OnPattern(RED, 45, 10),
+          0,
+          1,
+          true,
+        ),
+        new OnPattern(RELAX, 20, 0.5),
+        new OffPattern(4, 0.2),
+        new OnPattern(SOFT_RED, 1, 1),
       ),
-      new OnPattern(RELAX, 20, 0.5),
-      new OffPattern(4, 0.2),
-      new OnPattern(SOFT_RED, 1, 1),
-    ));
+    );
 
     super(spookyEvents, false);
   }
@@ -456,17 +467,20 @@ class HellBathroomCostumeScene extends AutoResetRingScene {
       );
     });
 
-    spookyEvents.push(new Event(soundLight,
-      new SoundPattern(
-        `${RESOURCES_DIR}/david_demon/david_rooftop_costume_contest.mp3`,
-        new FlickerPattern(2),
-        0,
-        1,
-        true
+    spookyEvents.push(
+      new Event(
+        soundLight,
+        new SoundPattern(
+          `${RESOURCES_DIR}/david_demon/david_rooftop_costume_contest.mp3`,
+          new FlickerPattern(2),
+          0,
+          1,
+          true,
+        ),
+        new OnPattern(RED, 35, 0.5),
+        new OnPattern(SOFT_RED, 1, 1),
       ),
-      new OnPattern(RED, 35, 0.5),
-      new OnPattern(SOFT_RED, 1, 1),
-    ));
+    );
 
     super(spookyEvents, false);
   }
@@ -485,18 +499,20 @@ class HellBathroomFeedingScene extends AutoResetRingScene {
       );
     });
 
-    spookyEvents.push(new Event(
-      soundLight,
-      new SoundPattern(
-        `${RESOURCES_DIR}/david_demon/david_rooftop_feeding.mp3`,
-        new FlickerPattern(2),
-        0,
-        1,
-        true
+    spookyEvents.push(
+      new Event(
+        soundLight,
+        new SoundPattern(
+          `${RESOURCES_DIR}/david_demon/david_rooftop_feeding.mp3`,
+          new FlickerPattern(2),
+          0,
+          1,
+          true,
+        ),
+        new OnPattern(RED, 35, 0.5),
+        new OnPattern(SOFT_RED, 1, 1),
       ),
-      new OnPattern(RED, 35, 0.5),
-      new OnPattern(SOFT_RED, 1, 1),
-    ));
+    );
 
     super(spookyEvents, false);
   }
@@ -514,24 +530,27 @@ class HellBathroomWolfScene extends AutoResetRingScene {
           new FlickerPattern(2),
           0,
           1,
-          true
+          true,
         ),
         new OnPattern(RED, 35, 0.5),
         new OnPattern(SOFT_RED, 1, 1),
       );
     });
 
-    spookyEvents.push(new Event(soundLight,
-      new SoundPattern(
-        `${RESOURCES_DIR}/david_demon/david_rooftop_werewolf.mp3`,
-        new FlickerPattern(2),
-        0,
-        1,
-        true
+    spookyEvents.push(
+      new Event(
+        soundLight,
+        new SoundPattern(
+          `${RESOURCES_DIR}/david_demon/david_rooftop_werewolf.mp3`,
+          new FlickerPattern(2),
+          0,
+          1,
+          true,
+        ),
+        new OnPattern(RED, 35, 0.5),
+        new OnPattern(SOFT_RED, 1, 1),
       ),
-      new OnPattern(RED, 35, 0.5),
-      new OnPattern(SOFT_RED, 1, 1),
-    ));
+    );
 
     super(spookyEvents, false);
   }
@@ -550,17 +569,20 @@ class DownstairsBathClownGoodbye extends AutoResetRingScene {
       );
     });
 
-    spookyEvents.push(new Event(soundLight,
-      new SoundPattern(
-        `${RESOURCES_DIR}/clowns/Bathroom-Clown-Laugh.mp3`,
-        new FlickerPattern(3),
-        0,
-        1,
-        true
+    spookyEvents.push(
+      new Event(
+        soundLight,
+        new SoundPattern(
+          `${RESOURCES_DIR}/clowns/Bathroom-Clown-Laugh.mp3`,
+          new FlickerPattern(3),
+          0,
+          1,
+          true,
+        ),
+        new OnPattern(RED, 35, 0.5),
+        new OnPattern(SOFT_RED, 1, 1),
       ),
-      new OnPattern(RED, 35, 0.5),
-      new OnPattern(SOFT_RED, 1, 1),
-    ));
+    );
 
     super(spookyEvents, true);
   }
@@ -658,9 +680,7 @@ class BlackLightHallwayScene extends AutoResetRingScene {
  * TODO
  */
 function get_photobooth_scene(lights: string[]): RandomMultiScene {
-  const spookyScenes = [
-    new ElectricLady(lights),
-  ];
+  const spookyScenes = [new ElectricLady(lights)];
   return new RandomMultiScene(spookyScenes, []);
 }
 
@@ -709,34 +729,28 @@ export function getScenes(device_name: string): { [key: string]: Scene } {
   let main_scenes = {
     // Scenes for the party
     // Main server's scenes
-    photobooth_spooks: get_photobooth_scene(
-      getLights("guest_bedroom")
-    ),
+    photobooth_spooks: get_photobooth_scene(getLights("guest_bedroom")),
     chromecast_portal_to_hell: new ChromecastPortalToHell(
       "Chromecast-HD-36a10199048bd09c03c63e7f05c555c2",
     ),
     chromecast_ghosts: new ChromecastGhosts(
       "Chromecast-70c4c8babee87879b01e6d819b6b5e97",
     ),
-    front_light_flicker: new FrontLightFlickerScene(
-      getLights("front_walkway"),
-    ),
+    front_light_flicker: new FrontLightFlickerScene(getLights("front_walkway")),
 
     // Scenes for The Beast
-    creepy_carnival: new CreepyCarnivalScene(
-      getLights("downstairs_office"),
-    ),
+    creepy_carnival: new CreepyCarnivalScene(getLights("downstairs_office")),
 
     // Hank's scenes
     down_bath_random: get_downstairs_bathroom_scene(
       getLights("downstairs_bathroom"),
     ),
-    down_bath_leaving: new DownstairsBathClownGoodbye(getLights("downstairs_bathroom")),
+    down_bath_leaving: new DownstairsBathClownGoodbye(
+      getLights("downstairs_bathroom"),
+    ),
 
     // Bill's scenes
-    master_bedroom: get_bedroom_murder_scene(
-      getLights("upstairs_hall"),
-    ), // TODO
+    master_bedroom: get_bedroom_murder_scene(getLights("upstairs_hall")), // TODO
 
     // Dale's scene
     calming_cockroaches: new CalmingCockroachesScene(
@@ -751,7 +765,9 @@ export function getScenes(device_name: string): { [key: string]: Scene } {
     ),
 
     // Test individual scenes
-    creepy_clown_shower: new DownstairsBathCreepyClownShowerScene(getLights("half_bathroom")),
+    creepy_clown_shower: new DownstairsBathCreepyClownShowerScene(
+      getLights("half_bathroom"),
+    ),
     psycho: new PsychoScene(getLights("half_bathroom")),
     electric_lady: new ElectricLady(getLights("half_bathroom")),
 

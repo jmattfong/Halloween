@@ -164,12 +164,17 @@ async function main() {
         // we are now trying to find the scenes where the id match, the sensor match, and the current sensor
         // event matches whether we should trigger this event (e.g. should we trigger the scenes when the door is
         // open (faulted) or closed (not faulted))
-        scenesToTrigger = myScenes.filter(
-          (s) => s.sensorId == sensorId && sensorType == s.sensorType && (s.onFault == null || s.onFault == data)
-        ).map((s) => s.name);
+        scenesToTrigger = myScenes
+          .filter(
+            (s) =>
+              s.sensorId == sensorId &&
+              sensorType == s.sensorType &&
+              (s.onFault == null || s.onFault == data),
+          )
+          .map((s) => s.name);
       }
 
-      log.debug(`${scenesToTrigger}`)
+      log.debug(`${scenesToTrigger}`);
 
       if (scenesToTrigger.length == 0) {
         log.warn(
@@ -190,8 +195,11 @@ async function main() {
         const sceneToRun = scenes[scene];
 
         const result = sceneToRun.run(spookyHueBulbPlayer, sensorType, data);
-        result.then((value) => log.info(`Finished playing ${scene} => ${value}`)).catch((e) => { log.error(`Failed to play scene due to error`, e) });
-
+        result
+          .then((value) => log.info(`Finished playing ${scene} => ${value}`))
+          .catch((e) => {
+            log.error(`Failed to play scene due to error`, e);
+          });
       });
     },
   );

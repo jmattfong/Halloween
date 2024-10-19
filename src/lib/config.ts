@@ -70,7 +70,7 @@ export const DARK_GREEN: Color = {
   sat: 254,
   xy: [0.2374, 0.6494],
   ct: 443,
-}
+};
 
 export const RELAX: Color = {
   bri: 144,

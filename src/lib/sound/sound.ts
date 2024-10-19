@@ -47,10 +47,13 @@ export class SoundPlayer {
         this.controller.abort();
       }
     } else {
-      exec(`ps aux | grep "[m]pg321 ${soundFile}" | awk '{print $2}' | xargs kill -9`, (_error) => {
-        log.info(`error: ${_error}`);
-        log.info(`Canceled sound playback`);
-      });
+      exec(
+        `ps aux | grep "[m]pg321 ${soundFile}" | awk '{print $2}' | xargs kill -9`,
+        (_error) => {
+          log.info(`error: ${_error}`);
+          log.info(`Canceled sound playback`);
+        },
+      );
     }
   }
 }
