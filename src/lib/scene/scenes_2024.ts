@@ -699,11 +699,33 @@ class BlackLightHallwayScene extends AutoResetRingScene {
   }
 }
 
+class PhotoBoothScream extends AutoResetRingScene {
+  constructor(lights: string[]) {
+    let soundLight = lights.slice(-1).pop();
+
+
+    spookyEvents.push(
+      new Event(
+        soundLight,
+        new SoundPattern(
+          `${RESOURCES_DIR}/misc/woman_scream_pain.mp3`,
+          new OnPattern(RELAX, 30),
+          0,
+          1,
+          true,
+        ),
+      ),
+    );
+
+    super(spookyEvents, true);
+  }
+}
+
 /**
  * TODO
  */
 function get_photobooth_scene(lights: string[]): RandomMultiScene {
-  const spookyScenes = [new ElectricLady(lights)];
+  const spookyScenes = [new PhotoBoothScream(lights)];
   return new RandomMultiScene(spookyScenes, []);
 }
 
