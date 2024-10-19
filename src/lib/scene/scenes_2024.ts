@@ -675,7 +675,7 @@ class PhotoBoothScream extends AutoResetRingScene {
   constructor(lights: string[]) {
     const spookyEvents = [
       new Event(
-        lights[0],
+        "999",
         new SoundPattern(
           `${RESOURCES_DIR}/misc/woman_scream_pain.mp3`,
           new OnPattern(RELAX, 30),
@@ -688,14 +688,6 @@ class PhotoBoothScream extends AutoResetRingScene {
 
     super(spookyEvents, true);
   }
-}
-
-/**
- * TODO
- */
-function get_photobooth_scene(lights: string[]): RandomMultiScene {
-  const spookyScenes = [new PhotoBoothScream(lights)];
-  return new RandomMultiScene(spookyScenes, []);
 }
 
 function get_downstairs_bathroom_scene(lights: string[]): RandomMultiScene {
@@ -713,12 +705,6 @@ function get_downstairs_bathroom_scene(lights: string[]): RandomMultiScene {
     new ElectricLady(Object.assign([], lights)),
     new PsychoScene(Object.assign([], lights)),
   ];
-
-  return new RandomMultiScene(spookyScenes, []);
-}
-
-function get_bedroom_murder_scene(lights: string[]): RandomMultiScene {
-  const spookyScenes = [new PsychoScene(Object.assign([], lights))];
 
   return new RandomMultiScene(spookyScenes, []);
 }
@@ -743,7 +729,7 @@ export function getScenes(device_name: string): { [key: string]: Scene } {
   let main_scenes = {
     // Scenes for the party
     // Main server's scenes
-    photobooth_spooks: get_photobooth_scene(getLights("guest_bedroom")),
+    photobooth_spooks: new PhotoBoothScream(getLights("guest_bedroom")),
     chromecast_portal_to_hell: new ChromecastPortalToHell(
       "Chromecast-HD-36a10199048bd09c03c63e7f05c555c2",
     ),
