@@ -274,9 +274,10 @@ class FrontLightFlickerScene extends AutoResetRingScene {
 
 class DownstairsBathCreepyClownShowerScene extends AutoResetRingScene {
   constructor(lights: string[]) {
-    let showerLight = lights.pop();
+    let lightsClone = lights.slice();
+    let showerLight = lightsClone.pop();
 
-    let spookyEvents: Event[] = lights.map((light) => {
+    let spookyEvents: Event[] = lightsClone.map((light) => {
       return new Event(
         light,
         new SleepPattern(0.0125),
@@ -342,8 +343,9 @@ class CalmingCockroachesScene extends MultiPartScene {
 
 class CreepyCarnivalScene extends AutoResetRingScene {
   constructor(lights: string[]) {
-    let soundLight = lights.slice(-1).pop();
-    let spookyEvents = lights.slice(0, -1).map((light) => {
+    let lightsClone = lights.slice();
+    let soundLight = lightsClone.pop();
+    let spookyEvents = lightsClone.map((light) => {
       return new Event(
         light,
         new RandomColourPattern(
@@ -389,9 +391,10 @@ class CreepyCarnivalScene extends AutoResetRingScene {
 
 class PsychoScene extends AutoResetRingScene {
   constructor(lights: string[]) {
-    let showerLight = lights.slice(-1).pop();
+    let lightsClone = lights.slice();
+    let showerLight = lightsClone.pop();
 
-    let spookyEvents = lights.slice(0, -1).map((light) => {
+    let spookyEvents = lightsClone.map((light) => {
       return new Event(
         light,
         new StableColourPattern(RELAX, 40, 13, 4),
@@ -442,46 +445,12 @@ class GuestVibeScene extends AutoResetRingScene {
 
 }
 
-// Song is 66 seconds long, first 10 sec are silent
-class ScreamScene extends AutoResetRingScene {
-  constructor(lights: string[]) {
-    let soundLight = lights.slice(-1).pop();
-
-    let spookyEvents = lights.map((light) => {
-      return new Event(
-        light,
-        new OnPattern(RED, 45, 10),
-        new OnPattern(RELAX, 20, 0.5),
-        new OffPattern(4, 0.2),
-        new OnPattern(SOFT_RED, 1, 1),
-      );
-    });
-
-    spookyEvents.push(
-      new Event(
-        soundLight,
-        new SoundPattern(
-          `${RESOURCES_DIR}/scream/scream_bathroom.mp3`,
-          new OnPattern(RED, 45, 10),
-          0,
-          1,
-          true,
-        ),
-        new OnPattern(RELAX, 20, 0.5),
-        new OffPattern(4, 0.2),
-        new OnPattern(SOFT_RED, 1, 1),
-      ),
-    );
-
-    super(spookyEvents, false);
-  }
-}
-
 class HellBathroomCostumeScene extends AutoResetRingScene {
   constructor(lights: string[]) {
-    let soundLight = lights.slice(-1).pop();
+    let lightsClone = lights.slice();
+    let soundLight = lightsClone.pop();
 
-    let spookyEvents = lights.slice(0, -1).map((light) => {
+    let spookyEvents = lights.map((light) => {
       return new Event(
         light,
         new FlickerPattern(2),
@@ -511,9 +480,10 @@ class HellBathroomCostumeScene extends AutoResetRingScene {
 
 class HellBathroomFeedingScene extends AutoResetRingScene {
   constructor(lights: string[]) {
-    let soundLight = lights.slice(-1).pop();
+    let lightsClone = lights.slice();
+    let soundLight = lightsClone.pop();
 
-    let spookyEvents = lights.slice(0, -1).map((light) => {
+    let spookyEvents = lightsClone.map((light) => {
       return new Event(
         light,
         new FlickerPattern(2),
@@ -543,9 +513,10 @@ class HellBathroomFeedingScene extends AutoResetRingScene {
 
 class HellBathroomWolfScene extends AutoResetRingScene {
   constructor(lights: string[]) {
-    let soundLight = lights.slice(-1).pop();
+    let lightsClone = lights.slice();
+    let soundLight = lightsClone.pop();
 
-    let spookyEvents = lights.slice(0, -1).map((light) => {
+    let spookyEvents = lightsClone.map((light) => {
       return new Event(
         light,
         new SoundPattern(
@@ -581,9 +552,10 @@ class HellBathroomWolfScene extends AutoResetRingScene {
 
 class DownstairsBathClownGoodbye extends AutoResetRingScene {
   constructor(lights: string[]) {
-    let soundLight = lights.slice(-1).pop();
+    let lightsClone = lights.slice();
+    let soundLight = lightsClone.pop();
 
-    let spookyEvents = lights.slice(0, -1).map((light) => {
+    let spookyEvents = lightsClone.map((light) => {
       return new Event(
         light,
         new FlickerPattern(3),
