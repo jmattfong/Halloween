@@ -95,11 +95,10 @@ export class SpookyHueBulbPlayer {
       throw new Error("not connected to the hue hub");
     }
 
-    let patterns = event.patterns;
-    const totalPatternLengthMs = patterns
+    const totalPatternLengthMs = event.patterns
       .map((p) => p.getDurationMs())
       .reduce((a, b) => a + b);
-    log.info("playing repeated light pattern: " + patterns);
+    log.info("playing repeated light pattern of => " + event.patterns.map((p) => p.constructor.name));
     return setInterval(
       (() => {
         log.debug("running repeating pattern");
