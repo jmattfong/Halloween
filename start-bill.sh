@@ -6,4 +6,4 @@ PORT=${3:-4269}
 
 echo "Starting client server BILL on port $PORT with orchestrator http://${ORCHESTRATOR_IP}:${ORCHESTRATOR_PORT}"
 
-./run-client  -n bill -o $ORCHESTRATOR_IP -x $ORCHESTRATOR_PORT -p $PORT -s creepy_carnival
+./run-client -n bill -o $ORCHESTRATOR_IP -x $ORCHESTRATOR_PORT -p $PORT -s creepy_carnival
