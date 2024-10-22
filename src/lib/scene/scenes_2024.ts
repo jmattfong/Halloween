@@ -37,6 +37,7 @@ import {
   ORANGE,
   PURPLE,
   YELLOW,
+  ENERGIZE,
 } from "../config";
 import { SensorType } from "../web_listener/webserver";
 
@@ -679,20 +680,27 @@ class PhotoBoothScream extends AutoResetRingScene {
     let spookyEvents = lightsClone.map((light) => {
       return new Event(
         light,
-        new FlickerPattern(10, RELAX)
+        new FlickerPattern(10, ENERGIZE),
+        new OnPattern(RELAX, 5)
       )
     });
 
     spookyEvents.push(
       new Event(
         soundLight,
-        new SoundPattern(
-          `${RESOURCES_DIR}/misc/woman_scream_pain.mp3`,
-          new FlickerPattern(10, RELAX),
+        new RandomSoundPattern(
+          [`${RESOURCES_DIR}/startle/woman-scream-pain-short.mp3`,
+          `${RESOURCES_DIR}/global/float_too.mp3`,
+          `${RESOURCES_DIR}/startle/david-startle-dog.mp3`,
+          `${RESOURCES_DIR}/startle/david-startle-strings.mp3`,
+          `${RESOURCES_DIR}/startle/david-startle-alien-extra-short.mp3`,
+          `${RESOURCES_DIR}/startle/david-startle-lightning.mp3`,
+          ],
+          new FlickerPattern(10, ENERGIZE),
           0,
           1,
-          true,
         ),
+        new OnPattern(RELAX, 5),
       ),
     );
 
