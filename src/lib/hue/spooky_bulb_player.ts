@@ -98,7 +98,10 @@ export class SpookyHueBulbPlayer {
     const totalPatternLengthMs = event.patterns
       .map((p) => p.getDurationMs())
       .reduce((a, b) => a + b);
-    log.info("playing repeated light pattern of => " + event.patterns.map((p) => p.constructor.name));
+    log.info(
+      "playing repeated light pattern of => " +
+        event.patterns.map((p) => p.constructor.name),
+    );
     return setInterval(
       (() => {
         log.debug("running repeating pattern");
