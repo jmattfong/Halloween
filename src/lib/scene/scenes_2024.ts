@@ -429,13 +429,13 @@ class GuestVibeScene extends AutoResetRingScene {
     let spookyEvents = lights.map((light) => {
       return new Event(
         light,
-        new StableColourPattern(RED, 40, 5, 5),
-        new StableColourPattern(SOFT_RED, 15, 5, 5),
-        new StableColourPattern(RED, 40, 5, 5),
-        new StableColourPattern(SOFT_RED, 15, 5, 5),
-        new StableColourPattern(RED, 40, 5, 5),
-        new StableColourPattern(SOFT_RED, 15, 5, 5),
-        new StableColourPattern(RED, 40, 5, 5),
+        new StableColourPattern(RED, 100, 3, 3),
+        new StableColourPattern(SOFT_RED, 15, 3, 3),
+        new StableColourPattern(RED, 100, 3, 3),
+        new StableColourPattern(SOFT_RED, 15, 3, 3),
+        new StableColourPattern(RED, 100, 3, 3),
+        new StableColourPattern(SOFT_RED, 15, 3, 3),
+        new StableColourPattern(RED, 100, 3, 3),
         new OnPattern(SOFT_RED, 10, 5),
       );
     });
