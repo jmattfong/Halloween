@@ -1,1 +1,1 @@
-*/30 * * * * ~/workspace/Halloween-2022/cron/random_spook.sh >> /tmp/cron.log 2>/tmp/cron-error.log
+*/30 * * * * ~/development/Halloween/cron/random_spook.sh >> /tmp/cron.log 2>/tmp/cron-error.log
