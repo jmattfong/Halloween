@@ -43,8 +43,8 @@ async function main() {
         type: Number,
         alias: "p",
         optional: true,
-        defaultValue: 8000,
-        description: `The port to listen for requests on`,
+        defaultValue: 5400,
+        description: `The port to listen for requests on. Default 5400`,
       },
       debug: {
         type: Boolean,

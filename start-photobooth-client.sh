@@ -6,4 +6,4 @@ PORT=${3:-8009}
 
 echo "Starting client server PHOTOBOOTH on port $PORT with orchestrator http://${ORCHESTRATOR_IP}:${ORCHESTRATOR_PORT}"
 
-./run-client -n photobooth -o $ORCHESTRATOR_IP -x $ORCHESTRATOR_PORT -p $PORT -s chromecast_ghosts -s chromecast_portal_to_hell -s photobooth_spooks
+./run-client -n photobooth -o $ORCHESTRATOR_IP -x $ORCHESTRATOR_PORT -p $PORT -s chromecast_ghosts -s front_light_flicker

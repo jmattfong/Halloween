@@ -9,7 +9,7 @@ import { getLogger, setLogLevel } from "./lib/logging";
 import { CategoryLogger, LogLevel } from "typescript-logging";
 import { CONFIG } from "./lib/config";
 
-import { getScenes } from "./lib/scene/scenes_2024";
+import { getScenes } from "./lib/scene/scenes_2025";
 import { sendRegisterEvent } from "./lib/web_listener/requests";
 import { SpookyHueBulbPlayer } from "./lib/hue/spooky_bulb_player";
 import { SceneConfig, getSceneConfigFromFile } from "./lib/scene/scene_config";
@@ -54,6 +54,7 @@ async function main() {
       },
       orchestratorIp: {
         type: String,
+        defaultValue: "localhost",
         alias: "o",
         optional: true,
         description: `The ip where the orchestrator runs`,
@@ -63,7 +64,7 @@ async function main() {
         defaultValue: 5400,
         alias: "x",
         optional: true,
-        description: `The port where the orchestrator is listening for requests on`,
+        description: `The port where the orchestrator is listening for requests on. Default 5400`,
       },
       debug: {
         type: Boolean,
