@@ -49,7 +49,30 @@ import {
   FindBulb,
 } from "./util_scenes";
 import {
-  getLights
+  getLights,
+  front_patio,
+  foyer,
+  living_room,
+  primary_bedroom,
+  dining_room,
+  reading_lamp,
+  upstairs_hallway,
+  kitchen,
+  upstairs_bathroom,
+  staircase,
+  media_room,
+  the_lady_hole,
+  water_heater,
+  downstairs_hallway,
+  downstairs_bedroom,
+  downstairs_bathroom,
+  garage,
+  power_switch,
+  werewolf_scene,
+  clown_room,
+  halloween_hallway,
+  photobooth_spooks,
+  workout_room,
 } from "./locations_brandon";
 
 const log: CategoryLogger = getLogger("scenes_2025");
@@ -207,6 +230,138 @@ class CalmingCockroachesScene extends MultiPartScene {
   }
 }
 
+class HalloweenHallway extends AutoResetRingScene {
+  constructor(lights: string[]) {
+    // TODO this was copied from 2022 and needs to be reworked
+    let events: Event[];
+    super(events, true);
+  }
+  getRepeatingEvents(lights: string[]): Event[] {
+    let eventLights: string[][] = [[], [], [], [], []];
+    let i = 0;
+    lights.forEach((light) => {
+      eventLights[i].push(light);
+      i = ++i % eventLights.length;
+    });
+
+    log.info(`eventLights: ${JSON.stringify(eventLights)}`);
+
+    let result = eventLights[0].map((light) => {
+      return new Event(
+        light,
+        new OnPattern(ORANGE, 1.5, 1),
+        new OffPattern(1),
+        new OffPattern(1),
+        new OffPattern(1),
+        new OffPattern(1),
+      );
+    });
+    result = result.concat(
+      eventLights[1].map((light) => {
+        return new Event(
+          light,
+          new OffPattern(1),
+          new OnPattern(ORANGE, 1.5, 1),
+          new OffPattern(1),
+          new OffPattern(1),
+          new OffPattern(1),
+        );
+      }),
+    );
+    result = result.concat(
+      eventLights[2].map((light) => {
+        return new Event(
+          light,
+          new OffPattern(1),
+          new OffPattern(1),
+          new OnPattern(ORANGE, 1.5, 1),
+          new OffPattern(1),
+          new OffPattern(1),
+        );
+      }),
+    );
+    result = result.concat(
+      eventLights[3].map((light) => {
+        return new Event(
+          light,
+          new OffPattern(1),
+          new OffPattern(1),
+          new OffPattern(1),
+          new OnPattern(ORANGE, 1.5, 1),
+          new OffPattern(1),
+        );
+      }),
+    );
+    result = result.concat(
+      eventLights[4].map((light) => {
+        return new Event(
+          light,
+          new OffPattern(1),
+          new OffPattern(1),
+          new OffPattern(1),
+          new OffPattern(1),
+          new OnPattern(ORANGE, 1.5, 1),
+        );
+      }),
+    );
+    log.info(`result: ${JSON.stringify(result)}`);
+    return result;
+  }
+}
+
+class LookItsWafflesScene extends AutoResetRingScene {
+  constructor(lights: string[]) {
+
+    let werewolfEye = lights.pop();
+
+    let events: Event[] = lights.map((light) => {
+      return new Event(
+        light, new FlickerPattern(30, ENERGIZE, 200),
+        )
+    });
+    events.push(new Event(
+      werewolfEye,
+        new SoundPattern(
+          `${RESOURCES_DIR}/david_the_beast.mp3`,
+          new OnPattern(SOFT_RED, 4),
+          0,
+        ),
+        // 0-4 - growl
+        // 5-10 growl
+        // 12-14 LOUD
+        // 15-17 LOUD
+        // 17-19 growl
+        // 21-24 growl
+        // 25-28 growl
+        // 29-31 LOUD
+        // -32 LOUD
+        new SleepPattern(0.1),
+        new OffPattern(1),
+        new OnPattern(SOFT_RED, 5),
+        new OffPattern(2),
+        new OnPattern(RED, 5),
+        new OnPattern(SOFT_RED, 2),
+        new OffPattern(1),
+        new OnPattern(SOFT_RED, 8),
+        new OffPattern(1),
+        new OnPattern(RED, 9),
+        new OffPattern(1, 1),
+      ));
+    super(events, true);
+  }
+
+  async run(
+    spookyHueBulbPlayer: SpookyHueBulbPlayer,
+    sensorType: SensorType,
+    sensorTriggedOn: boolean,
+  ): Promise<void> {
+    log.info(
+      `LookItsWafflesScene got a callback with sensor ${sensorTriggedOn}`,
+    );
+    await super.run(spookyHueBulbPlayer, sensorType, sensorTriggedOn);
+  }
+}
+
 class CreepyCarnivalScene extends AutoResetRingScene {
   constructor(lights: string[]) {
     let lightsClone = lights.slice();
@@ -284,26 +439,6 @@ class PsychoScene extends AutoResetRingScene {
         new OnPattern(SOFT_RED, 10, 5),
       ),
     );
-
-    super(spookyEvents, false);
-  }
-}
-
-class GuestVibeScene extends AutoResetRingScene {
-  constructor(lights: string[]) {
-    let spookyEvents = lights.map((light) => {
-      return new Event(
-        light,
-        new StableColourPattern(RED, 100, 3, 3),
-        new StableColourPattern(SOFT_RED, 15, 3, 3),
-        new StableColourPattern(RED, 100, 3, 3),
-        new StableColourPattern(SOFT_RED, 15, 3, 3),
-        new StableColourPattern(RED, 100, 3, 3),
-        new StableColourPattern(SOFT_RED, 15, 3, 3),
-        new StableColourPattern(RED, 100, 3, 3),
-        new OnPattern(SOFT_RED, 10, 5),
-      );
-    });
 
     super(spookyEvents, false);
   }
@@ -599,46 +734,127 @@ function get_downstairs_bathroom_scene(lights: string[]): RandomMultiScene {
 
 export function getScenes(device_name: string): { [key: string]: Scene } {
   let main_scenes = {
-    // Scenes for the party
-    // Main server's scenes
-    photobooth_spooks: new PhotoBoothScream(getLights("guest_bedroom")),
-    chromecast_portal_to_hell: new ChromecastPortalToHell(
-      "Chromecast-HD-36a10199048bd09c03c63e7f05c555c2",
-    ),
-    chromecast_ghosts: new ChromecastGhosts(
-      "Chromecast-70c4c8babee87879b01e6d819b6b5e97",
-    ),
-    front_light_flicker: new FrontLightFlickerScene(getLights("front_walkway")),
+    /* Front light flicker
+     * Room: Front patio
+     * Trigger: motion sensor
+     * Effect: single light flicker
+     * Sound: None
+     * Infra setup: None
+     * Computer: TBD
+     */
+    front_light_flicker: new FrontLightFlickerScene(getLights(front_patio)),
 
-    // Hank's scenes (Downstairs bathroom)
-    down_bath_random: get_downstairs_bathroom_scene(
-      getLights("downstairs_bathroom"),
-    ),
-    down_bath_leaving: new DownstairsBathClownGoodbye(
-      getLights("downstairs_bathroom"),
-    ),
+    /* Clown room
+     * Room: Matt's Office
+     * Trigger: motion sensor
+     * Effect: colorful rainbow lights
+     * Sound: Weird clown stuff. David sound
+     * Infra setup: Colored lamps, PC or pi?, Speaker
+     * Computer: TBD
+     */
+    // TODO test both of these? Which one works, or do we need new?
+    creepy_carnival: new CreepyCarnivalScene(getLights(clown_room)),
+    down_bath_leaving: new DownstairsBathClownGoodbye(getLights(clown_room)),
 
-    // Bill's scenes (Downstairs office)
-    creepy_carnival: new CreepyCarnivalScene(getLights("downstairs_office")),
+    /* The Devil's Hallway
+     * Room: Upstairs hallway, Dressing room
+     * Trigger: always on
+     * Effect: first light solid red, pulsing red light near the devil and in Dressing room
+     * Sound: None
+     * Infra setup: None
+     * Computer: TBD
+     */
+    halloween_hallway: new HalloweenHallway(getLights(halloween_hallway)),
+  
+    /* Kitchen Creeps
+     * Room: Kitchen
+     * Trigger: Back door contact sensor
+     * Effect: Outdoor lightning, creepy indoor lights n stuff
+     * Sound: Lightning, creepy witches n stuff
+     * Infra setup: Laptop, speaker
+     * Computer: TBD
+     */
+    // TODO
 
-    // Dale's scene (Living room bathroom)
-    calming_cockroaches: new CalmingCockroachesScene(
-      getLights("half_bathroom"),
-    ),
+    /* Primary Bathroom Creeps
+     * Room: Primary Bathroom
+     * Trigger: motion sensor
+     * Effect: random old scene
+     * Sound: random old scene
+     * Infra setup: Disable big light, pi, speaker
+     * Computer: TBD
+     */
+    classic_haunts: get_downstairs_bathroom_scene(getLights(upstairs_bathroom)),
 
-    // Boomhauer's scenes (Upstairs bathroom)
-    guest_bath: new GuestVibeScene(getLights("guest_bathroom")),
+    /* Garage Haunt
+     * Room: Garage
+     * Trigger: random every ~20 minutes
+     * Effect: attic lights turn colors, garage lights flash
+     * Sound: Sounds of walking upstairs, ghosts and ghouls
+     * Infra setup: Pi, Speaker
+     * Computer: TBD
+     */
+    // TODO
+
+    /* Calming Cockroaches
+     * Room: Downstairs bathroom
+     * Trigger: motion sensor + downstairs bath contact sensor closed
+     * Effect: calming cockroaches
+     * Sound: calming cockroaches
+     * Infra setup: pi, speaker
+     * Computer: TBD
+     */
+    calming_cockroaches: new CalmingCockroachesScene(getLights(downstairs_bathroom)),
+
+    /* The Werewolf
+     * Room: Utility closet
+     * Trigger: downstairs bath contact sensor opened
+     * Effect: flashing lights, werewolf eyes red
+     * Sound: Werewolf growls
+     * Infra setup: Pi, Speaker
+     * Computer: TBD
+     */
+    look_its_waffles: new LookItsWafflesScene(getLights(werewolf_scene)),
+
+    /* Ghost cum
+     * Room: Exercise room
+     * Trigger: motion sensor
+     * Effect: lights out, revealing ghost cum
+     * Sound: TBD
+     * Infra setup: Laptop, speaker, lamps w/ white lights, hanging black lights
+     * Computer: TBD
+     */
     black_light_hallway: new BlackLightHallwayScene(
-      getLights("switch")[0],
-      getLights("upstairs_hall"),
+      getLights(power_switch)[0],
+      getLights(workout_room),
     ),
+
+    /* Photobooth spooks
+     * Room: Anna's library
+     * Trigger: photobooth 3rd photo
+     * Effect: startling sounds
+     * Sound: flashing lights
+     * Infra setup: Matt's Laptop, speaker w/ bluetooth, lamps
+     * Computer: TBD
+     */
+    photobooth_spooks: new PhotoBoothScream(getLights(photobooth_spooks)),
+
+    /* Chromecast ghosts
+     * Room: Living room
+     * Trigger: random every ~10 minutes, front motion sensor
+     * Effect: startling sounds
+     * Sound: flashing lights
+     * Infra setup: Matt's Laptop, speaker w/ bluetooth, lamps
+     * Computer: TBD
+     */
+    chromecast_ghosts: new ChromecastGhosts("Chromecast-70c4c8babee87879b01e6d819b6b5e97"),
+
+    // ========== END 2025 Scenes ================
 
     // Test individual scenes
-    creepy_clown_shower: new DownstairsBathCreepyClownShowerScene(
-      getLights("downstairs_bathroom"),
-    ),
-    psycho: new PsychoScene(getLights("downstairs_bathroom")),
-    electric_lady: new ElectricLady(getLights("downstairs_bathroom")),
+    creepy_clown_shower: new DownstairsBathCreepyClownShowerScene(getLights(downstairs_bathroom)),
+    psycho: new PsychoScene(getLights(downstairs_bathroom)),
+    electric_lady: new ElectricLady(getLights(downstairs_bathroom)),
 
     // Test and Utility scenes
     list: new ListOnLightsScene(),
@@ -646,12 +862,8 @@ export function getScenes(device_name: string): { [key: string]: Scene } {
     flash_lights: new LoopThroughAllLights(),
     cycle_colors: new CycleColors(["26", "6"]),
     get_light: new GetLight(26), // Change this to get the state of different lights by ID
-    find_bulb: new FindBulb(getLights("downstairs_office")),
-    find_bulb_2: new FindBulb(getLights("downstairs_bathroom")),
-    find_bulb_3: new FindBulb(getLights("downstairs_office")),
+    find_bulb: new FindBulb(getLights(downstairs_bathroom)),
   };
-
-  main_scenes["dev_scene"] = main_scenes["down_bath_random"];
 
   return main_scenes;
 }

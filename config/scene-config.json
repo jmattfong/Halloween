@@ -2,20 +2,49 @@
     "version": "1.0.0",
     "scenes": [
         {
-            "name": "dev_scene",
-            "sensorId": "Guest Bathroom",
-            "sensorType": "ring",
+            "name": "look_its_waffles",
+            "sensorId": "62",
+            "TODO": "wrong sensor, we want a contact sensor attached to the door but it's not found...",
+            "sensorType": "hue",
+            "onFault": true
+        },
+        {
+            "name": "calming_cockroaches",
+            "sensorId": "62",
+            "sensorType": "hue",
             "onFault": true
         },
         {
             "name": "creepy_carnival",
-            "sensorId": "Waffles' Room",
-            "sensorType": "ring",
+            "sensorId": "59",
+            "sensorType": "hue",
             "onFault": true
         },
         {
             "name": "down_bath_leaving",
-            "sensorId": "Waffles' Room",
+            "sensorId": "59",
+            "sensorType": "hue",
+            "TODO": "do we want down_bath_leaving or creepy_carnival or one randomly?",
+            "onFault": true
+        },
+        {
+            "name": "classic_haunts",
+            "sensorId": "65",
+            "sensorType": "hue",
+            "onFault": false
+        },
+        {
+            "name": "front_light_flicker",
+            "sensorId": "68",
+            "sensorType": "hue",
+            "onFault": true
+        },
+
+
+
+        {
+            "name": "dev_scene",
+            "sensorId": "Guest Bathroom",
             "sensorType": "ring",
             "onFault": true
         },
@@ -23,34 +52,19 @@
             "name": "photobooth_spooks",
             "sensorType": "manual"
         },
-        {
-            "name": "down_bath_random",
-            "sensorId": "Waffles' Room",
-            "sensorType": "ring",
-            "onFault": false
-        },
+
         {
             "name": "welcome_inside",
             "sensorId": "Front Door",
             "sensorType": "ring",
             "onFault": false
         },
-        {
-            "name": "front_light_flicker",
-            "sensorId": "9",
-            "sensorType": "hue",
-            "onFault": true
-        },
+
         {
             "name": "black_light_hallway",
             "sensorId": "59",
             "sensorType": "hue",
             "onFault": true
-        },
-        {
-            "name": "calming_cockroaches",
-            "sensorId": "Front Gate",
-            "sensorType": "ring"
         },
         {
             "name": "guest_bath",

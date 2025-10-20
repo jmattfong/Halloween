@@ -273,53 +273,6 @@ class WerewolfDoorJiggleScene extends Scene {
   }
 }
 
-class LookItsWafflesScene extends AutoResetRingScene {
-  constructor(lights: string[]) {
-    let events: Event[] = lights.map((light) => {
-      // 0-4 - growl
-      // 5-10 growl
-      // 12-14 LOUD
-      // 15-17 LOUD
-      // 17-19 growl
-      // 21-24 growl
-      // 25-28 growl
-      // 29-31 LOUD
-      // -32 LOUD
-      return new Event(
-        light,
-        new SoundPattern(
-          `${RESOURCES_DIR}/david_the_beast.mp3`,
-          new OnPattern(SOFT_RED, 4),
-          0,
-        ),
-        new SleepPattern(0.1),
-        new OffPattern(1),
-        new OnPattern(SOFT_RED, 5),
-        new OffPattern(2),
-        new OnPattern(RED, 5),
-        new OnPattern(SOFT_RED, 2),
-        new OffPattern(1),
-        new OnPattern(SOFT_RED, 8),
-        new OffPattern(1),
-        new OnPattern(RED, 9),
-        new OffPattern(1, 1),
-      );
-    });
-    super(events, true);
-  }
-
-  async run(
-    spookyHueBulbPlayer: SpookyHueBulbPlayer,
-    sensorType: SensorType,
-    sensorTriggedOn: boolean,
-  ): Promise<void> {
-    log.info(
-      `LookItsWafflesScene got a callback with sensor ${sensorTriggedOn}`,
-    );
-    await super.run(spookyHueBulbPlayer, sensorType, sensorTriggedOn);
-  }
-}
-
 // Song is 161 seconds long
 class CalmingCockroachesScene extends MultiPartScene {
   constructor(lights: string[]) {
