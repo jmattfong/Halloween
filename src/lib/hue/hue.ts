@@ -1,7 +1,11 @@
 import { readFileSync } from "fs";
-import { HueSensor } from "./sensor";
+import { HueContactSensor, HueMotionSensor, HueSensor } from "./sensor";
 import { getLogger } from "../logging";
 import { CategoryLogger } from "typescript-logging";
+import {
+  listContactSensors,
+  getContactSensor,
+ } from "./apiv2/contact_sensor";
 
 const log: CategoryLogger = getLogger("hue");
 
@@ -14,8 +18,12 @@ interface HueSecrets {
 export class SpookyHueApi {
   private hueApi: any;
   private isConnected: boolean = false;
+  // username is also known as the hue "application key" in their APIv2
+  // See https://developers.meethue.com/develop/hue-api-v2/getting-started/
+  // See https://developers.meethue.com/develop/hue-api-v2/api-reference/
   private username: string;
   private lights: any;
+  private bridgeIp: string;
 
   constructor(secretsPath: string, config: any) {
     if (secretsPath === "") {
@@ -42,6 +50,7 @@ export class SpookyHueApi {
     if (this.isConnected) {
       return;
     }
+    this.bridgeIp = host;
     log.info(`connecting to ${host}`);
     this.hueApi = await v3.api.createLocal(host).connect(this.username);
     log.info("connected!");
@@ -75,20 +84,33 @@ export class SpookyHueApi {
     return await this.hueApi.lights.getAll();
   }
 
-  public async getSensor(sensorId: number): Promise<HueSensor> {
+  public async getSensor(sensorId: number): Promise<HueMotionSensor> {
     if (!this.isConnected) {
       throw new Error("not connected to the hue hub");
     }
     const sensor = await this.hueApi.sensors.getSensor(sensorId);
-    return new HueSensor(this.hueApi.sensors, sensor.id);
+    return new HueMotionSensor(this.hueApi.sensors, sensor.id);
   }
 
-  public async getSensors(): Promise<HueSensor[]> {
+  public async getContactSensors(): Promise<HueContactSensor[]> {
     if (!this.isConnected) {
       throw new Error("not connected to the hue hub");
     }
 
-    let sensors = await this.hueApi.sensors.getAll();
+    let sensors = await listContactSensors(this.bridgeIp, this.username);
+    return sensors["data"].map((s) => {
+      let sensorId = s["id"];
+      log.info(`Adding contact sensor -> ${sensorId}`);
+      return new HueContactSensor(sensorId, this.bridgeIp, this.username);
+    });
+  }
+
+  public async getMotionSensors(): Promise<HueMotionSensor[]> {
+    if (!this.isConnected) {
+      throw new Error("not connected to the hue hub");
+    }
+
+    let sensors = await this.hueApi.sensors.getAll();    
 
     return sensors
       .filter((sensor: any) => {
@@ -103,7 +125,14 @@ export class SpookyHueApi {
         log.debug(
           `Adding sensor ${sensor.name} -> ${sensor.type} -> ${sensor.id}}`,
         );
-        return new HueSensor(this.hueApi.sensors, sensor.id);
+        return new HueMotionSensor(this.hueApi.sensors, sensor.id);
       });
+  }
+
+  public async getSensors(): Promise<HueSensor<any>[]> {
+    let motion: HueSensor<any>[] = await this.getMotionSensors();
+    let allSensors = motion.concat(await this.getContactSensors());
+    log.debug(`Got ${allSensors.length} sensors, bitch`);
+    return allSensors;
   }
 }

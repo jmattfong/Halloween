@@ -1,15 +1,15 @@
 import { SpookyHueApi } from "./hue";
 import { getLogger } from "../logging";
 import { CategoryLogger } from "typescript-logging";
+import { getContactSensor } from "./apiv2/contact_sensor";
 
 const log: CategoryLogger = getLogger("hue-sensor");
 
-export class HueSensorUpdate {
-  private presence: boolean;
+export abstract class HueSensorUpdate {
+
   private updateTime: Date;
 
-  constructor(presence: boolean, lastUpdatedTime: string) {
-    this.presence = presence;
+  constructor(lastUpdatedTime: string) {
 
     if (!lastUpdatedTime.endsWith("z") && lastUpdatedTime.endsWith("Z")) {
       lastUpdatedTime += "Z";
@@ -18,37 +18,88 @@ export class HueSensorUpdate {
     this.updateTime = new Date(lastUpdatedTime);
   }
 
-  public getPresence(): boolean {
-    return this.presence;
-  }
-
   public getUpdatedTime(): Date {
     return this.updateTime;
   }
 
   public isEqual(other: HueSensorUpdate): boolean {
     return (
-      this.getPresence() === other.getPresence() &&
       this.getUpdatedTime().getTime() === other.getUpdatedTime().getTime()
     );
   }
 
   public toString(): string {
-    return `${this.getPresence()} - ${this.getUpdatedTime()}`;
+    return `${this.getUpdatedTime()}`;
+  }
+
+  abstract getTriggered(): boolean;
+}
+
+export class HueContactSensorUpdate extends HueSensorUpdate {
+  private contact: boolean;
+
+  constructor(contact: boolean, lastUpdatedTime: string) {
+    super(lastUpdatedTime);
+    this.contact = contact;
+  }
+
+  public getContact(): boolean {
+    return this.contact;
+  }
+
+  public isEqual(other: HueContactSensorUpdate): boolean {
+    return (
+      this.getContact() === other.getContact() && super.isEqual(other)
+    );
+  }
+
+  public toString(): string {
+    return `${this.getContact()} - ${super.toString()}`;
+  }
+
+  public getTriggered(): boolean {
+    return !this.getContact();
   }
 }
 
-export class HueSensor {
-  private sensorApi: any;
-  private sensorId: number;
-  private callbacks: ((event: any) => void)[];
-  private lastSensorUpdate: HueSensorUpdate | null;
+export class HueMotionSensorUpdate extends HueSensorUpdate {
+  private presence: boolean;
 
-  constructor(api: SpookyHueApi, sensorId: number) {
-    this.sensorApi = api;
+  constructor(presence: boolean, lastUpdatedTime: string) {
+    super(lastUpdatedTime);
+    this.presence = presence;
+  }
+
+  public getPresence(): boolean {
+    return this.presence;
+  }
+
+  public isEqual(other: HueMotionSensorUpdate): boolean {
+    return (
+      this.getPresence() === other.getPresence() && super.isEqual(other)
+    );
+  }
+
+  public toString(): string {
+    return `${this.getPresence()} - ${super.toString()}`;
+  }
+
+  public getTriggered(): boolean {
+    return this.getPresence();
+  }
+}
+
+export abstract class HueSensor<T extends HueSensorUpdate> {
+  private callbacks: ((event: any) => void)[] = new Array();
+  private lastSensorUpdate: T | null = null;
+  private sensorId: string;
+
+  constructor(sensorId: string) {
     this.sensorId = sensorId;
-    this.lastSensorUpdate = null;
-    this.callbacks = new Array();
+  }
+
+  public getSensorId(): string {
+    return this.sensorId;
   }
 
   public start() {
@@ -60,15 +111,16 @@ export class HueSensor {
     );
   }
 
+  public addCallback(callback: (update: T) => void) {
+    log.info("adding callback to sensor");
+    this.callbacks.push(callback);
+  }
+
+  abstract getSensorUpdate(): Promise<T>;
+
   private async checkForUpdate() {
     log.debug(`checking for update on sensor ${this.sensorId}`);
-    const sensor = await this.sensorApi.getSensor(this.sensorId);
-
-    log.debug(`sensor details: ${sensor.toStringDetailed()}`);
-    const sensorUpdate = new HueSensorUpdate(
-      sensor.getStateAttributeValue("presence"),
-      sensor.lastupdated,
-    );
+    const sensorUpdate = await this.getSensorUpdate();
     log.debug(`sensor update: ${JSON.stringify(sensorUpdate, null, 4)}`);
 
     // if no update has occurred in the past (initial setup) store the current state and return
@@ -92,20 +144,57 @@ export class HueSensor {
     }
   }
 
-  public addCallback(callback: (update: HueSensorUpdate) => void) {
-    log.info("adding callback to sensor");
-    this.callbacks.push(callback);
-  }
-
-  public getId(): number {
-    return this.sensorId;
-  }
-
   public toString(): string {
     let lastUpdate =
       this.lastSensorUpdate === null
         ? "No Updates"
         : this.lastSensorUpdate.toString();
     return `SensorId: ${this.sensorId} Last Update: ${lastUpdate} # callbacks registered: ${this.callbacks.length}`;
+  }
+}
+
+export class HueContactSensor extends HueSensor<HueContactSensorUpdate> {
+
+  private hueBridgeIp: string;
+  private username: string;
+
+  constructor(sensorId: string, hueBridgeIp: string, username: string) {
+    super(sensorId);
+    this.hueBridgeIp = hueBridgeIp;
+    this.username = username;
+  }
+
+  async getSensorUpdate(): Promise<HueContactSensorUpdate> {
+    let sensor = await getContactSensor(this.hueBridgeIp, this.username, this.getSensorId());
+    log.debug(`Contact Sensor API output: ${JSON.stringify(sensor)}`);
+    let contactReport = sensor["data"][0]["contact_report"];
+    let sensorContact: boolean = contactReport["state"] === "contact";
+    let updateTime: string = contactReport["changed"];
+    return new HueContactSensorUpdate(sensorContact, updateTime);
+  }
+}
+
+export class HueMotionSensor extends HueSensor<HueMotionSensorUpdate> {
+  private sensorApi: any;
+  private sensorNum: number;
+
+  constructor(api: SpookyHueApi, sensorId: number) {
+    super(`${sensorId}`)
+    this.sensorApi = api;
+    this.sensorNum = sensorId;
+  }
+
+  async getSensorUpdate(): Promise<HueMotionSensorUpdate> {
+    const sensor = await this.sensorApi.getSensor(this.sensorNum);
+    log.debug(`sensor details: ${sensor.toStringDetailed()}`);
+
+    return new HueMotionSensorUpdate(
+      sensor.getStateAttributeValue("presence"),
+      sensor.lastupdated,
+    );
+  }
+
+  public getId(): number {
+    return this.sensorNum;
   }
 }

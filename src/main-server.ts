@@ -1,4 +1,9 @@
-import { HueSensorUpdate, HueSensor } from "./lib/hue/sensor";
+import {
+  HueSensor,
+  HueSensorUpdate,
+  HueMotionSensorUpdate,
+  HueMotionSensor,
+ } from "./lib/hue/sensor";
 import { RingEnhancedSpookinatorV2 } from "./lib/ring";
 import { SpookyHueApi } from "./lib/hue/hue";
 import { parse } from "ts-command-line-args";
@@ -187,9 +192,9 @@ async function setupHueListeners(
   spookHue: SpookyHueApi,
 ) {
   const hueSensors = await spookHue.getSensors();
-  hueSensors.forEach((hueSensor: HueSensor) => {
+  hueSensors.forEach((hueSensor: HueSensor<any>) => {
     const hueCallback = (update: HueSensorUpdate) => {
-      const sensorId = `${hueSensor.getId()}`;
+      const sensorId = `${hueSensor.getSensorId()}`;
       log.info(`hue callback called on ${sensorId} `);
       registeredClients.get(sensorId)?.forEach(async (clientUri: string) => {
         log.info(`sending hue callback to client @${clientUri} `);
@@ -198,7 +203,7 @@ async function setupHueListeners(
             clientUri,
             sensorId,
             SensorType.HUE,
-            update.getPresence(),
+            update.getTriggered(),
           );
         } catch (e) {
           log.warn(`error sending hue callback to client @${clientUri}: ${e} `);
@@ -206,6 +211,7 @@ async function setupHueListeners(
       });
     };
 
+    log.info(`Registering callback for sensor ${hueSensor.getSensorId()}`);
     hueSensor.addCallback(hueCallback);
     hueSensor.start();
   });

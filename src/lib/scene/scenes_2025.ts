@@ -740,7 +740,7 @@ export function getScenes(device_name: string): { [key: string]: Scene } {
      * Effect: single light flicker
      * Sound: None
      * Infra setup: None
-     * Computer: TBD
+     * Computer: TBD (any)
      */
     front_light_flicker: new FrontLightFlickerScene(getLights(front_patio)),
 
@@ -749,7 +749,7 @@ export function getScenes(device_name: string): { [key: string]: Scene } {
      * Trigger: motion sensor
      * Effect: colorful rainbow lights
      * Sound: Weird clown stuff. David sound
-     * Infra setup: Colored lamps, PC or pi?, Speaker
+     * Infra setup: Colored tri-lamp, PC or pi?, Speaker
      * Computer: TBD
      */
     // TODO test both of these? Which one works, or do we need new?
