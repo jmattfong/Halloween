@@ -39,7 +39,7 @@ export const LIGHTS = {
     downstairs_hallway: ["27", "28"],
     downstairs_bedroom: ["20", "22"],
     downstairs_bathroom: ["13", "22"],
-    garage: [""], // TODO find lights
+    garage: ["32"], // TODO find lights
     power_switch: ["33"],
     // Scene specific
     werewolf_scene: ["12", "20"],
