@@ -316,25 +316,18 @@ class LookItsWafflesScene extends AutoResetRingScene {
 
     let events: Event[] = lights.map((light) => {
       return new Event(
-        light, new FlickerPattern(30, ENERGIZE, 200),
+        light, new FlickerPattern(10, ENERGIZE, 200),
       )
     });
     events.push(new Event(
       werewolfEye,
       new SoundPattern(
-        `${RESOURCES_DIR}/david_the_beast.mp3`,
+        `${RESOURCES_DIR}/david_the_beast_short.mp3`,
         new OnPattern(SOFT_RED, 4),
         0,
       ),
-      // 0-4 - growl
-      // 5-10 growl
-      // 12-14 LOUD
-      // 15-17 LOUD
-      // 17-19 growl
-      // 21-24 growl
-      // 25-28 growl
-      // 29-31 LOUD
-      // -32 LOUD
+      // 0-5 LOUD
+      // 6-10 growl
       new SleepPattern(0.1),
       new OffPattern(1),
       new OnPattern(SOFT_RED, 5),
