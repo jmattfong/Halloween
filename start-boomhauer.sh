@@ -6,4 +6,4 @@ PORT=${3:-6969}
 
 echo "Starting client server BOOMHAUER on port $PORT with orchestrator http://${ORCHESTRATOR_IP}:${ORCHESTRATOR_PORT}"
 
-./run-client  -n boomhauer -o $ORCHESTRATOR_IP -x $ORCHESTRATOR_PORT -p $PORT -s guest_bath -s black_light_hallway
+./run-client  -n boomhauer -o $ORCHESTRATOR_IP -x $ORCHESTRATOR_PORT -p $PORT -s look_its_waffles
