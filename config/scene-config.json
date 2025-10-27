@@ -56,7 +56,7 @@
         },
         {
             "name": "black_light_hallway",
-            "sensorId": "59",
+            "sensorId": "2",
             "sensorType": "hue",
             "onFault": true
         },
