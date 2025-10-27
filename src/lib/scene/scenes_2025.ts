@@ -317,36 +317,36 @@ class LookItsWafflesScene extends AutoResetRingScene {
     let events: Event[] = lights.map((light) => {
       return new Event(
         light, new FlickerPattern(30, ENERGIZE, 200),
-        )
+      )
     });
     events.push(new Event(
       werewolfEye,
-        new SoundPattern(
-          `${RESOURCES_DIR}/david_the_beast.mp3`,
-          new OnPattern(SOFT_RED, 4),
-          0,
-        ),
-        // 0-4 - growl
-        // 5-10 growl
-        // 12-14 LOUD
-        // 15-17 LOUD
-        // 17-19 growl
-        // 21-24 growl
-        // 25-28 growl
-        // 29-31 LOUD
-        // -32 LOUD
-        new SleepPattern(0.1),
-        new OffPattern(1),
-        new OnPattern(SOFT_RED, 5),
-        new OffPattern(2),
-        new OnPattern(RED, 5),
-        new OnPattern(SOFT_RED, 2),
-        new OffPattern(1),
-        new OnPattern(SOFT_RED, 8),
-        new OffPattern(1),
-        new OnPattern(RED, 9),
-        new OffPattern(1, 1),
-      ));
+      new SoundPattern(
+        `${RESOURCES_DIR}/david_the_beast.mp3`,
+        new OnPattern(SOFT_RED, 4),
+        0,
+      ),
+      // 0-4 - growl
+      // 5-10 growl
+      // 12-14 LOUD
+      // 15-17 LOUD
+      // 17-19 growl
+      // 21-24 growl
+      // 25-28 growl
+      // 29-31 LOUD
+      // -32 LOUD
+      new SleepPattern(0.1),
+      new OffPattern(1),
+      new OnPattern(SOFT_RED, 5),
+      new OffPattern(2),
+      new OnPattern(RED, 5),
+      new OnPattern(SOFT_RED, 2),
+      new OffPattern(1),
+      new OnPattern(SOFT_RED, 8),
+      new OffPattern(1),
+      new OnPattern(RED, 9),
+      new OffPattern(1, 1),
+    ));
     super(events, true);
   }
 
@@ -765,7 +765,7 @@ export function getScenes(device_name: string): { [key: string]: Scene } {
      * Computer: TBD
      */
     halloween_hallway: new HalloweenHallway(getLights(halloween_hallway)),
-  
+
     /* Kitchen Creeps
      * Room: Kitchen
      * Trigger: Back door contact sensor
@@ -784,7 +784,7 @@ export function getScenes(device_name: string): { [key: string]: Scene } {
      * Infra setup: Disable big light, pi, speaker
      * Computer: TBD
      */
-    classic_haunts: get_downstairs_bathroom_scene(getLights(upstairs_bathroom)),
+    classic_haunts: get_downstairs_bathroom_scene(getLights(downstairs_bathroom)),
 
     /* Garage Haunt
      * Room: Garage
