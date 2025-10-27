@@ -18,11 +18,11 @@ DELAY=$((RANDOM % 300))
 echo "Waiting $DELAY seconds"
 
 # Wait for the random delay
-sleep $DELAY
+#sleep $DELAY
 
 # Create a json payload with the scene and setting the scope to global
 JSON="{\"scene\": \"$SCENE\", \"scope\": \"direct\", \"name\": \"hank\"}"
 
 echo "Sending JSON payload $JSON"
 
-/opt/homebrew/bin/http POST localhost:8008/trigger name="$SCENE" scope=direct name=hank --ignore-stdin
+/opt/homebrew/bin/http POST localhost:8008/trigger name="$SCENE" scope=direct clientEndpoint="http://192.168.0.124:4242" --ignore-stdin
