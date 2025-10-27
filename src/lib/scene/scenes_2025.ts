@@ -699,6 +699,63 @@ class PhotoBoothScream extends AutoResetRingScene {
   }
 }
 
+class AtticAttackScene extends AutoResetRingScene {
+  constructor(lights: string[]) {
+
+    let events: Event[] = lights.map((light) => {
+      return new Event(
+        light, 
+        new SoundPattern(
+          `${RESOURCES_DIR}/attic/attic_attack.mp3`,
+          new FlickerPattern(16, ENERGIZE, 200),
+          0,
+        )
+
+      )
+    });
+
+    super(events, true);
+  }
+}
+
+class AtticLurkScene extends AutoResetRingScene {
+  constructor(lights: string[]) {
+
+    let events: Event[] = lights.map((light) => {
+      return new Event(
+        light, 
+        new SoundPattern(
+          `${RESOURCES_DIR}/attic/attic_lurk.mp3`,
+          new FlickerPattern(24, ENERGIZE, 200),
+          0,
+        )
+
+      )
+    });
+
+    super(events, true);
+  }
+}
+
+class AtticRuckusScene extends AutoResetRingScene {
+  constructor(lights: string[]) {
+
+    let events: Event[] = lights.map((light) => {
+      return new Event(
+        light, 
+        new SoundPattern(
+          `${RESOURCES_DIR}/attic/attic_ruckus.mp3`,
+          new FlickerPattern(23, ENERGIZE, 200),
+          0,
+        )
+
+      )
+    });
+
+    super(events, true);
+  }
+}
+
 function get_downstairs_bathroom_scene(lights: string[]): RandomMultiScene {
   const spookyScenes = [
     new HellBathroomCostumeScene(Object.assign([], lights)),
@@ -780,7 +837,11 @@ export function getScenes(device_name: string): { [key: string]: Scene } {
      * Infra setup: Pi, Speaker
      * Computer: TBD
      */
-    // TODO
+    attic_lurk: new AtticLurkScene(getLights(garage)),
+
+    attic_ruckus: new AtticRuckusScene(getLights(garage)),
+
+    attic_attack: new AtticAttackScene(getLights(garage)),
 
     /* Calming Cockroaches
      * Room: Upstairs bathroom
