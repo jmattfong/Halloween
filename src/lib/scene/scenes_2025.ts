@@ -772,7 +772,7 @@ class CumScene extends AutoResetRingScene {
           new FlickerPattern(4),
         ),
         new OffPattern(30),
-        new OnPattern(SOFT_RED, 1),
+        new OnPattern(RELAX, 1),
       );
     });
     spookyEvents.push(

@@ -174,8 +174,11 @@ export class FlickerPattern extends Pattern {
     lightApi: SpookyHueApi,
   ): Promise<boolean> {
     const startTime = new Date();
+    // Eh, maybe this is wrong because of the async loop, but whatever. Works for now.
+    this.isCancelled = false;
 
     let lightOn = true;
+    log.debug(`Running flicker pattern. Canceled: ${this.isCancelled}`);
     while (!this.isCancelled) {
       let state = new LightState();
       if (lightOn) {
