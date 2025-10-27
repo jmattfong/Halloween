@@ -1,10 +1,7 @@
 import {
   HueSensor,
   HueSensorUpdate,
-  HueMotionSensorUpdate,
-  HueMotionSensor,
- } from "./lib/hue/sensor";
-import { RingEnhancedSpookinatorV2 } from "./lib/ring";
+} from "./lib/hue/sensor";
 import { SpookyHueApi } from "./lib/hue/hue";
 import { parse } from "ts-command-line-args";
 import { getLogger, setLogLevel } from "./lib/logging";
@@ -15,14 +12,12 @@ import {
   OrchestratorWebServer,
   TriggerScope,
 } from "./lib/web_listener/webserver";
-import { RingDeviceData, RingDevice } from "ring-client-api";
 import { sendSensorEvent } from "./lib/web_listener/requests";
 
 const log: CategoryLogger = getLogger("main");
 
 // For details about adding new args, see https://www.npmjs.com/package/ts-command-line-args
 interface IHalloweenServerArgs {
-  startRingListener: boolean;
   startHueListener: boolean;
   port: number;
   debug: boolean;
@@ -32,12 +27,6 @@ interface IHalloweenServerArgs {
 async function main() {
   const args = parse<IHalloweenServerArgs>(
     {
-      startRingListener: {
-        type: Boolean,
-        alias: "r",
-        optional: true,
-        description: `Whether to start the ring listener`,
-      },
       startHueListener: {
         type: Boolean,
         alias: "b",
@@ -131,18 +120,6 @@ async function main() {
     },
   );
 
-  if (args.startRingListener) {
-    log.info("Setting up Ring");
-    const ringSpook = new RingEnhancedSpookinatorV2(CONFIG.secretPath, true);
-    log.debug(`all ring sensors: ${await ringSpook.getSensors()} `);
-
-    setupRingListener(registeredClients, ringSpook);
-
-    log.info("Ring sensors set up");
-  } else {
-    log.info("skipping ring setup");
-  }
-
   if (args.startHueListener) {
     log.info("Setting up connection to the Hue API");
     const spookHue: SpookyHueApi = new SpookyHueApi(CONFIG.secretPath, CONFIG);
@@ -158,32 +135,7 @@ async function main() {
     log.info("skipping hue setup");
   }
 
-  await server.listen();
-}
-
-// Sets up the ring listeners and callbacks for the ring sensors
-async function setupRingListener(
-  registeredClients: Map<string, Set<string>>,
-  ringSpook: RingEnhancedSpookinatorV2,
-) {
-  const ringSensors: RingDevice[] = await ringSpook.getSensors();
-
-  const ringCallback = (data: RingDeviceData) => {
-    const sensorId = data.name;
-    log.info(`ring callback called on ${sensorId} `);
-    registeredClients.get(sensorId)?.forEach(async (clientUri: string) => {
-      log.info(`sending ring callback to client @${clientUri} `);
-      try {
-        sendSensorEvent(clientUri, sensorId, SensorType.RING, data.faulted);
-      } catch (e) {
-        log.warn(`error sending ring callback to client @${clientUri}: ${e} `);
-      }
-    });
-  };
-
-  ringSensors.forEach((ringSensor: RingDevice) => {
-    ringSpook.addSensorCallback(ringSensor, ringCallback);
-  });
+  server.listen();
 }
 
 // Sets up the hue sensors and callbacks for the hue sensors
