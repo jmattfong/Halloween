@@ -323,15 +323,13 @@ class LookItsWafflesScene extends AutoResetRingScene {
       werewolfEye,
       new SoundPattern(
         `${RESOURCES_DIR}/werewolf/david_the_beast_short.mp3`,
-        new OnPattern(SOFT_RED, 4),
+        new OnPattern(RED, 5),
         0,
       ),
       // 0-5 LOUD
       // 6-10 growl
       new SleepPattern(0.1),
       new OffPattern(1),
-      new OnPattern(RED, 5),
-      new OffPattern(2),
       new OnPattern(RED, 5),
       new OffPattern(1, 1),
     ));
