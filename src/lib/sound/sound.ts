@@ -6,7 +6,7 @@ const log: CategoryLogger = getLogger("sound-player");
 
 export class SoundPlayer {
   private controller: AbortController;
-  constructor() {}
+  constructor() { }
 
   public async play(soundFile: string, volume: number) {
     this.controller = new AbortController();
@@ -48,7 +48,7 @@ export class SoundPlayer {
       }
     } else {
       exec(
-        `ps aux | grep "[m]pg321 ${soundFile}" | awk '{print $2}' | xargs kill -9`,
+        `ps aux | grep "[m]pg321 ${soundFile}" | awk '{print $2}' | xargs -I {} kill -9 {}`,
         (_error) => {
           log.info(`error: ${_error}`);
           log.info(`Canceled sound playback`);
