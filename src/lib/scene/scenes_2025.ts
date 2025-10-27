@@ -332,12 +332,7 @@ class LookItsWafflesScene extends AutoResetRingScene {
       new OffPattern(1),
       new OnPattern(SOFT_RED, 5),
       new OffPattern(2),
-      new OnPattern(RED, 5),
-      new OnPattern(SOFT_RED, 2),
-      new OffPattern(1),
-      new OnPattern(SOFT_RED, 8),
-      new OffPattern(1),
-      new OnPattern(RED, 9),
+      new OnPattern(SOFT_RED, 5),
       new OffPattern(1, 1),
     ));
     super(events, true);
