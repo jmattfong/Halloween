@@ -3,8 +3,7 @@
     "scenes": [
         {
             "name": "look_its_waffles",
-            "sensorId": "62",
-            "TODO": "wrong sensor, we want a contact sensor attached to the door but it's not found...",
+            "sensorId": "7b7388f6-7134-43f5-bb73-bf1a255cd3a3",
             "sensorType": "hue",
             "onFault": true
         },

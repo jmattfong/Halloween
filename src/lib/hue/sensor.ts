@@ -11,7 +11,7 @@ export abstract class HueSensorUpdate {
 
   constructor(lastUpdatedTime: string) {
 
-    if (!lastUpdatedTime.endsWith("z") && lastUpdatedTime.endsWith("Z")) {
+    if (!lastUpdatedTime.endsWith("z") && !lastUpdatedTime.endsWith("Z")) {
       lastUpdatedTime += "Z";
     }
 
@@ -25,6 +25,7 @@ export abstract class HueSensorUpdate {
   public isEqual(other: HueSensorUpdate): boolean {
     return (
       this.getUpdatedTime().getTime() === other.getUpdatedTime().getTime()
+      && this.getTriggered() === other.getTriggered()
     );
   }
 
@@ -47,12 +48,6 @@ export class HueContactSensorUpdate extends HueSensorUpdate {
     return this.contact;
   }
 
-  public isEqual(other: HueContactSensorUpdate): boolean {
-    return (
-      this.getContact() === other.getContact() && super.isEqual(other)
-    );
-  }
-
   public toString(): string {
     return `${this.getContact()} - ${super.toString()}`;
   }
@@ -72,12 +67,6 @@ export class HueMotionSensorUpdate extends HueSensorUpdate {
 
   public getPresence(): boolean {
     return this.presence;
-  }
-
-  public isEqual(other: HueMotionSensorUpdate): boolean {
-    return (
-      this.getPresence() === other.getPresence() && super.isEqual(other)
-    );
   }
 
   public toString(): string {
@@ -137,7 +126,7 @@ export abstract class HueSensor<T extends HueSensorUpdate> {
     }
 
     this.lastSensorUpdate = sensorUpdate;
-    log.info(`change detected! Invoking callbacks`);
+    log.info(`change detected! Invoking callbacks for sensor ${this.getSensorId()} - ${sensorUpdate.toString()}`);
     for (let i = 0; i < this.callbacks.length; i++) {
       const callback = this.callbacks[i];
       callback(sensorUpdate);
