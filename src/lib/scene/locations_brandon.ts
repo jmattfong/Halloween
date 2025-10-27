@@ -34,19 +34,19 @@ export const LIGHTS = {
     upstairs_bathroom: ["16"],
     staircase: ["26"],
     media_room: ["29, 30"],
-    the_lady_hole: ["31"],
+    the_lady_hole: [],
     water_heater: ["12"],
     downstairs_hallway: ["27", "28"],
     downstairs_bedroom: ["20", "22"],
     downstairs_bathroom: ["13", "22"],
-    garage: ["32"], // TODO find lights
+    garage: ["32"],
     power_switch: ["33"],
     // Scene specific
     werewolf_scene: ["12", "20"],
     clown_room: ["2", "9", "23"],
     halloween_hallway: ["3", "8"],
     photobooth_spooks: [], // TODO find lights
-    workout_room: []
+    workout_room: ["11", "31"]
 } as const;
 
 export function getLights(roomName: string): string[] {
