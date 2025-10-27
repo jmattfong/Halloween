@@ -11,7 +11,7 @@
             "name": "calming_cockroaches",
             "sensorId": "6b80ed83-49b1-43c8-905b-98599ffbf8c4",
             "sensorType": "hue",
-            "onFault": true
+            "onFault": false
         },
         {
             "name": "creepy_carnival",
