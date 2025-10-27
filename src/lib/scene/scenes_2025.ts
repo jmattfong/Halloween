@@ -756,6 +756,38 @@ class AtticRuckusScene extends AutoResetRingScene {
   }
 }
 
+class CumScene extends AutoResetRingScene {
+  constructor(switch_id: string, lights: string[]) {
+
+    let spookyEvents = lights.map((light) => {
+      return new Event(
+        light,
+        new RandomSoundPattern(
+          [
+            `${RESOURCES_DIR}/ghost_cum/ghost_cum_1.mp3`,
+            `${RESOURCES_DIR}/ghost_cum/ghost_cum_2.mp3`,
+            `${RESOURCES_DIR}/ghost_cum/ghost_cum_3.mp3`,
+            `${RESOURCES_DIR}/ghost_cum/ghost_cum_4.mp3`,
+          ],
+          new FlickerPattern(4),
+        ),
+        new OffPattern(30),
+        new OnPattern(SOFT_RED, 1),
+      );
+    });
+    spookyEvents.push(
+      new Event(
+        switch_id,
+        new OffPattern(4),
+        new OnPattern(RELAX, 30),
+        new OffPattern(1),
+      ),
+    );
+
+    super(spookyEvents, true);
+  }
+}
+
 function get_downstairs_bathroom_scene(lights: string[]): RandomMultiScene {
   const spookyScenes = [
     new HellBathroomCostumeScene(Object.assign([], lights)),
@@ -871,7 +903,7 @@ export function getScenes(device_name: string): { [key: string]: Scene } {
      * Infra setup: Laptop, speaker, lamps w/ white lights, hanging black lights
      * Computer: TBD
      */
-    black_light_hallway: new BlackLightHallwayScene(
+    black_light_hallway: new CumScene(
       getLights(power_switch)[0],
       getLights(workout_room),
     ),
