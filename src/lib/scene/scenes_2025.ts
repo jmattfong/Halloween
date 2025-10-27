@@ -330,9 +330,9 @@ class LookItsWafflesScene extends AutoResetRingScene {
       // 6-10 growl
       new SleepPattern(0.1),
       new OffPattern(1),
-      new OnPattern(SOFT_RED, 5),
+      new OnPattern(RED, 5),
       new OffPattern(2),
-      new OnPattern(SOFT_RED, 5),
+      new OnPattern(RED, 5),
       new OffPattern(1, 1),
     ));
     super(events, true);
