@@ -31,7 +31,7 @@ export const LIGHTS = {
     reading_lamp: ["18"],
     upstairs_hallway: ["3", "8"],
     kitchen: ["6", "7"],
-    upstairs_bathroom: ["14"],
+    upstairs_bathroom: ["16"],
     staircase: ["26"],
     media_room: ["29, 30"],
     the_lady_hole: ["31"],
