@@ -9,7 +9,7 @@
         },
         {
             "name": "calming_cockroaches",
-            "sensorId": "62",
+            "sensorId": "2",
             "sensorType": "hue",
             "onFault": true
         },

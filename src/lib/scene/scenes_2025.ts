@@ -783,14 +783,14 @@ export function getScenes(device_name: string): { [key: string]: Scene } {
     // TODO
 
     /* Calming Cockroaches
-     * Room: Downstairs bathroom
+     * Room: Upstairs bathroom
      * Trigger: motion sensor + downstairs bath contact sensor closed
      * Effect: calming cockroaches
      * Sound: calming cockroaches
      * Infra setup: pi, speaker
      * Computer: TBD
      */
-    calming_cockroaches: new CalmingCockroachesScene(getLights(downstairs_bathroom)),
+    calming_cockroaches: new CalmingCockroachesScene(getLights(upstairs_bathroom)),
 
     /* The Werewolf
      * Room: Utility closet
