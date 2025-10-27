@@ -28,7 +28,7 @@
         },
         {
             "name": "classic_haunts",
-            "sensorId": "65",
+            "sensorId": "8f62bdc1-25a5-4f3c-9577-53dbe84cf579",
             "sensorType": "hue",
             "onFault": false
         },
@@ -38,9 +38,6 @@
             "sensorType": "hue",
             "onFault": true
         },
-
-
-
         {
             "name": "dev_scene",
             "sensorId": "Guest Bathroom",
@@ -51,14 +48,12 @@
             "name": "photobooth_spooks",
             "sensorType": "manual"
         },
-
         {
             "name": "welcome_inside",
             "sensorId": "Front Door",
             "sensorType": "ring",
             "onFault": false
         },
-
         {
             "name": "black_light_hallway",
             "sensorId": "59",
