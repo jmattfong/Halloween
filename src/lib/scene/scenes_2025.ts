@@ -322,7 +322,7 @@ class LookItsWafflesScene extends AutoResetRingScene {
     events.push(new Event(
       werewolfEye,
       new SoundPattern(
-        `${RESOURCES_DIR}/david_the_beast_short.mp3`,
+        `${RESOURCES_DIR}/werewolf/david_the_beast_short.mp3`,
         new OnPattern(SOFT_RED, 4),
         0,
       ),
