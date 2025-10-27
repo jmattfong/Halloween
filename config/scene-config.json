@@ -3,7 +3,7 @@
     "scenes": [
         {
             "name": "look_its_waffles",
-            "sensorId": "7b7388f6-7134-43f5-bb73-bf1a255cd3a3",
+            "sensorId": "8f62bdc1-25a5-4f3c-9577-53dbe84cf579",
             "sensorType": "hue",
             "onFault": true
         },
