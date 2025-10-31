@@ -1,4 +1,3 @@
-import { Chromecaster } from "../chromecast";
 import { getLogger } from "../logging";
 import { CategoryLogger } from "typescript-logging";
 import { SpookyHueBulbPlayer } from "../hue/spooky_bulb_player";
@@ -568,65 +567,6 @@ class DownstairsBathClownGoodbye extends AutoResetRingScene {
   }
 }
 
-class ChromecastScene extends Scene {
-  chromecaster: Chromecaster;
-  started: boolean;
-  deviceId: string;
-
-  constructor(deviceId: string) {
-    super();
-    this.started = false;
-    this.deviceId = deviceId;
-  }
-
-  async start() {
-    if (!this.started) {
-      log.info(`Starting chromecast ${this.deviceId}`);
-      this.chromecaster = new Chromecaster(this.deviceId);
-      await this.chromecaster.start();
-      this.started = true;
-    }
-  }
-
-  async run(
-    _spook_yHueBulbPlayer: SpookyHueBulbPlayer,
-    _sensorType: SensorType,
-    _sensorTriggedOn: boolean,
-  ): Promise<void> {
-    await this.start();
-  }
-}
-
-class ChromecastPortalToHell extends ChromecastScene {
-  async run(
-    hue: SpookyHueBulbPlayer,
-    type: SensorType,
-    on: boolean,
-  ): Promise<void> {
-    log.info(`ChromecastPortalToHell got a callback with sensor ${on}`);
-    await super.run(hue, type, on);
-    while (true) {
-      await this.chromecaster.playVideo(PORTAL_TO_HELL);
-      await sleep(PORTAL_TO_HELL.getVideoLengthSeconds() * 1000 - 5);
-    }
-  }
-}
-
-class ChromecastGhosts extends ChromecastScene {
-  async run(
-    hue: SpookyHueBulbPlayer,
-    type: SensorType,
-    sensorTriggedOn: boolean,
-  ): Promise<void> {
-    log.info(`ChromecastGhosts got a callback with sensor ${sensorTriggedOn}`);
-    await super.run(hue, type, sensorTriggedOn);
-    if (sensorTriggedOn) {
-      let video = VIDEOS_2023[Math.floor(Math.random() * VIDEOS_2023.length)];
-      await this.chromecaster.playVideo(video);
-    }
-  }
-}
-
 class BlackLightHallwayScene extends AutoResetRingScene {
   constructor(switch_id: string, hallway_lights: string[]) {
     // this is pulling out 15, which is the stairwell light that is not a colour light
@@ -862,7 +802,7 @@ export function getScenes(device_name: string): { [key: string]: Scene } {
      * Infra setup: Laptop, speaker
      * Computer: TBD
      */
-    // TODO
+    kitchen_lightning: new ThunderScene(getLights(kitchen)),
 
     /* Primary Bathroom Creeps
      * Room: Primary Bathroom
@@ -928,16 +868,6 @@ export function getScenes(device_name: string): { [key: string]: Scene } {
      * Computer: TBD
      */
     photobooth_spooks: new PhotoBoothScream(getLights(photobooth_spooks)),
-
-    /* Chromecast ghosts
-     * Room: Living room
-     * Trigger: random every ~10 minutes, front motion sensor
-     * Effect: startling sounds
-     * Sound: flashing lights
-     * Infra setup: Matt's Laptop, speaker w/ bluetooth, lamps
-     * Computer: TBD
-     */
-    chromecast_ghosts: new ChromecastGhosts("Chromecast-70c4c8babee87879b01e6d819b6b5e97"),
 
     // ========== END 2025 Scenes ================
 
