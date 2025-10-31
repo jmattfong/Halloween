@@ -90,11 +90,14 @@ export class SoundPattern extends Pattern {
     this.soundToPatternDelayMs = soundToPatternDelaySeconds * 1000;
     this.soundPlayer = new SoundPlayer();
     this.stopSoundOnCancel = stopSoundOnCancel;
+
+    log.debug(`created SoundPattern with sound file: ${this}`);
   }
 
   public cancel() {
     log.info(`cancelling sound pattern`);
     this.lightPattern.cancel();
+    log.debug(`stopSoundOnCancel: ${this.stopSoundOnCancel}`);
     if (this.stopSoundOnCancel) {
       log.info(`stopping sound: ${this.getSoundFile()}`);
       this.soundPlayer.stop(this.getSoundFile());
