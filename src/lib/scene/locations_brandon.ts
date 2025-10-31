@@ -45,7 +45,7 @@ export const LIGHTS = {
     werewolf_scene: ["12", "20"],
     clown_room: ["2", "9", "23"],
     halloween_hallway: ["3", "8"],
-    photobooth_spooks: [], // TODO find lights
+    photobooth_spooks: ["10"],
     workout_room: ["11", "31"]
 } as const;
 
