@@ -75,20 +75,24 @@ export class MultiPartScene extends Scene {
     // if the data.faulted is true, that means that the door is open
     if (sensorType === SensorType.MANUAL || sensorTriggedOn) {
       if (sensorType === SensorType.MANUAL || this.spookOnFaulted) {
+        this.unSpookyEvents.forEach((event) => { event.cancel(); });
         this.spookyEvents.forEach((event) => {
           spookyHueBulbPlayer.playPattern(event);
         });
       } else {
+        this.spookyEvents.forEach((event) => { event.cancel(); });
         this.unSpookyEvents.forEach((event) => {
           spookyHueBulbPlayer.playPattern(event);
         });
       }
     } else {
       if (this.spookOnFaulted) {
+        this.spookyEvents.forEach((event) => { event.cancel(); });
         this.unSpookyEvents.forEach((event) => {
           spookyHueBulbPlayer.playPattern(event);
         });
       } else {
+        this.unSpookyEvents.forEach((event) => { event.cancel(); });
         this.spookyEvents.forEach((event) => {
           spookyHueBulbPlayer.playPattern(event);
         });
