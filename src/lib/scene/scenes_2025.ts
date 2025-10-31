@@ -712,7 +712,8 @@ class AtticAttackScene extends AutoResetRingScene {
           new FlickerPattern(8, ENERGIZE, 200),
           0,
         ),
-        new OffPattern(1),
+        new OffPattern(4),
+        new OnPattern(ENERGIZE, 8, 4)
       )
     });
 
@@ -756,10 +757,11 @@ class AtticRuckusScene extends AutoResetRingScene {
         light,
         new SoundPattern(
           `${RESOURCES_DIR}/attic/attic_ruckus.mp3`,
-          new FlickerPattern(23, ENERGIZE, 200),
+          new PulsePattern(ENERGIZE, 6, 0.5),
           0,
         )
-
+        new FlickerPattern(3, ENERGIZE, 200),
+        new PulsePattern(ENERGIZE, 14, 0.5),
       )
     });
 
