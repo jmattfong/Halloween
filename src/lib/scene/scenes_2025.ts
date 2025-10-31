@@ -699,7 +699,7 @@ class AtticRuckusScene extends AutoResetRingScene {
           `${RESOURCES_DIR}/attic/attic_ruckus.mp3`,
           new PulsePattern(ENERGIZE, 6, 0.5),
           0,
-        )
+        ),
         new FlickerPattern(3, ENERGIZE, 200),
         new PulsePattern(ENERGIZE, 14, 0.5),
       )
