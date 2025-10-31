@@ -12,8 +12,9 @@ SCENE=${SCENES[$RANDOM % ${#SCENES[@]} ]}
 
 echo "Chose scene $SCENE"
 
-# Generate a random delay between 0 and 5 minutes
-DELAY=$((RANDOM % 300))
+# Generate a random delay between 4 and 10 minutes (240-600 seconds)
+# Use RANDOM modulo the inclusive range length (600 - 240 = 360, +1 => 361)
+DELAY=$(((RANDOM % 360) + 240))
 
 echo "Waiting $DELAY seconds"
 
