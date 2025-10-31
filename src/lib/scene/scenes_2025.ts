@@ -702,6 +702,8 @@ class PhotoBoothScream extends AutoResetRingScene {
 class AtticAttackScene extends AutoResetRingScene {
   constructor(lights: string[]) {
 
+    const attic_light = lights.pop();
+
     let events: Event[] = lights.map((light) => {
       return new Event(
         light, 
@@ -709,10 +711,14 @@ class AtticAttackScene extends AutoResetRingScene {
           `${RESOURCES_DIR}/attic/attic_attack.mp3`,
           new FlickerPattern(8, ENERGIZE, 200),
           0,
+          new OffPattern(1),
         ),
-        new OnPattern(RED, 8, 0.5),
       )
     });
+
+    events.push(
+      new Event(attic_light, new FlickerPattern(8), new OnPattern(RED, 8, 0.5)),
+    );
 
     super(events, true);
   }
@@ -721,17 +727,22 @@ class AtticAttackScene extends AutoResetRingScene {
 class AtticLurkScene extends AutoResetRingScene {
   constructor(lights: string[]) {
 
+    const attic_light = lights.pop();
+
     let events: Event[] = lights.map((light) => {
       return new Event(
         light, 
         new SoundPattern(
           `${RESOURCES_DIR}/attic/attic_lurk.mp3`,
-          new PulsePattern(RED, 24, 0.5),
+          new PulsePattern(ENERGIZE, 24, 0.5),
           0,
         )
-
       )
     });
+
+    events.push(
+      new Event(attic_light, new PulsePattern(RED, 24, 0.5)),
+    );
 
     super(events, true);
   }
