@@ -819,7 +819,7 @@ export function getScenes(device_name: string): { [key: string]: Scene } {
      */
     front_light_flicker: new FrontLightFlickerScene(getLights(front_patio)),
 
-    /* Clown room
+    /* Clown room (CUT!)
      * Room: Matt's Office
      * Trigger: motion sensor
      * Effect: colorful rainbow lights
@@ -827,7 +827,6 @@ export function getScenes(device_name: string): { [key: string]: Scene } {
      * Infra setup: Colored tri-lamp, PC or pi?, Speaker
      * Computer: TBD
      */
-    // TODO test both of these? Which one works, or do we need new?
     creepy_carnival: new CreepyCarnivalScene(getLights(clown_room)),
     down_bath_leaving: new DownstairsBathClownGoodbye(getLights(clown_room)),
 
@@ -839,6 +838,7 @@ export function getScenes(device_name: string): { [key: string]: Scene } {
      * Infra setup: None
      * Computer: TBD
      */
+    // TODO red pulses
     halloween_hallway: new HalloweenHallway(getLights(halloween_hallway)),
 
     /* Kitchen Creeps
@@ -870,9 +870,7 @@ export function getScenes(device_name: string): { [key: string]: Scene } {
      * Computer: TBD
      */
     attic_lurk: new AtticLurkScene(getLights(garage)),
-
     attic_ruckus: new AtticRuckusScene(getLights(garage)),
-
     attic_attack: new AtticAttackScene(getLights(garage)),
 
     /* Calming Cockroaches

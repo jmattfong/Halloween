@@ -23,17 +23,16 @@ async function httpGet(url: string, headers: Record<string, string>): Promise<an
                 continue;
             }
             if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
+                log.warn(`HTTP error! Status: ${response.status}`);
             }
             const data = await response.text();
             log.debug(`Got API response ${data}`);
             return data;
         } catch (error) {
             log.error("Error fetching data:", error);
-            throw error;
         }
     }
-    throw new Error(`HTTP 429: Too Many Requests after ${maxRetries} retries.`);
+    log.warn(`HTTP 429: Too Many Requests after ${maxRetries} retries.`);
 }
 
 export async function listContactSensors(hueBridgeIp: string, applicationKey: string): Promise<any> {
