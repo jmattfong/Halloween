@@ -121,7 +121,7 @@ export class SoundPattern extends Pattern {
 
 export class NoSoundPattern extends SoundPattern {
   constructor(lightPattern: Pattern, soundToPatternDelaySeconds: number = 0) {
-    super("", lightPattern, soundToPatternDelaySeconds, 1);
+    super("", lightPattern, soundToPatternDelaySeconds, 1, true);
   }
 
   public async run(
