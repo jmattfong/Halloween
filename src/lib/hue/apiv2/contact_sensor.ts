@@ -6,9 +6,9 @@ process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = "0";
 const log: CategoryLogger = getLogger("contact_sensor");
 
 async function httpGet(url: string, headers: Record<string, string>): Promise<any> {
-    const maxRetries = 5;
+    const maxRetries = 25;
     let attempt = 0;
-    let delay_ms = 500; // start with 1 second
+    let delay_ms = 1000; // start with 1 second
     while (attempt < maxRetries) {
         try {
             const response = await fetch(url, {
@@ -19,7 +19,7 @@ async function httpGet(url: string, headers: Record<string, string>): Promise<an
                 log.warn(`Received 429 Too Many Requests. Retrying in ${delay_ms}ms (attempt ${attempt + 1}/${maxRetries})`);
                 await new Promise(res => setTimeout(res, delay_ms));
                 attempt++;
-                delay_ms *= 2; // exponential backoff
+                delay_ms *= 1.5; // exponential backoff
                 continue;
             }
             if (!response.ok) {
@@ -46,5 +46,6 @@ export async function getContactSensor(hueBridgeIp: string, applicationKey: stri
     let response = await httpGet(`https://${hueBridgeIp}/clip/v2/resource/contact/${sensorId}`, {
         'hue-application-key': applicationKey,
     });
+    log.info(`Get Contact Sensor Response: ${response}`);
     return JSON.parse(response);
 }
