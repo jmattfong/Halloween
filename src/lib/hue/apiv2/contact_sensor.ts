@@ -9,6 +9,8 @@ async function httpGet(url: string, headers: Record<string, string>): Promise<an
     const maxRetries = 25;
     let attempt = 0;
     let delay_ms = 1000; // start with 1 second
+    // sleep for 100ms to not kill the api
+    await sleep(100);
     while (attempt < maxRetries) {
         try {
             const response = await fetch(url, {
@@ -17,7 +19,7 @@ async function httpGet(url: string, headers: Record<string, string>): Promise<an
             });
             if (response.status === 429) {
                 log.warn(`Received 429 Too Many Requests. Retrying in ${delay_ms}ms (attempt ${attempt + 1}/${maxRetries})`);
-                await new Promise(res => setTimeout(res, delay_ms));
+                await sleep(delay_ms);
                 attempt++;
                 delay_ms *= 1.5; // exponential backoff
                 continue;
@@ -46,6 +48,10 @@ export async function getContactSensor(hueBridgeIp: string, applicationKey: stri
     let response = await httpGet(`https://${hueBridgeIp}/clip/v2/resource/contact/${sensorId}`, {
         'hue-application-key': applicationKey,
     });
-    log.info(`Get Contact Sensor Response: ${response}`);
+    log.debug(`Get Contact Sensor Response: ${response}`);
     return JSON.parse(response);
+}
+
+export async function sleep(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
 }
