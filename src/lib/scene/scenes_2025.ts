@@ -315,7 +315,7 @@ class LookItsWafflesScene extends AutoResetRingScene {
 
     let events: Event[] = lights.map((light) => {
       return new Event(
-        light, new FlickerPattern(10, ENERGIZE, 200),
+        light, new FlickerPattern(10, ENERGIZE, 200), new OffPattern(1, 1)
       )
     });
     events.push(new Event(
